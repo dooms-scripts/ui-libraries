@@ -1,5 +1,7 @@
 local library = {}
 
+warn('dooms anti lib loaded')
+
 function library.newWindow(title_text, main_color)
 	local window = {}
 	
@@ -100,7 +102,7 @@ function library.newWindow(title_text, main_color)
 	ContentHolder.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	ContentHolder.BorderSizePixel = 0
 	ContentHolder.Position = UDim2.new(0.00400000019, 0, 0.184210524, 0)
-	ContentHolder.Size = UDim2.new(0, 249, 0, 155)
+	ContentHolder.Size = UDim2.new(0, 249, 0, 4)
 
 	UIListLayout.Parent = ContentHolder
 	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -127,6 +129,8 @@ function library.newWindow(title_text, main_color)
 		local toggle = Instance.new("Frame")
 		local label = Instance.new("TextLabel")
 		local toggle_2 = Instance.new("TextButton")
+
+		ContentHolder.Size += UDim2.new(0,0,0,30)
 
 		toggle.Name = "toggle"
 		toggle.Parent = ContentHolder
