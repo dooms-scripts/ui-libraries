@@ -1,6 +1,6 @@
 local library = {}
 
-warn('dooms anti lib loaded')
+warn('dooms anti lib loaded : v1.0.0')
 
 function library.newWindow(title_text, main_color)
 	local window = {}
