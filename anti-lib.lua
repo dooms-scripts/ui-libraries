@@ -31,7 +31,7 @@ function library.newWindow(title_text, main_color)
 	Main.BorderColor3 = Color3.fromRGB(50, 50, 50)
 	Main.BorderMode = 'Inset'
 	Main.Position = UDim2.new(0.729705751, 0, 0.700501263, 0)
-	Main.Size = UDim2.new(0, 250, 0, 190)
+	Main.Size = UDim2.new(0, 250, 0, 37)
 	
 	Main.Selectable = true
 	Main.Active = true
@@ -131,6 +131,7 @@ function library.newWindow(title_text, main_color)
 		local toggle_2 = Instance.new("TextButton")
 
 		ContentHolder.Size += UDim2.new(0,0,0,30)
+		Main.Size += UDim2.new(0,0,0,30)
 
 		toggle.Name = "toggle"
 		toggle.Parent = ContentHolder
