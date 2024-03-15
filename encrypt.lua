@@ -1,4 +1,4 @@
-local library = {}
+local encrypt = {}
 
 if _G.LIB_COLOR == nil then _G.LIB_COLOR = Color3.fromRGB(255,255,255) end
 
@@ -18,7 +18,7 @@ end
 EncryptedName.Name = tostring('doom_'..math.random(10000000000,99999999999))
 EncryptedName.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-function library.new_window(title_text)
+function encrypt.new_window(title_text)
 	local window = {}
 	
 	-- Creating UI
@@ -431,9 +431,9 @@ end
 
 warn('ENCRYPT UI LIBRARY: LOADED')
 
-function window:exit()
+function encrypt:exit()
 	EncryptedName:Destroy()
 	warn('ENCRYPT UI; CLOSED')
 end
 
-return library
+return encrypt
