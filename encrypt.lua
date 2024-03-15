@@ -5,11 +5,23 @@ if _G.LIB_COLOR == nil then _G.LIB_COLOR = Color3.fromRGB(255,255,255) end
 local ts = game:GetService('TweenService')
 local ti = TweenInfo
 
+local EncryptedName = Instance.new("ScreenGui")
+local _,err = pcall(function()
+	EncryptedName.Parent = game.CoreGui
+end)
+
+if err then 
+	warn('⚠️ ENCRYPT LIBRARY ERROR: ' ..tostring(err))
+	EncryptedName.Parent = game:GetService('Players').LocalPlayer:WaitForChild('PlayerGui')
+end
+
+EncryptedName.Name = tostring('doom_'..math.random(10000000000,99999999999))
+EncryptedName.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
 function library.new_window(title_text)
 	local window = {}
 	
 	-- Creating UI
-	local EncrypedName = Instance.new("ScreenGui")
 	local ButtonHolder = Instance.new("Frame")
 	local WindowFrame = Instance.new("Frame")
 	local Divider = Instance.new("Frame")
@@ -20,20 +32,9 @@ function library.new_window(title_text)
 	local UIListLayout_2 = Instance.new("UIListLayout")
 	local Gradient = Instance.new("ImageLabel")
 
-	local _,err = pcall(function()
-		EncrypedName.Parent = game.CoreGui
-	end)
-	
-	if err then 
-		warn('⚠️ ENCRYPT LIBRARY ERROR: ' ..tostring(err))
-		EncrypedName.Parent = game:GetService('Players').LocalPlayer:WaitForChild('PlayerGui')
-	end
-	
-	EncrypedName.Name = tostring('doom_'..math.random(10000000000,99999999999))
-	EncrypedName.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 	WindowFrame.Name = "WindowFrame"
-	WindowFrame.Parent = EncrypedName
+	WindowFrame.Parent = EncryptedName
 	WindowFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 	WindowFrame.BorderColor3 = Color3.fromRGB(35, 35, 35)
 	WindowFrame.Position = UDim2.new(0.711538434, 0, 0.436090231, 0)
@@ -424,15 +425,15 @@ function library.new_window(title_text)
 		return group
 	end
 
-	-- Functions
-	function window:close()
-		EncryptedName:Destroy()
-		warn('ENCRYPT UI; CLOSED')
-	end
 	
 	return window
 end
 
 warn('ENCRYPT UI LIBRARY: LOADED')
+
+function window:exit()
+	EncryptedName:Destroy()
+	warn('ENCRYPT UI; CLOSED')
+end
 
 return library
