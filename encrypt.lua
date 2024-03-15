@@ -1,6 +1,7 @@
 local encrypt = {}
 
-if _G.LIB_COLOR == nil then _G.LIB_COLOR = Color3.fromRGB(255,255,255) end
+encrypt.color = Color3.fromRGB(255,255,255)
+if _G.LIB_COLOR == nil then _G.LIB_COLOR = encrypt.color end
 
 local ts = game:GetService('TweenService')
 local ti = TweenInfo
