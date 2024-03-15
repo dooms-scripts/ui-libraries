@@ -1,7 +1,6 @@
 local encrypt = {}
 
 encrypt.color = Color3.fromRGB(255,255,255)
-if _G.LIB_COLOR == nil then _G.LIB_COLOR = encrypt.color end
 
 local ts = game:GetService('TweenService')
 local ti = TweenInfo
@@ -131,7 +130,7 @@ function encrypt.new_window(title_text)
 		ContentHolder.BorderSizePixel = 0
 		ContentHolder.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		ContentHolder.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-		ContentHolder.ScrollBarImageColor3 = _G.LIB_COLOR
+		ContentHolder.ScrollBarImageColor3 = encrypt.color
 		ContentHolder.BackgroundTransparency = 1.000
 		ContentHolder.TopImage = "http://www.roblox.com/asset/?id=16747999837"
 		ContentHolder.BottomImage = "http://www.roblox.com/asset/?id=16748002234"
@@ -207,7 +206,7 @@ function encrypt.new_window(title_text)
 				text.Size = UDim2.new(0, 165, 0, 20)
 				text.Font = Enum.Font.Gotham
 				text.Text = text_input
-				text.TextColor3 = _G.LIB_COLOR
+				text.TextColor3 = encrypt.color
 				text.TextSize = 12.000
 				text.TextXAlignment = Enum.TextXAlignment.Left
 				
@@ -286,7 +285,7 @@ function encrypt.new_window(title_text)
 					callback()
 					toggle.value = not toggle.value
 					if toggle.value then
-						ts:Create(button, ti.new(.15), { BackgroundColor3 = _G.LIB_COLOR }):Play()
+						ts:Create(button, ti.new(.15), { BackgroundColor3 = encrypt.color }):Play()
 					elseif not toggle.value then 
 						ts:Create(button, ti.new(.15), { BackgroundColor3 = Color3.fromRGB(23, 23, 23) }):Play()
 					end
