@@ -423,6 +423,12 @@ function library.new_window(title_text)
 		
 		return group
 	end
+
+	-- Functions
+	function window:close()
+		EncryptedName:Destroy()
+		warn('ENCRYPT UI; CLOSED')
+	end
 	
 	return window
 end
