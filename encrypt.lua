@@ -213,7 +213,7 @@ function encrypt.new_window(title_text)
 				TitleText.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				TitleText.BorderSizePixel = 0
 				TitleText.Position = UDim2.new(0.0411764719, 0, 0, 0)
-				TitleText.Size = UDim2.new(0, 163, 0, 20)
+				TitleText.Size = UDim2.new(1, 0, 0, 20)
 				TitleText.Font = Enum.Font.Gotham
 				TitleText.Text = tostring(title_text)
 				TitleText.TextColor3 = Color3.fromRGB(255, 255, 255)
