@@ -28,7 +28,6 @@ function encrypt.new_window(title_text)
 	local Tabs = Instance.new("Frame")
 	local Topbar = Instance.new("Frame")
 	local TitleText = Instance.new("TextLabel")
-	local UIListLayout = Instance.new("UIListLayout")
 	local Gradient = Instance.new("ImageLabel")
 
 	WindowFrame.Name = "WindowFrame"
@@ -69,6 +68,11 @@ function encrypt.new_window(title_text)
 	ButtonHolder.BorderSizePixel = 0
 	ButtonHolder.Size = UDim2.new(1, 0, 1, 0)
 
+	local UIListLayout = Instance.new("UIListLayout", ButtonHolder)
+	UIListLayout.Parent = ButtonHolder
+	UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	
 	TitleText.Name = "TitleText"
 	TitleText.Parent = ButtonHolder
 	TitleText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -82,10 +86,6 @@ function encrypt.new_window(title_text)
 	TitleText.TextSize = 14.000
 	TitleText.TextXAlignment = Enum.TextXAlignment.Left
 	TitleText.Size = UDim2.new(0, TitleText.TextBounds.X + 10, 1, 0)
-
-	UIListLayout.Parent = ButtonHolder
-	UIListLayout.FillDirection = Enum.FillDirection.Horizontal
-	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 	Divider.Name = "Divider"
 	Divider.Parent = Topbar
@@ -111,7 +111,7 @@ function encrypt.new_window(title_text)
 		local tab = {}
 		local TabFrame = Instance.new("Frame")
 			
-		TabFrame.Name = "Tab"
+		TabFrame.Name = tab_name
 		TabFrame.Parent = Tabs
 		TabFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 		TabFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
