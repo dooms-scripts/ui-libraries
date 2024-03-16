@@ -125,7 +125,7 @@ function encrypt.new_window(title_text)
 		TabFrame.Size = UDim2.new(1, 0, 1, 0)
 		
 		local UIListLayout = Instance.new("UIListLayout", ButtonHolder)
-		UIListLayout.Parent = Tab
+		UIListLayout.Parent = TabFrame
 		UIListLayout.FillDirection = Enum.FillDirection.Horizontal
 		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 		UIListLayout.Padding = UDim.new(0, 8)
