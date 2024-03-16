@@ -153,6 +153,12 @@ function encrypt.new_window(title_text)
 			end
 		end)
 
+		local UIListLayout = Instance.new("UIListLayout")
+		UIListLayout.Parent = Tab
+		UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+		UIListLayout.Padding = UDim.new(0, 8)
+
 		function tab.new_group(group_name)
 			local group = {}
 			
