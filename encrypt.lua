@@ -1,6 +1,6 @@
 local encrypt = {}
-
 encrypt.color = Color3.fromRGB(255,255,255)
+encrypt.ui_object = nil
 
 local ts = game:GetService('TweenService')
 local ti = TweenInfo
@@ -488,5 +488,7 @@ function encrypt:exit()
 	EncryptedName:Destroy()
 	warn('ENCRYPT UI; CLOSED')
 end
+
+encrypt.ui_object = EncryptedName
 
 return encrypt
