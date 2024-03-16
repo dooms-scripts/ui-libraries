@@ -10,6 +10,8 @@ local _,err = pcall(function()
 	EncryptedName.Parent = game.CoreGui
 end)
 
+warn('ENCRYPT v1.0.0')
+
 if err then 
 	warn('⚠️ ENCRYPT LIBRARY ERROR: ' ..tostring(err))
 	EncryptedName.Parent = game:GetService('Players').LocalPlayer:WaitForChild('PlayerGui')
