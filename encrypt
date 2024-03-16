@@ -185,11 +185,14 @@ function encrypt.new_window(title_text)
 			ContentHolder.MidImage = "rbxassetid://1510273450"
 	
 			UIListLayout.Parent = ContentHolder
-			UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+			UIListLayout.SortOrder = Enum.SortOrder.Name
 			UIListLayout.Padding = UDim.new(0, 4)
 			
 			-- Functions
+			group.categoryCount = 0
+
 			function group.new_category(title_text)
+				group.categoryCount += 1
 				local category = {}
 				
 				-- Creating UI
@@ -199,7 +202,7 @@ function encrypt.new_window(title_text)
 				local UIListLayout = Instance.new("UIListLayout")
 	
 				CategoryFrame.Parent = ContentHolder
-				CategoryFrame.Name = "CategoryFrame"
+				CategoryFrame.Name = tostring(group.categoryCount) .."CategoryFrame" ..tostring(group.categoryCount)
 				CategoryFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 				CategoryFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				CategoryFrame.BorderSizePixel = 0
