@@ -85,7 +85,7 @@ function encrypt.new_window(title_text)
 	TitleText.Font = Enum.Font.Gotham
 	TitleText.Text = "  "..tostring(title_text)
 	TitleText.TextColor3 = Color3.fromRGB(255, 255, 255)
-	TitleText.TextSize = 14.000
+	TitleText.TextSize = 12.000
 	TitleText.TextXAlignment = Enum.TextXAlignment.Left
 	TitleText.Size = UDim2.new(0, TitleText.TextBounds.X + 10, 1, 0)
 
@@ -141,7 +141,7 @@ function encrypt.new_window(title_text)
 		TabButton.Font = Enum.Font.Gotham
 		TabButton.Text = tab_name
 		TabButton.TextColor3 = Color3.fromRGB(100, 100, 100)
-		TabButton.TextSize = 14.000
+		TabButton.TextSize = 12.000
 		TabButton.TextWrapped = true
 		TabButton.Size = UDim2.new(0, TabButton.TextBounds.X + 10, 1, 0)
 		TabButton.MouseButton1Click:Connect(function()
