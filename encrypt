@@ -22,7 +22,7 @@ EncryptedName.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 function encrypt.new_window(title_text)
 	local window = {}
-	
+
 	-- Creating UI
 	local ButtonHolder = Instance.new("Frame")
 	local WindowFrame = Instance.new("Frame")
@@ -53,7 +53,7 @@ function encrypt.new_window(title_text)
 	Gradient.Image = "rbxassetid://277037193"
 	Gradient.ImageColor3 = Color3.fromRGB(10, 10, 10)
 	Gradient.ZIndex = 99
-	
+
 	Topbar.Name = "Topbar"
 	Topbar.Parent = WindowFrame
 	Topbar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -74,7 +74,7 @@ function encrypt.new_window(title_text)
 	UIListLayout.Parent = ButtonHolder
 	UIListLayout.FillDirection = Enum.FillDirection.Horizontal
 	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-	
+
 	TitleText.Name = "TitleText"
 	TitleText.Parent = ButtonHolder
 	TitleText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -107,12 +107,12 @@ function encrypt.new_window(title_text)
 	Tabs.BorderSizePixel = 0
 	Tabs.Position = UDim2.new(0.5, 0, 0.075000003, 0)
 	Tabs.Size = UDim2.new(0, 366, 0, 385)
-	
+
 	-- Functions
 	function window.new_tab(tab_name)
 		local tab = {}
 		local TabFrame = Instance.new("Frame")
-			
+
 		TabFrame.Name = tab_name
 		TabFrame.Parent = Tabs
 		TabFrame.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -123,7 +123,7 @@ function encrypt.new_window(title_text)
 		TabFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 		TabFrame.Visible = false
 		TabFrame.Size = UDim2.new(1, 0, 1, 0)
-		
+
 		local UIListLayout = Instance.new("UIListLayout", ButtonHolder)
 		UIListLayout.Parent = TabFrame
 		UIListLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -156,19 +156,19 @@ function encrypt.new_window(title_text)
 		end)
 
 		local UIListLayout = Instance.new("UIListLayout")
-		UIListLayout.Parent = Tab
+		UIListLayout.Parent = TabFrame
 		UIListLayout.FillDirection = Enum.FillDirection.Horizontal
 		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 		UIListLayout.Padding = UDim.new(0, 8)
 
 		function tab.new_group(group_name)
 			local group = {}
-			
+
 			-- Creating UI
 			local ContentHolder = Instance.new("ScrollingFrame")
 			local UIListLayout = Instance.new("UIListLayout")
 			ContentHolder.Parent = TabFrame
-			
+
 			ContentHolder.Name = group_name
 			ContentHolder.Size = UDim2.new(0, 179, 0, 387)
 			ContentHolder.Position = UDim2.new(0, 0, 0, 0)
@@ -183,24 +183,24 @@ function encrypt.new_window(title_text)
 			ContentHolder.TopImage = "http://www.roblox.com/asset/?id=16747999837"
 			ContentHolder.BottomImage = "http://www.roblox.com/asset/?id=16748002234"
 			ContentHolder.MidImage = "rbxassetid://1510273450"
-	
+
 			UIListLayout.Parent = ContentHolder
 			UIListLayout.SortOrder = Enum.SortOrder.Name
 			UIListLayout.Padding = UDim.new(0, 4)
-			
+
 			-- Functions
 			group.categoryCount = 0
 
 			function group.new_category(title_text)
 				group.categoryCount += 1
 				local category = {}
-				
+
 				-- Creating UI
 				local CategoryFrame = Instance.new("Frame")
 				local TitleText = Instance.new("TextLabel")
 				local UICorner = Instance.new("UICorner")
 				local UIListLayout = Instance.new("UIListLayout")
-	
+
 				CategoryFrame.Parent = ContentHolder
 				CategoryFrame.Name = tostring(group.categoryCount) .."CategoryFrame" ..tostring(group.categoryCount)
 				CategoryFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
@@ -209,7 +209,7 @@ function encrypt.new_window(title_text)
 				CategoryFrame.BorderSizePixel = 0
 				CategoryFrame.Size = UDim2.new(0, 170, 0, 24)
 				ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 24)
-	
+
 				TitleText.Name = "TitleText"
 				TitleText.Parent = CategoryFrame
 				TitleText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -222,23 +222,23 @@ function encrypt.new_window(title_text)
 				TitleText.Text = tostring(title_text)
 				TitleText.TextColor3 = Color3.fromRGB(255, 255, 255)
 				TitleText.TextSize = 14.000
-	
+
 				UICorner.CornerRadius = UDim.new(0, 4)
 				UICorner.Parent = CategoryFrame
-	
+
 				UIListLayout.Parent = CategoryFrame
 				UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-				
+
 				ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 4)
-				
+
 				-- Functions
 				function category.new_text(text_input)
 					local text_divider = {}
-					
+
 					-- Creating UI
 					local TextDivider = Instance.new("Frame")
 					local text = Instance.new("TextLabel")
-	
+
 					TextDivider.Name = "TextDivider"
 					TextDivider.Parent = CategoryFrame
 					TextDivider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -247,7 +247,7 @@ function encrypt.new_window(title_text)
 					TextDivider.BorderSizePixel = 0
 					TextDivider.Position = UDim2.new(0, 0, 0.13333334, 0)
 					TextDivider.Size = UDim2.new(0, 170, 0, 20)
-	
+
 					text.Name = "text"
 					text.Parent = TextDivider
 					text.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -261,34 +261,34 @@ function encrypt.new_window(title_text)
 					text.TextColor3 = encrypt.color
 					text.TextSize = 12.000
 					text.TextXAlignment = Enum.TextXAlignment.Left
-					
+
 					CategoryFrame.Size += UDim2.new(0, 0, 0, 20)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
-					
+
 					-- Functions
 					function text_divider.update_text(new_text)
 						text.Text = new_text
 					end
-					
+
 					function text_divider:delete() 
 						TextDivider:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
 					end
-					
+
 					return text_divider
 				end
-				
+
 				function category.new_toggle(text_input, callback)
 					local toggle = {}
 					toggle.value = false
-					
+
 					-- Creating UI
 					local Toggle = Instance.new("Frame")
 					local text = Instance.new("TextLabel")
 					local button = Instance.new("TextButton")
 					local UICorner = Instance.new("UICorner")
-	
+
 					Toggle.Name = "Toggle"
 					Toggle.Parent = CategoryFrame
 					Toggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -297,7 +297,7 @@ function encrypt.new_window(title_text)
 					Toggle.BorderSizePixel = 0
 					Toggle.Position = UDim2.new(0, 0, 0.13333334, 0)
 					Toggle.Size = UDim2.new(0, 170, 0, 20)
-	
+
 					text.Name = "text"
 					text.Parent = Toggle
 					text.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -311,7 +311,7 @@ function encrypt.new_window(title_text)
 					text.TextColor3 = Color3.fromRGB(255, 255, 255)
 					text.TextSize = 12.000
 					text.TextXAlignment = Enum.TextXAlignment.Left
-	
+
 					button.Name = "button"
 					button.Parent = Toggle
 					button.AnchorPoint = Vector2.new(0, 0.5)
@@ -325,13 +325,13 @@ function encrypt.new_window(title_text)
 					button.Text = ""
 					button.TextColor3 = Color3.fromRGB(0, 0, 0)
 					button.TextSize = 14.000
-	
+
 					UICorner.CornerRadius = UDim.new(0, 2)
 					UICorner.Parent = button
-					
+
 					CategoryFrame.Size += UDim2.new(0, 0, 0, 20)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
-					
+
 					-- Functions
 					button.MouseButton1Click:Connect(function()
 						callback()
@@ -342,24 +342,24 @@ function encrypt.new_window(title_text)
 							ts:Create(button, ti.new(.15), { BackgroundColor3 = Color3.fromRGB(23, 23, 23) }):Play()
 						end
 					end)
-					
+
 					function toggle:delete()
 						Toggle:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
 					end
-					
+
 					return toggle
 				end
-				
+
 				function category.new_button(text_input, callback)
 					local text_button = {}
-					
+
 					-- Creating UI
 					local TextButton = Instance.new("Frame")
 					local button = Instance.new("TextButton")
 					local UICorner = Instance.new("UICorner")
-	
+
 					TextButton.Name = "TextButton"
 					TextButton.Parent = CategoryFrame
 					TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -368,7 +368,7 @@ function encrypt.new_window(title_text)
 					TextButton.BorderSizePixel = 0
 					TextButton.Position = UDim2.new(0, 0, 0.13333334, 0)
 					TextButton.Size = UDim2.new(0, 170, 0, 20)
-	
+
 					button.Name = "button"
 					button.Parent = TextButton
 					button.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -382,34 +382,34 @@ function encrypt.new_window(title_text)
 					button.Text = text_input
 					button.TextColor3 = Color3.fromRGB(255, 255, 255)
 					button.TextSize = 12.000
-	
+
 					UICorner.CornerRadius = UDim.new(0, 2)
 					UICorner.Parent = button
-					
+
 					CategoryFrame.Size += UDim2.new(0, 0, 0, 20)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
-					
+
 					-- Functions
 					button.MouseButton1Click:Connect(callback)
-					
+
 					function text_button:delete()
 						TextButton:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
 					end
-					
+
 					return text_button
 				end
-				
+
 				function category.new_textbox(text_input, placeholder_text, callback)
 					local text_box = {}
-					
+
 					-- Creating UI
 					local TextBox = Instance.new("Frame")
 					local text = Instance.new("TextLabel")
 					local input = Instance.new("TextBox")
 					local UICorner = Instance.new("UICorner")
-	
+
 					TextBox.Name = "TextBox"
 					TextBox.Parent = CategoryFrame
 					TextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -418,7 +418,7 @@ function encrypt.new_window(title_text)
 					TextBox.BorderSizePixel = 0
 					TextBox.Position = UDim2.new(0, 0, 0.13333334, 0)
 					TextBox.Size = UDim2.new(0, 170, 0, 20)
-	
+
 					text.Name = "text"
 					text.Parent = TextBox
 					text.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -432,7 +432,7 @@ function encrypt.new_window(title_text)
 					text.TextColor3 = Color3.fromRGB(255, 255, 255)
 					text.TextSize = 12.000
 					text.TextXAlignment = Enum.TextXAlignment.Left
-	
+
 					input.Name = "input"
 					input.Parent = TextBox
 					input.AnchorPoint = Vector2.new(0, 0.5)
@@ -447,13 +447,13 @@ function encrypt.new_window(title_text)
 					input.TextColor3 = Color3.fromRGB(255, 255, 255)
 					input.TextSize = 12.000
 					input.TextWrapped = true
-	
+
 					UICorner.CornerRadius = UDim.new(0, 2)
 					UICorner.Parent = input
-					
+
 					CategoryFrame.Size += UDim2.new(0, 0, 0, 20)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
-					
+
 					-- Functions
 					input.Changed:Connect(function(property)
 						if property == 'Text' then
@@ -461,28 +461,28 @@ function encrypt.new_window(title_text)
 							callback()
 						end
 					end)
-					
+
 					function text_box:delete()
 						TextBox:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
 					end
-	
+
 					return text_box
 				end
-				
+
 				return category
 			end
-			
+
 			return group
 		end
 
 		return tab
 	end
 
-	
-	
-	
+
+
+
 	return window
 end
 
