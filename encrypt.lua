@@ -493,6 +493,10 @@ function encrypt:exit()
 	warn('ENCRYPT UI; CLOSED')
 end
 
+function encrypt:toggle()
+	EncryptedName.Enabled = not EncryptedName.Enabled
+end
+
 encrypt.ui_object = EncryptedName
 
 return encrypt
