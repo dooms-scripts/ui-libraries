@@ -10,7 +10,7 @@ local _,err = pcall(function()
 	EncryptedName.Parent = game.CoreGui
 end)
 
-warn('ENCRYPT v1.0.0')
+warn('ENCRYPT v1.1.0')
 
 if err then 
 	warn('⚠️ ENCRYPT LIBRARY ERROR: ' ..tostring(err))
@@ -342,6 +342,15 @@ function encrypt.new_window(title_text)
 							ts:Create(button, ti.new(.15), { BackgroundColor3 = Color3.fromRGB(23, 23, 23) }):Play()
 						end
 					end)
+
+					function toggle:update_value(bool)
+						toggle.value = bool
+						if toggle.value then
+							ts:Create(button, ti.new(.15), { BackgroundColor3 = encrypt.color }):Play()
+						elseif not toggle.value then 
+							ts:Create(button, ti.new(.15), { BackgroundColor3 = Color3.fromRGB(23, 23, 23) }):Play()
+						end
+					end
 
 					function toggle:delete()
 						Toggle:Destroy()
