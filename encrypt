@@ -34,7 +34,7 @@ function encrypt.new_window(title_text)
 
 	WindowFrame.Name = "WindowFrame"
 	WindowFrame.Parent = EncryptedName
-	WindowFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	WindowFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 	WindowFrame.BorderColor3 = Color3.fromRGB(35, 35, 35)
 	WindowFrame.Position = UDim2.new(0.711538434, 0, 0.436090231, 0)
 	WindowFrame.Size = UDim2.new(0, 380, 0, 425)
@@ -51,7 +51,7 @@ function encrypt.new_window(title_text)
 	Gradient.Position = UDim2.new(0, 0, 0.99, 0)
 	Gradient.Size = UDim2.new(1, 0, 0, 25)
 	Gradient.Image = "rbxassetid://277037193"
-	Gradient.ImageColor3 = Color3.fromRGB(20, 20, 20)
+	Gradient.ImageColor3 = Color3.fromRGB(10, 10, 10)
 	Gradient.ZIndex = 99
 	
 	Topbar.Name = "Topbar"
@@ -205,6 +205,7 @@ function encrypt.new_window(title_text)
 				CategoryFrame.Name = tostring(group.categoryCount) .."CategoryFrame" ..tostring(group.categoryCount)
 				CategoryFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 				CategoryFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+				CategoryFrame.BackgroundTransparency = 1
 				CategoryFrame.BorderSizePixel = 0
 				CategoryFrame.Size = UDim2.new(0, 170, 0, 24)
 				ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 24)
