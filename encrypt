@@ -10,7 +10,7 @@ local _,err = pcall(function()
 	EncryptedName.Parent = game.CoreGui
 end)
 
-warn('ENCRYPT v1.1.5')
+warn('ENCRYPT v1.1.6')
 
 if err then 
 	warn('⚠️ ENCRYPT LIBRARY ERROR: ' ..tostring(err))
