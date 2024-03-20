@@ -73,13 +73,15 @@ function encrypt_notification_lib.notify(text, duration)
 	notification.TextStrokeTransparency = 0.750
 	notification.TextXAlignment = Enum.TextXAlignment.Center
 	
-	task.wait(duration)
-	--tween(notification, ti.new(.35, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), 'TextSize', 0)
-	tween(notification, ti.new(.35, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), 'TextTransparency', 1)
-	task.wait(.35)
-	notification:Destroy()
+	coroutine.wrap(function()
+		task.wait(duration)
+		--tween(notification, ti.new(.35, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), 'TextSize', 0)
+		tween(notification, ti.new(.35, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), 'TextTransparency', 1)
+		task.wait(.35)
+		notification:Destroy()
+	end)()
 end
 
-warn('✅ ENCRYPT NOTIFICATION LIBRARY: LOADED')
+warn('✅ ENCRYPT NOTIFICATION LIBRARY: LOADED V1.0.1')
 
 return encrypt_notification_lib
