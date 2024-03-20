@@ -74,8 +74,8 @@ function encrypt_notification_lib.notify(text, duration)
 	notification.TextXAlignment = Enum.TextXAlignment.Center
 	
 	task.wait(duration)
-	tween(notification, ti.new(.35, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), 'TextSize', 0)
-	--tween(notification, ti.new(.35, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), 'TextTransparency', 1)
+	--tween(notification, ti.new(.35, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), 'TextSize', 0)
+	tween(notification, ti.new(.35, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), 'TextTransparency', 1)
 	task.wait(.35)
 	notification:Destroy()
 end
