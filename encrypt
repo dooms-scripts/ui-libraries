@@ -564,7 +564,7 @@ function encrypt.new_window(title_text)
 							return
 						end
 
-						if input.KeyCode == Enum.KeyCode[string.upper(key)] then
+						if input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] then
 							callback()
 						end
 					end)
