@@ -574,7 +574,8 @@ function encrypt.new_window(title_text)
 
 					input_service.InputBegan:Connect(function(input)
 						if editing == true then
-							if chat_box:IsFocused() then return end
+							focused = chat_box:IsFocused()
+							if focused == true then return warn('cant activate') end
 							keybind.key = tostring(input.KeyCode):gsub('Enum.KeyCode.', '')
 							button.Text = keybind.key
 							warn(key)
