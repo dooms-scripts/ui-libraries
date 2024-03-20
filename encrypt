@@ -10,7 +10,7 @@ local _,err = pcall(function()
 	EncryptedName.Parent = game.CoreGui
 end)
 
-warn('ENCRYPT v1.1.3')
+warn('ENCRYPT v1.1.4')
 
 if err then 
 	warn('⚠️ ENCRYPT LIBRARY ERROR: ' ..tostring(err))
@@ -503,7 +503,7 @@ function encrypt.new_window(title_text)
 					text.Position = UDim2.new(0.0289999992, 0, 0, 0)
 					text.Size = UDim2.new(0, 140, 0, 20)
 					text.Font = Enum.Font.Gotham
-					text.Text = "keybind"
+					text.Text = text_input
 					text.TextColor3 = Color3.fromRGB(255, 255, 255)
 					text.TextSize = 12.000
 					text.TextXAlignment = Enum.TextXAlignment.Left
@@ -561,7 +561,7 @@ function encrypt.new_window(title_text)
 						end
 					
 						if input.KeyCode == Enum.KeyCode[key] then
-							print('Keybind Pressed')
+							callback(args1, args2, args3)
 						end
 					end)
 
