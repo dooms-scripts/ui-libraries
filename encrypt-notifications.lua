@@ -25,12 +25,12 @@ local padding = Instance.new("UIPadding")
 
 
 notification_container.Parent = encrypted_name
-notification_container.AnchorPoint = Vector2.new(0, 1)
+notification_container.AnchorPoint = Vector2.new(0.5, 1)
 notification_container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 notification_container.BackgroundTransparency = 1.000
 notification_container.BorderColor3 = Color3.fromRGB(0, 0, 0)
 notification_container.BorderSizePixel = 0
-notification_container.Position = UDim2.new(0, 0, 1, 0)
+notification_container.Position = UDim2.new(0.5, 0, 1, 0)
 notification_container.Size = UDim2.new(0, 400, 0, 200)
 
 list_layout.Parent = notification_container
@@ -71,7 +71,7 @@ function encrypt_notification_lib.notify(text, duration)
 	notification.TextColor3 = Color3.fromRGB(0, 0, 0)
 	notification.TextSize = 16.000
 	notification.TextStrokeTransparency = 0.750
-	notification.TextXAlignment = Enum.TextXAlignment.Left
+	notification.TextXAlignment = Enum.TextXAlignment.Center
 	
 	task.wait(duration)
 	tween(notification, ti.new(.35, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), 'TextTransparency', 1)
