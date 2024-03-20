@@ -22,7 +22,7 @@ local _,err = pcall(function()
 	EncryptedName.Parent = game.CoreGui
 end)
 
-warn('ENCRYPT v1.1.7')
+warn('ENCRYPT v1.1.8')
 
 if err then 
 	warn('⚠️ ENCRYPT LIBRARY ERROR: ' ..tostring(err))
@@ -280,6 +280,18 @@ function encrypt.new_window(title_text)
 					-- Functions
 					function text_divider.update_text(new_text)
 						text.Text = new_text
+					end
+
+					function text_divider.alignment(option)
+						if option == 'left' then
+							text.TextXAlignment = Enum.TextXAlignment.Left
+						end
+						if option == 'right' then
+							text.TextXAlignment = Enum.TextXAlignment.Right
+						end
+						if option == 'center' then
+							text.TextXAlignment = Enum.TextXAlignment.Center
+						end
 					end
 
 					function text_divider:delete() 
