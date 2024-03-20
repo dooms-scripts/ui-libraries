@@ -10,7 +10,7 @@ local _,err = pcall(function()
 	EncryptedName.Parent = game.CoreGui
 end)
 
-warn('ENCRYPT v1.1.4')
+warn('ENCRYPT v1.1.5')
 
 if err then 
 	warn('⚠️ ENCRYPT LIBRARY ERROR: ' ..tostring(err))
@@ -412,7 +412,10 @@ function encrypt.new_window(title_text)
 
 				function category.new_textbox(text_input, placeholder_text, callback)
 					local text_box = {}
-4			local UICorner = Instance.new("UICorner")
+					local TextBox = Instance.new('Frame')
+					local text = Instance.new('TextLabel')
+					local input = Instance.new('TextBox')
+					local UICorner = Instance.new("UICorner")
 
 					TextBox.Name = "TextBox"
 					TextBox.Parent = CategoryFrame
@@ -484,7 +487,7 @@ function encrypt.new_window(title_text)
 					local text = Instance.new("TextLabel")
 					local button = Instance.new("TextButton")
 					local UICorner = Instance.new("UICorner")
-					
+
 					keybind_frame.Name = "keybind"
 					keybind_frame.Parent = CategoryFrame
 					keybind_frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -493,7 +496,7 @@ function encrypt.new_window(title_text)
 					keybind_frame.BorderSizePixel = 0
 					keybind_frame.Position = UDim2.new(0, 0, 0.13333334, 0)
 					keybind_frame.Size = UDim2.new(0, 170, 0, 20)
-					
+
 					text.Name = "text"
 					text.Parent = keybind_frame
 					text.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -507,7 +510,7 @@ function encrypt.new_window(title_text)
 					text.TextColor3 = Color3.fromRGB(255, 255, 255)
 					text.TextSize = 12.000
 					text.TextXAlignment = Enum.TextXAlignment.Left
-					
+
 					button.Name = "button"
 					button.Parent = keybind_frame
 					button.AnchorPoint = Vector2.new(0, 0.5)
@@ -523,16 +526,16 @@ function encrypt.new_window(title_text)
 					button.TextColor3 = Color3.fromRGB(150, 150, 150)
 					button.TextSize = 15.000
 					button.TextWrapped = true
-					
+
 					UICorner.CornerRadius = UDim.new(0, 2)
 					UICorner.Parent = button
-					
+
 					CategoryFrame.Size += UDim2.new(0, 0, 0, 20)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
 
 					--> Services
 					local input_service = game:GetService('UserInputService')
-					
+
 					--> Variables
 					local key = nil
 					if default_key ~= nil then
@@ -541,16 +544,16 @@ function encrypt.new_window(title_text)
 
 					local button = button
 					local text = button
-					
+
 					local editing = false
-					
+
 					--> Functions
 					button.MouseButton1Click:Connect(function()
 						editing = true
 						button.Text = '...'
 						print('clicked')
 					end)
-					
+
 					input_service.InputBegan:Connect(function(input)
 						if editing == true then
 							key = tostring(input.KeyCode):gsub('Enum.KeyCode.', '')
@@ -559,19 +562,19 @@ function encrypt.new_window(title_text)
 							editing = false
 							return
 						end
-					
-						if input.KeyCode == Enum.KeyCode[key] then
-							callback(args1, args2, args3)
+
+						if input.KeyCode == Enum.KeyCode[string.upper(key)] then
+							callback()
 						end
 					end)
 
-					function text_box:delete()
+					function keybind:delete()
 						keybind_frame:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
 					end
 
-					
+
 					return keybind
 				end
 
