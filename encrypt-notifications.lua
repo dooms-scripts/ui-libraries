@@ -20,7 +20,7 @@ local ti = TweenInfo
 --> Variables
 local encrypted_name = Instance.new("ScreenGui")
 local notification_container = Instance.new("Frame")
-local list_layout = Instance.new("UIlist_layout")
+local list_layout = Instance.new("UIListLayout")
 local padding = Instance.new("UIPadding")
 
 
