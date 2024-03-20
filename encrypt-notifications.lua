@@ -30,7 +30,7 @@ notification_container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 notification_container.BackgroundTransparency = 1.000
 notification_container.BorderColor3 = Color3.fromRGB(0, 0, 0)
 notification_container.BorderSizePixel = 0
-notification_container.Position = UDim2.new(0.5, 0, 1, 0)
+notification_container.Position = UDim2.new(0.5, 0, 0.85, 0)
 notification_container.Size = UDim2.new(0, 400, 0, 200)
 
 list_layout.Parent = notification_container
@@ -74,7 +74,8 @@ function encrypt_notification_lib.notify(text, duration)
 	notification.TextXAlignment = Enum.TextXAlignment.Center
 	
 	task.wait(duration)
-	tween(notification, ti.new(.35, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), 'TextTransparency', 1)
+	tween(notification, ti.new(.35, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), 'TextSize', 0)
+	--tween(notification, ti.new(.35, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), 'TextTransparency', 1)
 	task.wait(.35)
 	notification:Destroy()
 end
