@@ -22,7 +22,7 @@ local _,err = pcall(function()
 	EncryptedName.Parent = game.CoreGui
 end)
 
-warn('ENCRYPT v1.1.6')
+warn('ENCRYPT v1.1.7')
 
 if err then 
 	warn('⚠️ ENCRYPT LIBRARY ERROR: ' ..tostring(err))
@@ -549,6 +549,11 @@ function encrypt.new_window(title_text)
 					local input_service = game:GetService('UserInputService')
 
 					--> Variables
+					local plr = game.Players.LocalPlayer
+					local player_gui = plr:WaitForChild('PlayerGui')
+					local chat = player_gui:WaitForChild('Chat')
+					local chat_box = chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar
+
 					keybind.key = nil
 					if default_key ~= nil then
 						keybind.key = default_key
@@ -569,6 +574,7 @@ function encrypt.new_window(title_text)
 
 					input_service.InputBegan:Connect(function(input)
 						if editing == true then
+							if chat_box:IsFocused() then return end
 							keybind.key = tostring(input.KeyCode):gsub('Enum.KeyCode.', '')
 							button.Text = keybind.key
 							warn(key)
