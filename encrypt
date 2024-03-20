@@ -540,6 +540,7 @@ function encrypt.new_window(title_text)
 					local key = nil
 					if default_key ~= nil then
 						key = default_key
+						button.Text = key
 					end
 
 					local button = button
