@@ -537,10 +537,10 @@ function encrypt.new_window(title_text)
 					local input_service = game:GetService('UserInputService')
 
 					--> Variables
-					local key = nil
+					keybind.key = nil
 					if default_key ~= nil then
-						key = default_key
-						button.Text = key
+						keybind.key = default_key
+						button.Text = keybind.key
 					end
 
 					local button = button
@@ -557,8 +557,8 @@ function encrypt.new_window(title_text)
 
 					input_service.InputBegan:Connect(function(input)
 						if editing == true then
-							key = tostring(input.KeyCode):gsub('Enum.KeyCode.', '')
-							button.Text = key
+							keybind.key = tostring(input.KeyCode):gsub('Enum.KeyCode.', '')
+							button.Text = keybind.key
 							warn(key)
 							editing = false
 							return
