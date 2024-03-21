@@ -11,7 +11,7 @@
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.2.4'
+encrypt.version = 'v1.2.5'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -774,7 +774,7 @@ function encrypt.new_window(title_text)
 					input_service.InputEnded:Connect(function(input)
 						if input.UserInputType == Enum.UserInputType.MouseButton1 then
 							mouse_down = false
-							label.Text = slider.value
+							label.Text = text
 							tween(fill, ti.new(.25, es.Linear, ed.InOut), 'BackgroundTransparency', .75)
 						end
 					end)
