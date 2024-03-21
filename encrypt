@@ -11,6 +11,7 @@
 ]]--
 
 local encrypt = {}
+encrypt.version = 'v1.2.0'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -22,7 +23,7 @@ local _,err = pcall(function()
 	EncryptedName.Parent = game.CoreGui
 end)
 
-warn('ENCRYPT v1.1.9')
+warn('ENCRYPT '..encrypt.version)
 
 if err then 
 	warn('⚠️ ENCRYPT LIBRARY ERROR: ' ..tostring(err))
@@ -617,7 +618,7 @@ function encrypt.new_window(title_text)
 					return keybind
 				end
 
-				function category.new_slider(text, default_value, min_value, max_value, function()
+				function category.new_slider(text, default_value, min_value, max_value, callback)
 					slider = {}
 
 					local slider_frame = Instance.new("Frame")
@@ -742,6 +743,11 @@ function encrypt.new_window(title_text)
 						-- tween(fill, ti.new(.25, es.Quad, ed.InOut), 'Size', UDim2.new((slider.value - min) / (max - min), 0, 1, 0))
 						fill.Size = UDim2.new((slider.value - min) / (max - min), 0, 1, 0)
 						label.Text = slider.value
+						local s, err = pcall(function()
+							callback()
+						end)
+
+						if err then warn('err') end
 					end)
 					
 					mouse.Move:Connect(function()
@@ -752,6 +758,11 @@ function encrypt.new_window(title_text)
 							-- tween(fill, ti.new(.25, es.Quad, ed.InOut), 'Size', UDim2.new((slider.value - min) / (max - min), 0, 1, 0))
 							fill.Size = UDim2.new((slider.value - min) / (max - min), 0, 1, 0)
 							label.Text = slider.value
+							local s, err = pcall(function()
+								callback()
+							end)
+	
+							if err then warn('err') end
 						end
 					end)
 					
@@ -768,7 +779,7 @@ function encrypt.new_window(title_text)
 					end)
 
 					return slider
-				end)
+				end
 
 				return category
 			end
