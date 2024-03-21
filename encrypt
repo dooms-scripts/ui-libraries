@@ -11,7 +11,7 @@
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.2.7'
+encrypt.version = 'v1.2.8'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -274,6 +274,7 @@ function encrypt.new_window(title_text)
 					text.TextColor3 = encrypt.color
 					text.TextSize = 12.000
 					text.TextXAlignment = Enum.TextXAlignment.Left
+					text.RichText = true
 
 					CategoryFrame.Size += UDim2.new(0, 0, 0, 20)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
