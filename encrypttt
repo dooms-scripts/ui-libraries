@@ -11,7 +11,7 @@
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.2.3'
+encrypt.version = 'v1.2.4'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -598,6 +598,7 @@ function encrypt.new_window(title_text)
 						if editing == true then
 							focused = chat_box:IsFocused()
 							if focused == true or typing then return warn('cant activate') end
+
 							keybind.key = tostring(input.KeyCode):gsub('Enum.KeyCode.', '')
 							button.Text = keybind.key
 							warn(key)
@@ -606,6 +607,9 @@ function encrypt.new_window(title_text)
 						end
 
 						if input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] then
+							focused = chat_box:IsFocused()
+							if focused == true or typing then return warn('cant activate') end
+
 							callback()
 						end
 					end)
