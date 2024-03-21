@@ -11,7 +11,7 @@
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.2.2'
+encrypt.version = 'v1.2.3'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -568,9 +568,11 @@ function encrypt.new_window(title_text)
 					local chat = player_gui:WaitForChild('Chat')
 					local chat_box = chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar
 
-					game:GetService('InputService').InputBegan:Connect(function(input, _t)
+					game:GetService('UserInputService').InputBegan:Connect(function(input, _t)
 						if _t then
 							typing = true
+						elseif not _t then
+							typing = false
 						end
 					end)
 
