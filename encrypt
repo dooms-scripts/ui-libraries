@@ -11,7 +11,7 @@
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.2.1'
+encrypt.version = 'v1.2.2'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -714,7 +714,6 @@ function encrypt.new_window(title_text)
 					local plr = game.Players.LocalPlayer
 					local mouse = plr:GetMouse()
 					
-					local button = script.Parent
 					local fill = button.fill
 					fill.Size = UDim2.new((slider.value - min) / (max - min), 0, 1, 0)
 					
