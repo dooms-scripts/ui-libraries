@@ -11,7 +11,7 @@
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.2.0'
+encrypt.version = 'v1.2.1'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -776,7 +776,7 @@ function encrypt.new_window(title_text)
 
 					function slider:delete()
 						slider_frame:destroy()
-					end)
+					end
 
 					return slider
 				end
