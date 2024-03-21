@@ -11,7 +11,7 @@
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.2.6'
+encrypt.version = 'v1.2.7'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -565,9 +565,13 @@ function encrypt.new_window(title_text)
 					local plr = game.Players.LocalPlayer
 					local typing = false
 					local player_gui = plr:WaitForChild('PlayerGui')
-					
-					local chat = player_gui['Chat']
-					local chat_box = chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar
+					local chat = nil
+					local chat_box = nil
+
+					if player_gui:FindFirstChild('Chat') then
+						chat = player_gui['Chat']
+						chat_box = chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar
+					end
 
 					game:GetService('UserInputService').InputBegan:Connect(function(input, _t)
 						if _t then
@@ -597,7 +601,10 @@ function encrypt.new_window(title_text)
 
 					input_service.InputBegan:Connect(function(input)
 						if editing == true then
-							focused = chat_box:IsFocused()
+							focused = false
+							if chat_box ~= nil then
+								focused = chat_box:IsFocused()
+							end
 							if focused == true or typing then return warn('cant activate') end
 
 							keybind.key = tostring(input.KeyCode):gsub('Enum.KeyCode.', '')
@@ -608,7 +615,11 @@ function encrypt.new_window(title_text)
 						end
 
 						if input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] then
-							focused = chat_box:IsFocused()
+							focused = false
+							if chat_box ~= nil then
+								focused = chat_box:IsFocused()
+							end
+
 							if focused == true or typing then return warn('cant activate') end
 
 							callback()
