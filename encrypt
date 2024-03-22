@@ -11,7 +11,7 @@
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.2.8'
+encrypt.version = 'v1.2.9'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
