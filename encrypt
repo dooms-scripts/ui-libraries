@@ -12,7 +12,7 @@
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.3.7'
+encrypt.version = 'v1.3.8'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -632,10 +632,10 @@ function encrypt.new_window(title_text)
 						button.Text = '...'
 						print('clicked')
 					end)
-					
+
 					input_service.InputBegan:Connect(function(input)
-						if typing then return warn('typing; returned')
-						if editing == true then and not typing then
+						if typing then return warn('typing; returned') end
+						if editing and not typing then
 							keybind.key = tostring(input.KeyCode):gsub('Enum.KeyCode.', '')
 							button.Text = keybind.key
 
@@ -653,156 +653,137 @@ function encrypt.new_window(title_text)
 
 
 					return keybind
-				end
-
-				function category.new_slider(text, default_value, min_value, max_value, allow_decimals, callback)
-					slider = {}
-
-					local text = text or 'slider'
-					local default_value = default_value or 0
-					local min_value = min_value or 0
-					local max_value = max_value or 100
-					local allow_decimals = allow_decimals or false
-
-					if type(allow_decimals) == 'function' then
-						callback = allow_decimals
-						allow_decimals = false
 					end
 
-					local slider_frame = Instance.new("Frame")
-					local ImageLabel = Instance.new("ImageLabel")
-					local button = Instance.new("TextButton")
-					local UICorner = Instance.new("UICorner")
-					local fill = Instance.new("Frame")
-					local UICorner_2 = Instance.new("UICorner")
-					local label = Instance.new("TextLabel")
-					local UIPadding = Instance.new("UIPadding")
+					function category.new_slider(text, default_value, min_value, max_value, allow_decimals, callback)
+						local slider = {}
 
-					slider_frame.Name = "slider"
-					slider_frame.Parent = CategoryFrame
-					slider_frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-					slider_frame.BackgroundTransparency = 1.000
-					slider_frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-					slider_frame.BorderSizePixel = 0
-					slider_frame.Position = UDim2.new(0, 0, 0.13333334, 0)
-					slider_frame.Size = UDim2.new(0, 170, 0, 20)
+						local text = text or 'slider'
+						local default_value = default_value or 0
+						local min_value = min_value or 0
+						local max_value = max_value or 100
+						local allow_decimals = allow_decimals or false
 
-					ImageLabel.Parent = slider_frame
-					ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-					ImageLabel.BackgroundTransparency = 1.000
-					ImageLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-					ImageLabel.BorderSizePixel = 0
-					ImageLabel.Position = UDim2.new(0.873529434, 0, 0.275000006, 0)
-					ImageLabel.Size = UDim2.new(0, 8, 0, 8)
-					ImageLabel.Image = "http://www.roblox.com/asset/?id=16747905322"
-
-					button.Name = "button"
-					button.Parent = slider_frame
-					button.AnchorPoint = Vector2.new(0.5, 0.5)
-					button.BackgroundColor3 = Color3.fromRGB(23, 23, 23)
-					button.BorderColor3 = Color3.fromRGB(0, 0, 0)
-					button.BorderSizePixel = 0
-					button.Position = UDim2.new(0.5, 0, 0.5, 0)
-					button.Size = UDim2.new(1, 0, 0, 16)
-					button.AutoButtonColor = false
-					button.Font = Enum.Font.Gotham
-					button.Text = ""
-					button.TextColor3 = Color3.fromRGB(255, 255, 255)
-					button.TextSize = 12.000
-
-					UICorner.CornerRadius = UDim.new(0, 2)
-					UICorner.Parent = button
-
-					fill.Name = "fill"
-					fill.Parent = button
-					fill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-					fill.BackgroundTransparency = 0.750
-					fill.BorderColor3 = Color3.fromRGB(0, 0, 0)
-					fill.BorderSizePixel = 0
-					fill.Size = UDim2.new(0.282352954, 0, 1, 0)
-					fill.ZIndex = 2
-
-					UICorner_2.CornerRadius = UDim.new(0, 2)
-					UICorner_2.Parent = fill
-
-					label.Name = "label"
-					label.Parent = button
-					label.AnchorPoint = Vector2.new(0.5, 0.5)
-					label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-					label.BackgroundTransparency = 1.000
-					label.BorderColor3 = Color3.fromRGB(0, 0, 0)
-					label.BorderSizePixel = 0
-					label.Position = UDim2.new(0.5, 0, 0.5, 0)
-					label.Size = UDim2.new(1, 0, 1, 0)
-					label.ZIndex = 3
-					label.Font = Enum.Font.Gotham
-					label.Text = text
-					label.TextColor3 = Color3.fromRGB(255, 255, 255)
-					label.TextSize = 11.000
-					label.TextStrokeTransparency = 0.500
-					label.TextWrapped = true
-
-					UIPadding.Parent = slider_frame
-					UIPadding.PaddingLeft = UDim.new(0, 5)
-					UIPadding.PaddingRight = UDim.new(0, 5)
-
-					--> Services
-					local input_service = game:GetService('UserInputService')
-					local ts = game:GetService('TweenService')
-					local ti = TweenInfo
-					local es = Enum.EasingStyle
-					local ed = Enum.EasingDirection
-
-					--> Values
-					local min = min_value
-					local max = max_value
-					slider.value = default_value
-
-					--> Variables
-					local plr = game.Players.LocalPlayer
-					local mouse = plr:GetMouse()
-
-					local fill = button.fill
-					fill.Size = UDim2.new((slider.value - min) / (max - min), 0, 1, 0)
-
-					local text = 'slider'
-					local label = button.label
-
-					local mouse_down = false
-					local mouse_on = false
-
-					--> Functions
-					local function tween(instance, info, property, value)
-						ts:Create(instance, info, {[property] = value}):Play()
-					end
-
-					--> Connections
-					button.MouseButton1Up:Connect(function() mouse_down = false label.Text = text end)
-					button.MouseEnter:Connect(function() mouse_on = true end)
-					button.MouseLeave:Connect(function() mouse_on = false end)
-
-					button.MouseButton1Down:Connect(function()
-						mouse_down = true
-						tween(fill, ti.new(.25, es.Linear, ed.InOut), 'BackgroundTransparency', 0)
-						local mouse_x = math.clamp(mouse.X - button.AbsolutePosition.X, min, button.AbsoluteSize.X)
-						if allow_decimals then
-							slider.value = (math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
-						elseif not allow_decimals then
-							slider.value = math.floor(math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
+						if type(allow_decimals) == 'function' then
+							callback = allow_decimals
+							allow_decimals = false
 						end
 
-						-- tween(fill, ti.new(.25, es.Quad, ed.InOut), 'Size', UDim2.new((slider.value - min) / (max - min), 0, 1, 0))
+						local slider_frame = Instance.new("Frame")
+						local ImageLabel = Instance.new("ImageLabel")
+						local button = Instance.new("TextButton")
+						local UICorner = Instance.new("UICorner")
+						local fill = Instance.new("Frame")
+						local UICorner_2 = Instance.new("UICorner")
+						local label = Instance.new("TextLabel")
+						local UIPadding = Instance.new("UIPadding")
+
+						slider_frame.Name = "slider"
+						slider_frame.Parent = CategoryFrame
+						slider_frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+						slider_frame.BackgroundTransparency = 1.000
+						slider_frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+						slider_frame.BorderSizePixel = 0
+						slider_frame.Position = UDim2.new(0, 0, 0.13333334, 0)
+						slider_frame.Size = UDim2.new(0, 170, 0, 20)
+
+						ImageLabel.Parent = slider_frame
+						ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+						ImageLabel.BackgroundTransparency = 1.000
+						ImageLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+						ImageLabel.BorderSizePixel = 0
+						ImageLabel.Position = UDim2.new(0.873529434, 0, 0.275000006, 0)
+						ImageLabel.Size = UDim2.new(0, 8, 0, 8)
+						ImageLabel.Image = "http://www.roblox.com/asset/?id=16747905322"
+
+						button.Name = "button"
+						button.Parent = slider_frame
+						button.AnchorPoint = Vector2.new(0.5, 0.5)
+						button.BackgroundColor3 = Color3.fromRGB(23, 23, 23)
+						button.BorderColor3 = Color3.fromRGB(0, 0, 0)
+						button.BorderSizePixel = 0
+						button.Position = UDim2.new(0.5, 0, 0.5, 0)
+						button.Size = UDim2.new(1, 0, 0, 16)
+						button.AutoButtonColor = false
+						button.Font = Enum.Font.Gotham
+						button.Text = ""
+						button.TextColor3 = Color3.fromRGB(255, 255, 255)
+						button.TextSize = 12.000
+
+						UICorner.CornerRadius = UDim.new(0, 2)
+						UICorner.Parent = button
+
+						fill.Name = "fill"
+						fill.Parent = button
+						fill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+						fill.BackgroundTransparency = 0.750
+						fill.BorderColor3 = Color3.fromRGB(0, 0, 0)
+						fill.BorderSizePixel = 0
+						fill.Size = UDim2.new(0.282352954, 0, 1, 0)
+						fill.ZIndex = 2
+
+						UICorner_2.CornerRadius = UDim.new(0, 2)
+						UICorner_2.Parent = fill
+
+						label.Name = "label"
+						label.Parent = button
+						label.AnchorPoint = Vector2.new(0.5, 0.5)
+						label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+						label.BackgroundTransparency = 1.000
+						label.BorderColor3 = Color3.fromRGB(0, 0, 0)
+						label.BorderSizePixel = 0
+						label.Position = UDim2.new(0.5, 0, 0.5, 0)
+						label.Size = UDim2.new(1, 0, 1, 0)
+						label.ZIndex = 3
+						label.Font = Enum.Font.Gotham
+						label.Text = text
+						label.TextColor3 = Color3.fromRGB(255, 255, 255)
+						label.TextSize = 11.000
+						label.TextStrokeTransparency = 0.500
+						label.TextWrapped = true
+
+						UIPadding.Parent = slider_frame
+						UIPadding.PaddingLeft = UDim.new(0, 5)
+						UIPadding.PaddingRight = UDim.new(0, 5)
+
+						--> Services
+						local input_service = game:GetService('UserInputService')
+						local ts = game:GetService('TweenService')
+						local ti = TweenInfo
+						local es = Enum.EasingStyle
+						local ed = Enum.EasingDirection
+
+						--> Values
+						local min = min_value
+						local max = max_value
+						slider.value = default_value
+
+						--> Variables
+						local plr = game.Players.LocalPlayer
+						local mouse = plr:GetMouse()
+
+						local fill = button.fill
 						fill.Size = UDim2.new((slider.value - min) / (max - min), 0, 1, 0)
-						label.Text = tostring(slider.value):sub(1,4)
-						local s, err = pcall(function()
-							callback(slider.value)
-						end)
 
-						if err then warn('err') end
-					end)
+						local text = 'slider'
+						local label = button.label
 
-					mouse.Move:Connect(function()
-						if mouse_down then	
+						local mouse_down = false
+						local mouse_on = false
+
+						--> Functions
+						local function tween(instance, info, property, value)
+							ts:Create(instance, info, {[property] = value}):Play()
+						end
+
+						--> Connections
+						button.MouseButton1Up:Connect(function() mouse_down = false label.Text = text end)
+						button.MouseEnter:Connect(function() mouse_on = true end)
+						button.MouseLeave:Connect(function() mouse_on = false end)
+
+						button.MouseButton1Down:Connect(function()
+							mouse_down = true
+							tween(fill, ti.new(.25, es.Linear, ed.InOut), 'BackgroundTransparency', 0)
 							local mouse_x = math.clamp(mouse.X - button.AbsolutePosition.X, min, button.AbsoluteSize.X)
 							if allow_decimals then
 								slider.value = (math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
@@ -814,41 +795,60 @@ function encrypt.new_window(title_text)
 							fill.Size = UDim2.new((slider.value - min) / (max - min), 0, 1, 0)
 							label.Text = tostring(slider.value):sub(1,4)
 							local s, err = pcall(function()
-								callback()
+								callback(slider.value)
 							end)
 
 							if err then warn('err') end
-						end
-					end)
+						end)
 
-					input_service.InputEnded:Connect(function(input)
-						if input.UserInputType == Enum.UserInputType.MouseButton1 then
-							mouse_down = false
-							label.Text = text
-							tween(fill, ti.new(.25, es.Linear, ed.InOut), 'BackgroundTransparency', .75)
-						end
-					end)
+						mouse.Move:Connect(function()
+							if mouse_down then	
+								local mouse_x = math.clamp(mouse.X - button.AbsolutePosition.X, min, button.AbsoluteSize.X)
+								if allow_decimals then
+									slider.value = (math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
+								elseif not allow_decimals then
+									slider.value = math.floor(math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
+								end
 
-					function slider:delete()
-						slider_frame:destroy()
+								-- tween(fill, ti.new(.25, es.Quad, ed.InOut), 'Size', UDim2.new((slider.value - min) / (max - min), 0, 1, 0))
+								fill.Size = UDim2.new((slider.value - min) / (max - min), 0, 1, 0)
+								label.Text = tostring(slider.value):sub(1,4)
+								local s, err = pcall(function()
+									callback()
+								end)
+
+								if err then warn('err') end
+							end
+						end)
+
+						input_service.InputEnded:Connect(function(input)
+							if input.UserInputType == Enum.UserInputType.MouseButton1 then
+								mouse_down = false
+								label.Text = text
+								tween(fill, ti.new(.25, es.Linear, ed.InOut), 'BackgroundTransparency', .75)
+							end
+						end)
+
+						function slider:delete()
+							slider_frame:destroy()
+						end
+
+						return slider
 					end
 
-					return slider
+				return category
 				end
 
-				return category
+			return group
 			end
 
-			return group
+		return tab
 		end
 
-		return tab
-	end
 
 
 
-
-	return window
+return window
 end
 
 warn('✅ ENCRYPT UI LIBRARY: LOADED')
