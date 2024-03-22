@@ -637,7 +637,7 @@ function encrypt.new_window(title_text)
 					return keybind
 				end
 
-				function category.new_slider(text, default_value, min_value, max_value, callback)
+				function category.new_slider(text, default_value, min_value, max_value, allow_decimals, callback)
 					slider = {}
 
 					local slider_frame = Instance.new("Frame")
@@ -756,13 +756,17 @@ function encrypt.new_window(title_text)
 						mouse_down = true
 						tween(fill, ti.new(.25, es.Linear, ed.InOut), 'BackgroundTransparency', 0)
 						local mouse_x = math.clamp(mouse.X - button.AbsolutePosition.X, min, button.AbsoluteSize.X)
-						slider.value = math.floor(math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
+						if allow_decimals then
+							slider.value = (math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max)
+						else
+							slider.value = math.floor(math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
+						end
 						
 						-- tween(fill, ti.new(.25, es.Quad, ed.InOut), 'Size', UDim2.new((slider.value - min) / (max - min), 0, 1, 0))
 						fill.Size = UDim2.new((slider.value - min) / (max - min), 0, 1, 0)
-						label.Text = slider.value
+						label.Text = tostring(slider.value):sub(1,4)
 						local s, err = pcall(function()
-							callback()
+							callback(slider.value)
 						end)
 
 						if err then warn('err') end
@@ -771,11 +775,15 @@ function encrypt.new_window(title_text)
 					mouse.Move:Connect(function()
 						if mouse_down then	
 							local mouse_x = math.clamp(mouse.X - button.AbsolutePosition.X, min, button.AbsoluteSize.X)
-							slider.value = math.floor(math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
-						
+							if allow_decimals then
+								slider.value = (math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max)
+							else
+								slider.value = math.floor(math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
+							end
+
 							-- tween(fill, ti.new(.25, es.Quad, ed.InOut), 'Size', UDim2.new((slider.value - min) / (max - min), 0, 1, 0))
 							fill.Size = UDim2.new((slider.value - min) / (max - min), 0, 1, 0)
-							label.Text = slider.value
+							label.Text = tostring(slider.value):sub(1,4)
 							local s, err = pcall(function()
 								callback()
 							end)
