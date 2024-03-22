@@ -8,10 +8,11 @@
     		---------------------------------------
     		> ui library
     		> doom#1000
+
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.3.0'
+encrypt.version = 'v1.3.1'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -305,7 +306,7 @@ function encrypt.new_window(title_text)
 					return text_divider
 				end
 
-				function category.new_toggle(text_input, callback)
+				function category.new_toggle(text_input, callback, yield_color)
 					local toggle = {}
 					toggle.value = false
 
@@ -360,12 +361,18 @@ function encrypt.new_window(title_text)
 
 					-- Functions
 					button.MouseButton1Click:Connect(function()
-						callback()
-						toggle.value = not toggle.value
-						if toggle.value then
+						if yield_color then
 							ts:Create(button, ti.new(.15), { BackgroundColor3 = encrypt.color }):Play()
-						elseif not toggle.value then 
+							callback()
 							ts:Create(button, ti.new(.15), { BackgroundColor3 = Color3.fromRGB(23, 23, 23) }):Play()
+						elseif yield_color == nil then
+							callback()
+							toggle.value = not toggle.value
+							if toggle.value then
+								ts:Create(button, ti.new(.15), { BackgroundColor3 = encrypt.color }):Play()
+							elseif not toggle.value then 
+								ts:Create(button, ti.new(.15), { BackgroundColor3 = Color3.fromRGB(23, 23, 23) }):Play()
+							end
 						end
 					end)
 
