@@ -12,7 +12,7 @@
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.3.1'
+encrypt.version = 'v1.3.2'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -297,6 +297,10 @@ function encrypt.new_window(title_text)
 						end
 					end
 
+					function text_divider:get_text()
+						return text.Text
+					end
+
 					function text_divider:delete() 
 						TextDivider:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
@@ -375,6 +379,10 @@ function encrypt.new_window(title_text)
 							end
 						end
 					end)
+
+					function toggle:get_value()
+						return toggle.value
+					end
 
 					function toggle:update_value(bool)
 						toggle.value = bool
