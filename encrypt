@@ -12,7 +12,7 @@
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.3.4'
+encrypt.version = 'v1.3.6'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -318,6 +318,11 @@ function encrypt.new_window(title_text)
 					local text_input = text_input or 'toggle'
 					local yield_color = yield_color or false
 
+					if type(yield_color) == 'function' then
+						callback = yield_color
+						yield_color = false
+					end
+
 					-- Creating UI
 					local Toggle = Instance.new("Frame")
 					local text = Instance.new("TextLabel")
@@ -600,7 +605,7 @@ function encrypt.new_window(title_text)
 						chat_box = chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar
 					end
 
-					game:GetService('UserInputService').InputBegan:Connect(function(input, _t)
+					input_service.InputBegan:Connect(function(input, _t)
 						if _t then
 							typing = true
 						elseif not _t then
@@ -628,11 +633,9 @@ function encrypt.new_window(title_text)
 
 					input_service.InputBegan:Connect(function(input)
 						if editing == true then
-							focused = false
-							if chat_box ~= nil then
-								focused = chat_box:IsFocused()
+							if typing == true then return 
+								warn('cant activate') 
 							end
-							if focused == true or typing then return warn('cant activate') end
 
 							keybind.key = tostring(input.KeyCode):gsub('Enum.KeyCode.', '')
 							button.Text = keybind.key
@@ -642,12 +645,9 @@ function encrypt.new_window(title_text)
 						end
 
 						if input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] then
-							focused = false
-							if chat_box ~= nil then
-								focused = chat_box:IsFocused()
+							if typing == true then return 
+								warn('cant activate') 
 							end
-
-							if focused == true or typing then return warn('cant activate') end
 
 							callback()
 						end
