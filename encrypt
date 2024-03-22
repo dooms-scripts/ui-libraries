@@ -12,7 +12,7 @@
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.3.3'
+encrypt.version = 'v1.3.4'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -373,7 +373,7 @@ function encrypt.new_window(title_text)
 							ts:Create(button, ti.new(.15), { BackgroundColor3 = encrypt.color }):Play()
 							callback()
 							ts:Create(button, ti.new(.15), { BackgroundColor3 = Color3.fromRGB(23, 23, 23) }):Play()
-						elseif yield_color == nil then
+						elseif not yield_color then
 							callback()
 							toggle.value = not toggle.value
 							if toggle.value then
