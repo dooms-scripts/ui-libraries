@@ -611,9 +611,9 @@ function encrypt.new_window(title_text)
 						chat_box = chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar
 					end
 
-					input_service.InputBegan:Connect(function(input, isTyping)
-						typing = isTyping
-					end)
+					--input_service.InputBegan:Connect(function(input, isTyping)
+					--	typing = isTyping
+					--end)
 
 					keybind.key = nil
 					if default_key ~= nil then
@@ -635,7 +635,7 @@ function encrypt.new_window(title_text)
 
 					input_service.InputBegan:Connect(function(input)
 						local focused = input_service:GetFocusedTextBox()
-						if focused then return warn('focusing on a textbox, cant activate...') end
+						if focused then return end
 
 						if editing then
 							keybind.key = tostring(input.KeyCode):gsub('Enum.KeyCode.', '')
