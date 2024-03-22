@@ -12,7 +12,7 @@
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.3.6'
+encrypt.version = 'v1.3.7'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -413,6 +413,7 @@ function encrypt.new_window(title_text)
 
 				function category.new_button(text_input, callback)
 					local text_button = {}
+
 					local text_input = text_input or 'button'
 
 					-- Creating UI
@@ -462,10 +463,10 @@ function encrypt.new_window(title_text)
 				end
 
 				function category.new_textbox(text_input, placeholder_text, callback)
+					local text_box = {}
+
 					local text_input = text_input or 'textbox'
 					local placeholder_text = placeholder_text or '...'
-
-					local text_box = {}
 					local TextBox = Instance.new('Frame')
 					local text = Instance.new('TextLabel')
 					local input = Instance.new('TextBox')
@@ -535,10 +536,15 @@ function encrypt.new_window(title_text)
 				end
 
 				function category.new_keybind(text_input, default_key, callback)
+					local keybind = {}
+
 					local text_input = text_input or 'keybind'
 					local default_key = default_key or '...'
-	
-					local keybind = {}
+
+					if type(default_key) == 'function' then
+						callback = default_key
+						default_key = '...'
+					end
 
 					local keybind_frame = Instance.new("Frame")
 					local text = Instance.new("TextLabel")
@@ -605,12 +611,8 @@ function encrypt.new_window(title_text)
 						chat_box = chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar
 					end
 
-					input_service.InputBegan:Connect(function(input, _t)
-						if _t then
-							typing = true
-						elseif not _t then
-							typing = false
-						end
+					input_service.InputBegan:Connect(function(input, isTyping)
+						typing = isTyping
 					end)
 
 					keybind.key = nil
@@ -630,25 +632,15 @@ function encrypt.new_window(title_text)
 						button.Text = '...'
 						print('clicked')
 					end)
-
+					
 					input_service.InputBegan:Connect(function(input)
-						if editing == true then
-							if typing == true then return 
-								warn('cant activate') 
-							end
-
+						if typing then return warn('typing; returned')
+						if editing == true then and not typing then
 							keybind.key = tostring(input.KeyCode):gsub('Enum.KeyCode.', '')
 							button.Text = keybind.key
-							warn(key)
+
 							editing = false
-							return
-						end
-
-						if input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] then
-							if typing == true then return 
-								warn('cant activate') 
-							end
-
+						elseif input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] and not typing then
 							callback()
 						end
 					end)
@@ -671,6 +663,11 @@ function encrypt.new_window(title_text)
 					local min_value = min_value or 0
 					local max_value = max_value or 100
 					local allow_decimals = allow_decimals or false
+
+					if type(allow_decimals) == 'function' then
+						callback = allow_decimals
+						allow_decimals = false
+					end
 
 					local slider_frame = Instance.new("Frame")
 					local ImageLabel = Instance.new("ImageLabel")
