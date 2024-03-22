@@ -11,7 +11,7 @@
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.2.9'
+encrypt.version = 'v1.3.0'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -648,7 +648,7 @@ function encrypt.new_window(title_text)
 					local UICorner_2 = Instance.new("UICorner")
 					local label = Instance.new("TextLabel")
 					local UIPadding = Instance.new("UIPadding")
-					
+
 					slider_frame.Name = "slider"
 					slider_frame.Parent = CategoryFrame
 					slider_frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -657,7 +657,7 @@ function encrypt.new_window(title_text)
 					slider_frame.BorderSizePixel = 0
 					slider_frame.Position = UDim2.new(0, 0, 0.13333334, 0)
 					slider_frame.Size = UDim2.new(0, 170, 0, 20)
-					
+
 					ImageLabel.Parent = slider_frame
 					ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 					ImageLabel.BackgroundTransparency = 1.000
@@ -666,7 +666,7 @@ function encrypt.new_window(title_text)
 					ImageLabel.Position = UDim2.new(0.873529434, 0, 0.275000006, 0)
 					ImageLabel.Size = UDim2.new(0, 8, 0, 8)
 					ImageLabel.Image = "http://www.roblox.com/asset/?id=16747905322"
-					
+
 					button.Name = "button"
 					button.Parent = slider_frame
 					button.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -680,10 +680,10 @@ function encrypt.new_window(title_text)
 					button.Text = ""
 					button.TextColor3 = Color3.fromRGB(255, 255, 255)
 					button.TextSize = 12.000
-					
+
 					UICorner.CornerRadius = UDim.new(0, 2)
 					UICorner.Parent = button
-					
+
 					fill.Name = "fill"
 					fill.Parent = button
 					fill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -692,10 +692,10 @@ function encrypt.new_window(title_text)
 					fill.BorderSizePixel = 0
 					fill.Size = UDim2.new(0.282352954, 0, 1, 0)
 					fill.ZIndex = 2
-					
+
 					UICorner_2.CornerRadius = UDim.new(0, 2)
 					UICorner_2.Parent = fill
-					
+
 					label.Name = "label"
 					label.Parent = button
 					label.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -712,7 +712,7 @@ function encrypt.new_window(title_text)
 					label.TextSize = 11.000
 					label.TextStrokeTransparency = 0.500
 					label.TextWrapped = true
-					
+
 					UIPadding.Parent = slider_frame
 					UIPadding.PaddingLeft = UDim.new(0, 5)
 					UIPadding.PaddingRight = UDim.new(0, 5)
@@ -723,45 +723,45 @@ function encrypt.new_window(title_text)
 					local ti = TweenInfo
 					local es = Enum.EasingStyle
 					local ed = Enum.EasingDirection
-					
+
 					--> Values
 					local min = min_value
 					local max = max_value
 					slider.value = default_value
-					
+
 					--> Variables
 					local plr = game.Players.LocalPlayer
 					local mouse = plr:GetMouse()
-					
+
 					local fill = button.fill
 					fill.Size = UDim2.new((slider.value - min) / (max - min), 0, 1, 0)
-					
+
 					local text = 'slider'
 					local label = button.label
-					
+
 					local mouse_down = false
 					local mouse_on = false
-					
+
 					--> Functions
 					local function tween(instance, info, property, value)
 						ts:Create(instance, info, {[property] = value}):Play()
 					end
-					
+
 					--> Connections
 					button.MouseButton1Up:Connect(function() mouse_down = false label.Text = text end)
 					button.MouseEnter:Connect(function() mouse_on = true end)
 					button.MouseLeave:Connect(function() mouse_on = false end)
-					
+
 					button.MouseButton1Down:Connect(function()
 						mouse_down = true
 						tween(fill, ti.new(.25, es.Linear, ed.InOut), 'BackgroundTransparency', 0)
 						local mouse_x = math.clamp(mouse.X - button.AbsolutePosition.X, min, button.AbsoluteSize.X)
 						if allow_decimals then
-							slider.value = (math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max)
-						else
+							slider.value = (math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
+						elseif not allow_decimals then
 							slider.value = math.floor(math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
 						end
-						
+
 						-- tween(fill, ti.new(.25, es.Quad, ed.InOut), 'Size', UDim2.new((slider.value - min) / (max - min), 0, 1, 0))
 						fill.Size = UDim2.new((slider.value - min) / (max - min), 0, 1, 0)
 						label.Text = tostring(slider.value):sub(1,4)
@@ -771,13 +771,13 @@ function encrypt.new_window(title_text)
 
 						if err then warn('err') end
 					end)
-					
+
 					mouse.Move:Connect(function()
 						if mouse_down then	
 							local mouse_x = math.clamp(mouse.X - button.AbsolutePosition.X, min, button.AbsoluteSize.X)
 							if allow_decimals then
-								slider.value = (math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max)
-							else
+								slider.value = (math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
+							elseif not allow_decimals then
 								slider.value = math.floor(math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
 							end
 
@@ -787,11 +787,11 @@ function encrypt.new_window(title_text)
 							local s, err = pcall(function()
 								callback()
 							end)
-	
+
 							if err then warn('err') end
 						end
 					end)
-					
+
 					input_service.InputEnded:Connect(function(input)
 						if input.UserInputType == Enum.UserInputType.MouseButton1 then
 							mouse_down = false
