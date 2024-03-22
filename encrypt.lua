@@ -12,7 +12,7 @@
 ]]--
 
 local encrypt = {}
-encrypt.version = 'v1.3.8'
+encrypt.version = 'v1.3.9'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -630,17 +630,19 @@ function encrypt.new_window(title_text)
 					button.MouseButton1Click:Connect(function()
 						editing = true
 						button.Text = '...'
-						print('clicked')
+						print('editing...')
 					end)
 
 					input_service.InputBegan:Connect(function(input)
-						if typing then return warn('typing; returned') end
-						if editing and not typing then
+						local focused = input_service:GetFocusedTextBox()
+						if focused then return warn('focusing on a textbox, cant activate...') end
+
+						if editing then
 							keybind.key = tostring(input.KeyCode):gsub('Enum.KeyCode.', '')
 							button.Text = keybind.key
 
 							editing = false
-						elseif input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] and not typing then
+						elseif input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] then
 							callback()
 						end
 					end)
