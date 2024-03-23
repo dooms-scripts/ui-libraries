@@ -10,7 +10,7 @@
     		> doom#1000
 ]]--
 
-local encrypt_notification_lib = {}
+local encrypt_notification_lib = { loaded = true }
 
 --> Services
 local players = game:GetService('Players')
@@ -18,33 +18,43 @@ local ts = game:GetService('TweenService')
 local ti = TweenInfo
 
 --> Variables
-local encrypted_name = Instance.new("ScreenGui")
-local notification_container = Instance.new("Frame")
-local list_layout = Instance.new("UIListLayout")
-local padding = Instance.new("UIPadding")
+local encrypted_name = nil
+local notification_container = nil
 
-
-notification_container.Parent = encrypted_name
-notification_container.AnchorPoint = Vector2.new(0.5, 1)
-notification_container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-notification_container.BackgroundTransparency = 1.000
-notification_container.BorderColor3 = Color3.fromRGB(0, 0, 0)
-notification_container.BorderSizePixel = 0
-notification_container.Position = UDim2.new(0.5, 0, 0.85, 0)
-notification_container.Size = UDim2.new(0, 400, 0, 200)
-
-list_layout.Parent = notification_container
-list_layout.SortOrder = Enum.SortOrder.LayoutOrder
-list_layout.VerticalAlignment = Enum.VerticalAlignment.Bottom
-
-padding.Parent = notification_container
-padding.PaddingBottom = UDim.new(0, 4)
-padding.PaddingLeft = UDim.new(0, 4)
+if game.CoreGui:FindFirstChild('encrypt_notifications') then
+	encrypted_name = game.CoreGui['encrypt_notifications']
+	notification_container = game.CoreGui['encrypt_notifications']['Frame']
+else
+	encrypted_name = Instance.new("ScreenGui")
+	notification_container = Instance.new("Frame")
+	
+	local list_layout = Instance.new("UIListLayout")
+	local padding = Instance.new("UIPadding")
+	
+	
+	notification_container.Parent = encrypted_name
+	notification_container.AnchorPoint = Vector2.new(0.5, 1)
+	notification_container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	notification_container.BackgroundTransparency = 1.000
+	notification_container.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	notification_container.BorderSizePixel = 0
+	notification_container.Position = UDim2.new(0.5, 0, 0.85, 0)
+	notification_container.Size = UDim2.new(0, 400, 0, 200)
+	
+	list_layout.Parent = notification_container
+	list_layout.SortOrder = Enum.SortOrder.LayoutOrder
+	list_layout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+	
+	padding.Parent = notification_container
+	padding.PaddingBottom = UDim.new(0, 4)
+	padding.PaddingLeft = UDim.new(0, 4)
+end
 
 -- Functions
 local _,err = pcall(function()
 	encrypted_name.Parent = game.CoreGui
-	encrypted_name.Name = tostring('doom_'..math.random(10000000000,99999999999))
+	--encrypted_name.Name = tostring('doom_'..math.random(10000000000,99999999999))
+	encrypted_name.Name == 'encrypt_notifications'
 	encrypted_name.ResetOnSpawn = false
 end)
 
