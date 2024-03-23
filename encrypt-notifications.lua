@@ -54,7 +54,7 @@ end
 local _,err = pcall(function()
 	encrypted_name.Parent = game.CoreGui
 	--encrypted_name.Name = tostring('doom_'..math.random(10000000000,99999999999))
-	encrypted_name.Name == 'encrypt_notifications'
+	encrypted_name.Name = 'encrypt_notifications'
 	encrypted_name.ResetOnSpawn = false
 end)
 
