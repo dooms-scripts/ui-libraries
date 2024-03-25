@@ -12,7 +12,7 @@
 
 --> CONFIG <------------------------------------------------
 local encrypt = {
-	version = 'e1.4.5',
+	version = 'e1.4.6',
 	ui_object = nil,
 	font = 'Gotham',
 }
@@ -98,7 +98,7 @@ function encrypt.new_window(options)
 		BackgroundTransparency = 0,
 		BorderColor3 = Color3.fromRGB(0, 0, 0),
 		BorderSizePixel = 0,
-		Position = UDim2.new(0.5, 0, 1, 0),
+		Position = UDim2.new(0.5, 0, 0, 0),
 		Size = UDim2.new(1, 0, 0, 25),
 	})
 
