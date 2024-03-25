@@ -12,7 +12,7 @@
 
 --> CONFIG <------------------------------------------------
 local encrypt = {}
-encrypt.version = 'e1.4.2'
+encrypt.version = 'e1.4.3'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -697,7 +697,7 @@ function encrypt.new_window(title_text)
 							button.Text = keybind.key
 
 							keybind.editing = false
-						elseif input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] and keybind.key ~= '...' then
+						elseif keybind.key ~= '...' and input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] then
 							callback()
 						end
 					end)
