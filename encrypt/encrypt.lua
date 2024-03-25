@@ -12,7 +12,7 @@
 
 --> CONFIG <------------------------------------------------
 local encrypt = {
-	version = 'e1.4.4',
+	version = 'e1.4.5',
 	ui_object = nil,
 	font = 'Gotham',
 }
@@ -90,6 +90,18 @@ function encrypt.new_window(options)
 		Draggable = true,
 	})
 
+	local Topbar = encrypt.create('Frame', {
+		Name = "1Topbar1",
+		Parent = WindowFrame,
+		AnchorPoint = Vector2.new(0.5, 0),
+		BackgroundColor3 = encrypt.colors.topbar,
+		BackgroundTransparency = 0,
+		BorderColor3 = Color3.fromRGB(0, 0, 0),
+		BorderSizePixel = 0,
+		Position = UDim2.new(0.5, 0, 1, 0),
+		Size = UDim2.new(1, 0, 0, 25),
+	})
+
 	local Tabs = encrypt.create("Frame", {
 		Name = "Tabs",
 		Parent = WindowFrame,
@@ -100,18 +112,6 @@ function encrypt.new_window(options)
 		BorderSizePixel = 0,
 		Position = UDim2.new(0.5, 0, 1, 0),
 		Size = UDim2.new(1, 0, 0, 399),
-	})
-
-	local Topbar = encrypt.create('Frame', {
-		Name = "Topbar",
-		Parent = WindowFrame,
-		AnchorPoint = Vector2.new(0.5, 0),
-		BackgroundColor3 = encrypt.colors.topbar,
-		BackgroundTransparency = 0,
-		BorderColor3 = Color3.fromRGB(0, 0, 0),
-		BorderSizePixel = 0,
-		Position = UDim2.new(0.5, 0, 1, 0),
-		Size = UDim2.new(1, 0, 0, 25),
 	})
 
 	local ButtonHolder = encrypt.create('Frame', {
@@ -363,7 +363,8 @@ function encrypt.new_window(options)
 
 					function text_label.alignment(option)
 						local first_character = string.upper(option:sub(1,1))
-						label.TextXAlignment = Enum.TextXAlignment[first_character]
+						local rest = string.lower(option:sub(2,99))
+						label.TextXAlignment = Enum.TextXAlignment[first_character .. rest]
 					end
 
 					function text_label:get_text()
