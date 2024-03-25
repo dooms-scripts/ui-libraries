@@ -16,7 +16,7 @@ encrypt.version = 'e1.4.3'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
-warn('[#] ENCRYPT '..encrypt.version)
+warn('[🔃] ENCRYPT (%s): LOADING)
 
 --> SERVICES & ATTRIBUTES <---------------------------------
 local tween_service = game:GetService('TweenService')
@@ -836,7 +836,7 @@ function encrypt.new_window(title_text)
 
 					button.MouseButton1Down:Connect(function()
 						mouse_down = true
-						encrypt.tween(fill, tween_info.new(.25, easing_style, easing_direction.InOut), 'BackgroundTransparency', 0)
+						encrypt.tween(fill, tween_info.new(.25, easing_style.Linear, easing_direction.InOut), 'BackgroundTransparency', 0)
 						local mouse_x = math.clamp(mouse.X - button.AbsolutePosition.X, min, button.AbsoluteSize.X)
 						if allow_decimals then
 							slider.value = (math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
