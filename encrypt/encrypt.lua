@@ -12,7 +12,7 @@
 
 --> CONFIG <------------------------------------------------
 local encrypt = {
-	version = 'e1.4.2',
+	version = 'e1.4.3',
 	ui_object = nil,
 	font = 'Gotham',
 }
@@ -67,8 +67,8 @@ if err then  warn('[⚠️] ENCRYPT > LIBRARY ERROR: ' ..tostring(err)) end
 --> CREATE UI <---------------------------------------------
 function encrypt.new_window(options)
 	default = {
-		title_text = 'encrypt // '..encrypt.version
-		size = UDim2.new(0, 380, 0, 425)
+		title_text = 'encrypt // '..encrypt.versionm
+		size = UDim2.new(0, 380, 0, 425)m
 	}
 	
 	local options = options or default
