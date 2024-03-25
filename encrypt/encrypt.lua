@@ -12,7 +12,7 @@
 
 --> CONFIG <------------------------------------------------
 local encrypt = {
-	version = 'e1.4.3',
+	version = 'e1.4.4',
 	ui_object = nil,
 	font = 'Gotham',
 }
@@ -44,7 +44,7 @@ function encrypt.create(instance, properties)
 
 		if err then warn('[⚠️] ENCRYPT > PROBLEM CREATING INSTANCE "'..tostring(instance)..'": '..err) end
 	end
-	
+
 	return i
 end
 
@@ -66,15 +66,15 @@ if err then  warn('[⚠️] ENCRYPT > LIBRARY ERROR: ' ..tostring(err)) end
 
 --> CREATE UI <---------------------------------------------
 function encrypt.new_window(options)
-	default = {
-		title_text = 'encrypt // '..encrypt.versionm
-		size = UDim2.new(0, 380, 0, 425)m
+	local default = {
+		title_text = 'encrypt // '..encrypt.version,
+		size = UDim2.new(0, 380, 0, 425),
 	}
-	
+
 	local options = options or default
 	local title_text = options.title_text or default.title_text
 	local size = options.size or default.size
-	
+
 	local window = {}
 
 	-- Creating UI
@@ -101,11 +101,11 @@ function encrypt.new_window(options)
 		Position = UDim2.new(0.5, 0, 1, 0),
 		Size = UDim2.new(1, 0, 0, 399),
 	})
-	
+
 	local Topbar = encrypt.create('Frame', {
 		Name = "Topbar",
 		Parent = WindowFrame,
-		AnchorPoint = Vector2.new(0.5, 0)
+		AnchorPoint = Vector2.new(0.5, 0),
 		BackgroundColor3 = encrypt.colors.topbar,
 		BackgroundTransparency = 0,
 		BorderColor3 = Color3.fromRGB(0, 0, 0),
@@ -134,7 +134,7 @@ function encrypt.new_window(options)
 		Position = UDim2.new(0.5, 0, 1, 0),
 		Size = UDim2.new(1, 0, 0, 1),
 	})
-	
+
 	local TitleText = encrypt.create('TextLabel', {
 		Name = "TitleText",
 		Parent = ButtonHolder,
@@ -149,7 +149,7 @@ function encrypt.new_window(options)
 		TextSize = 12.000,
 		TextXAlignment = Enum.TextXAlignment.Left,
 	})
-	
+
 	encrypt.create('ImageLabel', {
 		Parent = WindowFrame,
 		AnchorPoint = Vector2.new(0, 1),
@@ -163,7 +163,7 @@ function encrypt.new_window(options)
 		ImageColor3 = Color3.fromRGB(10, 10, 10),
 		ZIndex = 99,
 	})
-	
+
 	encrypt.create('UIListLayout', {
 		Parent = ButtonHolder,
 		FillDirection = Enum.FillDirection.Horizontal,
@@ -183,7 +183,7 @@ function encrypt.new_window(options)
 	-- Functions
 	function window.new_tab(tab_name)
 		local tab = {}
-		
+
 		local TabFrame = encrypt.create('Frame', {
 			Name = tab_name,
 			Parent = Tabs,
@@ -196,7 +196,7 @@ function encrypt.new_window(options)
 			Visible = false,
 			Size = UDim2.new(1, 0, 1, 0),
 		})
-		
+
 		local TabButton = encrypt.create('TextButton', {
 			Parent = ButtonHolder,
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
@@ -211,7 +211,7 @@ function encrypt.new_window(options)
 			TextSize = 12.000,
 			TextWrapped = true,
 		})
-		
+
 		local UIListLayout = encrypt.create('UIListLayout', {
 			Parent = TabFrame,
 			FillDirection = Enum.FillDirection.Horizontal,
@@ -252,7 +252,7 @@ function encrypt.new_window(options)
 				BottomImage = "http://www.roblox.com/asset/?id=16748002234",
 				MidImage = "rbxassetid://1510273450",
 			})
-			
+
 			encrypt.create('UIListLayout', {
 				Parent = ContentHolder, 
 				SortOrder = Enum.SortOrder.Name, 
@@ -264,7 +264,7 @@ function encrypt.new_window(options)
 
 			function group.new_category(title_text)
 				local category = {}
-				
+
 				group.categoryCount += 1
 				category.label_count = 0
 				category.button_count = 0
@@ -283,7 +283,7 @@ function encrypt.new_window(options)
 					BorderSizePixel = 0,
 					Size = UDim2.new(0, 170, 0, 24),
 				})
-				
+
 				local TitleText = encrypt.create('TextLabel', {
 					Name = "TitleText",
 					Parent = CategoryFrame,
@@ -298,12 +298,12 @@ function encrypt.new_window(options)
 					TextColor3 = Color3.fromRGB(255, 255, 255),
 					TextSize = 14.000,
 				})
-				
+
 				encrypt.create('UICorner', {
 					CornerRadius = UDim.new(0, 4),
 					Parent = CategoryFrame,
 				})
-				
+
 				encrypt.create('UIListLayout', {
 					Parent = CategoryFrame,
 					SortOrder = Enum.SortOrder.LayoutOrder,
@@ -314,14 +314,14 @@ function encrypt.new_window(options)
 				-- Functions
 				function category.new_label(options)
 					category.label_count += 1
-					
+
 					local default = {
 						text = 'label'
 					}
-					
+
 					local options = options or default
 					local text = options.text or default.text
-						
+
 					local text_label = {}
 
 					--> Creating UI
@@ -335,7 +335,7 @@ function encrypt.new_window(options)
 						Position = UDim2.new(0, 0, 0.13333334, 0),
 						Size = UDim2.new(0, 170, 0, 20),
 					})
-					
+
 					local label = encrypt.create('TextLabel', {
 						Name = "TextLabel",
 						Parent = container,
@@ -381,7 +381,7 @@ function encrypt.new_window(options)
 
 				function category.new_toggle(options)
 					category.toggle_count += 1
-					
+
 					local default = {
 						text = 'toggle',
 						yield = false,
@@ -394,7 +394,7 @@ function encrypt.new_window(options)
 					local text       = options.text or default.text
 					local yield      = options.yield or default.yield
 					local callback   = options.callback or default.callback
-					
+
 					local toggle = { value = false }
 
 					-- Creating UI
@@ -408,7 +408,7 @@ function encrypt.new_window(options)
 						Position = UDim2.new(0, 0, 0.13333334, 0),
 						Size = UDim2.new(0, 170, 0, 20),
 					})
-					
+
 					local label = encrypt.create('TextLabel', {
 						Name = "text",
 						Parent = container,
@@ -424,7 +424,7 @@ function encrypt.new_window(options)
 						TextSize = 12.000,
 						TextXAlignment = Enum.TextXAlignment.Left,
 					})
-					
+
 					local button = encrypt.create('TextButton', {
 						Name = "button",
 						Parent = container,
@@ -440,7 +440,7 @@ function encrypt.new_window(options)
 						TextColor3 = Color3.fromRGB(0, 0, 0),
 						TextSize = 14.000,
 					})
-					
+
 					encrypt.create('UICorner', {
 						CornerRadius = UDim.new(0, 2),
 						Parent = button,
@@ -489,18 +489,18 @@ function encrypt.new_window(options)
 
 				function category.new_button(options)
 					category.button_count += 1
-					
+
 					local default = {
 						text = 'button',
 						callback = function()
 							warn(string.format('[❗] Button %d > no callback set.', category.button_count))
 						end,
 					}
-					
+
 					local options = options or default
 					local text		 = options.text or default.text
 					local callback	 = options.callback or default.callback
-					
+
 					local text_button = {}
 
 					-- Creating UI
@@ -514,7 +514,7 @@ function encrypt.new_window(options)
 						Position = UDim2.new(0, 0, 0.13333334, 0),
 						Size = UDim2.new(0, 170, 0, 20),
 					})
-					
+
 					local button = encrypt.create('TextButton', {
 						Name = "button",
 						Parent = container,
@@ -530,7 +530,7 @@ function encrypt.new_window(options)
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 					})
-					
+
 					encrypt.create('UICorner', {
 						CornerRadius = UDim.new(0, 2),
 						Parent = button,
@@ -553,7 +553,7 @@ function encrypt.new_window(options)
 
 				function category.new_textbox(options)
 					category.textbox_count += 1
-					
+
 					local default = {
 						text = 'button',
 						placeholder_text = '...',
@@ -561,14 +561,14 @@ function encrypt.new_window(options)
 							warn(string.format('[❗] Textbox %d > no callback set.', category.textbox_count))
 						end,
 					}
-					
+
 					local options		   = options or default
 					local text	           = options.text
 					local placeholder_text     = options.placeholder_text or default.placeholder_text
 					local callback		   = options.callback or default.callback
 
 					local text_box = { text = text }
-					
+
 					local container = encrypt.create('Frame', {
 						Name = "TextBox",
 						Parent = CategoryFrame,
@@ -579,7 +579,7 @@ function encrypt.new_window(options)
 						Position = UDim2.new(0, 0, 0.13333334, 0),
 						Size = UDim2.new(0, 170, 0, 20),
 					})
-					
+
 					local label = encrypt.create('TextLabel', {
 						Name = "text",
 						Parent = container,
@@ -595,7 +595,7 @@ function encrypt.new_window(options)
 						TextSize = 12.000,
 						TextXAlignment = Enum.TextXAlignment.Left,
 					})
-					
+
 					local textbox = encrypt.create('TextBox', {
 						Name = "input",
 						Parent = container,
@@ -640,7 +640,7 @@ function encrypt.new_window(options)
 
 				function category.new_keybind(options)
 					category.keybind_count += 1
-					
+
 					local default = {
 						text = 'keybind',
 						keybind = '...',
@@ -648,14 +648,14 @@ function encrypt.new_window(options)
 							warn(string.format('[❗] Keybind %d > no callback set.', category.keybind_count))
 						end,
 					}
-					
+
 					local options  = options or default
 					local text	   = options.text or default.text
 					local key	   = options.keybind or default.keybind
 					local callback = options.callback or default.callback
 
 					local keybind = { text = text, key = key, editing = false }
-					
+
 					local container = encrypt.create('Frame', {
 						Name = "keybind",
 						Parent = CategoryFrame,
@@ -666,7 +666,7 @@ function encrypt.new_window(options)
 						Position = UDim2.new(0, 0, 0.13333334, 0),
 						Size = UDim2.new(0, 170, 0, 20),
 					})
-					
+
 					local label = encrypt.create('TextLabel', {
 						Name = "text",
 						Parent = container,
@@ -682,7 +682,7 @@ function encrypt.new_window(options)
 						TextSize = 12.000,
 						TextXAlignment = Enum.TextXAlignment.Left,
 					})
-					
+
 					local button = encrypt.create('TextButton', {
 						Name = "button",
 						Parent = container,
@@ -700,7 +700,7 @@ function encrypt.new_window(options)
 						TextSize = 15.000,
 						TextWrapped = true,
 					})
-					
+
 					encrypt.create('UICorner', {
 						CornerRadius = UDim.new(0, 2),
 						Parent = button,
@@ -729,7 +729,7 @@ function encrypt.new_window(options)
 							callback()
 						end
 					end)
-					
+
 					function keybind:get_value()
 						return keybind.key
 					end
@@ -755,7 +755,7 @@ function encrypt.new_window(options)
 							warn(string.format('[❗] Slider %d > no callback set.', category.slider_count))
 						end,
 					}
-					
+
 					local options		 = options or default
 					local text			 = options.text or default.text
 					local default_value	 = options.default_value or default.default_value
@@ -763,9 +763,9 @@ function encrypt.new_window(options)
 					local max_value		 = options.max_value or default.max_value
 					local allow_decimals = options.allow_decimals or default.allow_decimals
 					local callback		 = options.callback or default.callback
-					
+
 					local slider = { value = default_value }
-					
+
 					local container = encrypt.create('Frame', {
 						Name = "slider",
 						Parent = CategoryFrame,
@@ -776,7 +776,7 @@ function encrypt.new_window(options)
 						Position = UDim2.new(0, 0, 0.13333334, 0),
 						Size = UDim2.new(0, 170, 0, 20),
 					})
-					
+
 					local button = encrypt.create('TextButton', {
 						Name = "button",
 						Parent = container,
@@ -792,7 +792,7 @@ function encrypt.new_window(options)
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 					})
-					
+
 					local fill = encrypt.create('Frame', {
 						Name = "fill",
 						Parent = button,
@@ -803,7 +803,7 @@ function encrypt.new_window(options)
 						Size = UDim2.new(0.282352954, 0, 1, 0),
 						ZIndex = 2,
 					})
-					
+
 					local label = encrypt.create('TextLabel', {
 						Name = "label",
 						Parent = button,
@@ -822,17 +822,17 @@ function encrypt.new_window(options)
 						TextStrokeTransparency = 0.500,
 						TextWrapped = true,
 					})
-					
+
 					encrypt.create('UICorner', {
 						CornerRadius = UDim.new(0, 2),
 						Parent = button,
 					})
-					
+
 					encrypt.create('UICorner', {
 						CornerRadius = UDim.new(0, 2),
 						Parent = fill,
 					})
-					
+
 					encrypt.create('UIPadding', {
 						PaddingLeft = UDim.new(0, 5),
 						PaddingRight = UDim.new(0, 5),
@@ -856,7 +856,7 @@ function encrypt.new_window(options)
 
 					local mouse_down = false
 					local mouse_on = false
-						
+
 					--> Connections
 					button.MouseButton1Up:Connect(function() mouse_down = false label.Text = text end)
 					button.MouseEnter:Connect(function() mouse_on = true end)
