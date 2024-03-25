@@ -12,11 +12,11 @@
 
 --> CONFIG <------------------------------------------------
 local encrypt = {}
-encrypt.version = 'e1.4.3'
+encrypt.version = 'e1.4.4'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
-warn('[🔃] ENCRYPT (%s): LOADING)
+warn(string.format('[🔃] ENCRYPT (%s): LOADING'), encrypt.version)
 
 --> SERVICES & ATTRIBUTES <---------------------------------
 local tween_service = game:GetService('TweenService')
