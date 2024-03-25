@@ -11,10 +11,20 @@
 ]]--
 
 --> CONFIG <------------------------------------------------
-local encrypt = {}
-encrypt.version = 'e1.4.0'
-encrypt.color = Color3.fromRGB(255,255,255)
-encrypt.ui_object = nil
+local encrypt = {
+	version = 'e1.4.1',
+	ui_object = nil,
+	font = 'Gotham',
+	size =  UDim2.new(0, 380, 0, 425),
+}
+
+encrypt.colors = {
+	main_color = Color3.fromRGB(255, 255, 255),
+	foreground = Color3.fromRGB(23, 23, 23),
+	background = Color3.fromRGB(10, 10, 10),
+	categories = Color3.fromRGB(10, 10, 10),
+	topbar = Color3.fromRGB(10, 10, 10),
+}
 
 warn(string.format('[🔃] ENCRYPT (%s): LOADING', encrypt.version))
 
@@ -63,10 +73,10 @@ function encrypt.new_window(title_text)
 	local WindowFrame = encrypt.create('Frame', {
 		Name = "WindowFrame",
 		Parent = EncryptedName,
-		BackgroundColor3 = Color3.fromRGB(10, 10, 10),
+		BackgroundColor3 = encrypt.colors.background,
 		BorderColor3 = Color3.fromRGB(35, 35, 35),
 		Position = UDim2.new(0.711538434, 0, 0.436090231, 0),
-		Size = UDim2.new(0, 380, 0, 425),
+		Size = encrypt.size,
 		Active = true,
 		Selectable = true,
 		Draggable = true,
@@ -75,22 +85,24 @@ function encrypt.new_window(title_text)
 	local Tabs = encrypt.create("Frame", {
 		Name = "Tabs",
 		Parent = WindowFrame,
-		AnchorPoint = Vector2.new(0.5, 0),
+		AnchorPoint = Vector2.new(0.5, 1),
 		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 		BackgroundTransparency = 1.000,
 		BorderColor3 = Color3.fromRGB(0, 0, 0),
 		BorderSizePixel = 0,
-		Position = UDim2.new(0.5, 0, 0.075000003, 0),
-		Size = UDim2.new(0, 366, 0, 385),
+		Position = UDim2.new(0.5, 0, 1, 0),
+		Size = UDim2.new(1, 0, 0, 399),
 	})
 	
 	local Topbar = encrypt.create('Frame', {
 		Name = "Topbar",
 		Parent = WindowFrame,
-		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-		BackgroundTransparency = 1.000,
+		AnchorPoint = Vector2.new(0.5, 0)
+		BackgroundColor3 = encrypt.colors.topbar,
+		BackgroundTransparency = 0,
 		BorderColor3 = Color3.fromRGB(0, 0, 0),
 		BorderSizePixel = 0,
+		Position = UDim2.new(0.5, 0, 1, 0),
 		Size = UDim2.new(1, 0, 0, 25),
 	})
 
@@ -130,10 +142,10 @@ function encrypt.new_window(title_text)
 		TextXAlignment = Enum.TextXAlignment.Left,
 	})
 	
-	local Gradient = encrypt.create('ImageLabel', {
+	encrypt.create('ImageLabel', {
 		Parent = WindowFrame,
 		AnchorPoint = Vector2.new(0, 1),
-		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+		BackgroundColor3 = encrypt.colors.background,
 		BackgroundTransparency = 1.000,
 		BorderColor3 = Color3.fromRGB(0, 0, 0),
 		BorderSizePixel = 0,
@@ -144,10 +156,18 @@ function encrypt.new_window(title_text)
 		ZIndex = 99,
 	})
 	
-	local UIListLayout = encrypt.create('UIListLayout', {
+	encrypt.create('UIListLayout', {
 		Parent = ButtonHolder,
 		FillDirection = Enum.FillDirection.Horizontal,
 		SortOrder = Enum.SortOrder.LayoutOrder,
+	})
+
+	encrypt.create('UIPadding', {
+		Parent = Tabs,
+		PaddingBottom = UDim.new(0, 7),
+		PaddingRight = UDim.new(0, 7),
+		PaddingLeft = UDim.new(0, 7),
+		PaddingTop = UDim.new(0, 7),
 	})
 
 	TitleText.Size = UDim2.new(0, TitleText.TextBounds.X + 10, 1, 0)
@@ -199,7 +219,7 @@ function encrypt.new_window(title_text)
 			end
 			for _,b in ipairs(ButtonHolder:GetChildren()) do
 				if b:IsA('TextButton') then b.TextColor3 = Color3.fromRGB(100, 100, 100) end
-				TabButton.TextColor3 = encrypt.color
+				TabButton.TextColor3 = encrypt.colors.main_color
 			end
 		end)
 
@@ -249,9 +269,9 @@ function encrypt.new_window(title_text)
 				local CategoryFrame = encrypt.create('Frame', {
 					Parent = ContentHolder,
 					Name = tostring(group.categoryCount) .."CategoryFrame" ..tostring(group.categoryCount),
-					BackgroundColor3 = Color3.fromRGB(15, 15, 15),
+					BackgroundColor3 = encrypt.colors.categories,
 					BorderColor3 = Color3.fromRGB(0, 0, 0),
-					BackgroundTransparency = 1,
+					BackgroundTransparency = 0,
 					BorderSizePixel = 0,
 					Size = UDim2.new(0, 170, 0, 24),
 				})
@@ -319,7 +339,7 @@ function encrypt.new_window(title_text)
 						Size = UDim2.new(0, 165, 0, 20),
 						Font = Enum.Font.Gotham,
 						Text = text,
-						TextColor3 = encrypt.color,
+						TextColor3 = encrypt.colors.main_color,
 						TextSize = 12.000,
 						TextXAlignment = Enum.TextXAlignment.Left,
 						RichText = true,
@@ -362,10 +382,10 @@ function encrypt.new_window(title_text)
 						end,
 					}
 
-					local options	 = options or default
-					local text	 = options.text or default.text
-					local yield	 = options.yield or default.yield
-					local callback	 = options.callback or default.callback
+					local options    = options or default
+					local text       = options.text or default.text
+					local yield      = options.yield or default.yield
+					local callback   = options.callback or default.callback
 					
 					local toggle = { value = false }
 
@@ -401,7 +421,7 @@ function encrypt.new_window(title_text)
 						Name = "button",
 						Parent = container,
 						AnchorPoint = Vector2.new(0, 0.5),
-						BackgroundColor3 = Color3.fromRGB(23, 23, 23),
+						BackgroundColor3 = encrypt.colors.foreground,
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(0.875, 0, 0.5, 0),
@@ -425,15 +445,15 @@ function encrypt.new_window(title_text)
 					button.MouseButton1Click:Connect(function()
 						if yield then
 							toggle.value = true
-							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.color)
+							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
 							callback()
-							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', Color3.fromRGB(23, 23, 23))
+							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
 							toggle.value = false
 						elseif not yield then
 							callback()
 							toggle.value = not toggle.value
-							if toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.color)
-							elseif not toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', Color3.fromRGB(23, 23, 23)) end
+							if toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
+							elseif not toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground) end
 						end
 					end)
 
@@ -444,9 +464,9 @@ function encrypt.new_window(title_text)
 					function toggle:update_value(bool)
 						toggle.value = bool
 						if toggle.value then
-							tween_service:Create(button, tween_info.new(.15), { BackgroundColor3 = encrypt.color }):Play()
+							tween_service:Create(button, tween_info.new(.15), { BackgroundColor3 = encrypt.colors.main_color }):Play()
 						elseif not toggle.value then 
-							tween_service:Create(button, tween_info.new(.15), { BackgroundColor3 = Color3.fromRGB(23, 23, 23) }):Play()
+							tween_service:Create(button, tween_info.new(.15), { BackgroundColor3 = encrypt.colors.foreground }):Play()
 						end
 					end
 
@@ -491,7 +511,7 @@ function encrypt.new_window(title_text)
 						Name = "button",
 						Parent = container,
 						AnchorPoint = Vector2.new(0.5, 0.5),
-						BackgroundColor3 = Color3.fromRGB(23, 23, 23),
+						BackgroundColor3 = encrypt.colors.foreground,
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(0.5, 0, 0.5, 0),
@@ -572,7 +592,7 @@ function encrypt.new_window(title_text)
 						Name = "input",
 						Parent = container,
 						AnchorPoint = Vector2.new(0, 0.5),
-						BackgroundColor3 = Color3.fromRGB(23, 23, 23),
+						BackgroundColor3 = encrypt.colors.foreground,
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(0.616176486, 0, 0.5, 0),
@@ -659,7 +679,7 @@ function encrypt.new_window(title_text)
 						Name = "button",
 						Parent = container,
 						AnchorPoint = Vector2.new(0, 0.5),
-						BackgroundColor3 = Color3.fromRGB(23, 23, 23),
+						BackgroundColor3 = encrypt.colors.foreground,
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(0.875, 0, 0.5, 0),
@@ -753,7 +773,7 @@ function encrypt.new_window(title_text)
 						Name = "button",
 						Parent = container,
 						AnchorPoint = Vector2.new(0.5, 0.5),
-						BackgroundColor3 = Color3.fromRGB(23, 23, 23),
+						BackgroundColor3 = encrypt.colors.foreground,
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(0.5, 0, 0.5, 0),
