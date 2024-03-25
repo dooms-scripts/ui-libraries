@@ -12,7 +12,7 @@
 
 --> CONFIG <------------------------------------------------
 local encrypt = {}
-encrypt.version = 'e1.4.0'
+encrypt.version = 'e1.4.1'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -674,7 +674,7 @@ function encrypt.new_window(title_text)
 					})
 					
 					encrypt.create('UICorner', {
-						CornerRadius = UDim2.new(0, 2),
+						CornerRadius = UDim.new(0, 2),
 						Parent = button,
 					})
 
@@ -689,6 +689,8 @@ function encrypt.new_window(title_text)
 					end)
 
 					input_service.InputBegan:Connect(function(input)
+						if keybind.key == '...' then return end
+
 						local focused = input_service:GetFocusedTextBox()
 						if focused then return end
 
@@ -698,7 +700,6 @@ function encrypt.new_window(title_text)
 
 							keybind.editing = false
 						elseif input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] then
-							if keybind.key == '...' then return end
 							callback()
 						end
 					end)
@@ -797,12 +798,12 @@ function encrypt.new_window(title_text)
 					})
 					
 					encrypt.create('UICorner', {
-						CornerRadius = UDim2.new(0, 2),
+						CornerRadius = UDim.new(0, 2),
 						Parent = button,
 					})
 					
 					encrypt.create('UICorner', {
-						CornerRadius = UDim2.new(0, 2),
+						CornerRadius = UDim.new(0, 2),
 						Parent = fill,
 					})
 					
@@ -879,7 +880,7 @@ function encrypt.new_window(title_text)
 						if input.UserInputType == Enum.UserInputType.MouseButton1 then
 							mouse_down = false
 							label.Text = text
-							encrypt.tween(fill, tween_info.new(.25, easing_style, easing_direction.InOut), 'BackgroundTransparency', .75)
+							encrypt.tween(fill, tween_info.new(.25, easing_style.Linear, easing_direction.InOut), 'BackgroundTransparency', .75)
 						end
 					end)
 
