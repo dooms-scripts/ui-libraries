@@ -98,7 +98,7 @@ function encrypt.new_window(options)
 		BackgroundTransparency = 0,
 		BorderColor3 = Color3.fromRGB(0, 0, 0),
 		BorderSizePixel = 0,
-		Position = UDim2.new(0.5, 0, 0, 0),
+		Position = UDim2.new(0.5, 0, 1, 0),
 		Size = UDim2.new(1, 0, 0, 25),
 	})
 
@@ -623,11 +623,9 @@ function encrypt.new_window(options)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
 
 					-- Functions
-					textbox.Changed:Connect(function(property)
-						if property == 'Text' then
-							text_box.text = textbox.Text
-							callback(textbox.Text)
-						end
+					textbox.FocusLost:Connect(function()
+						text_box.text = textbox.Text
+						callback(textbox.Text)
 					end)
 
 					function text_box:delete()
