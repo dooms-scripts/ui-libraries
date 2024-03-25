@@ -342,13 +342,13 @@ function encrypt.new_window(title_text)
 						return label.Text
 					end
 
-					function label:delete() 
+					function text_label:delete() 
 						container:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
 					end
 
-					return label
+					return text_label
 				end
 
 				function category.new_toggle(options)
