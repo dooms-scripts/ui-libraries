@@ -12,7 +12,7 @@
 
 --> CONFIG <------------------------------------------------
 local encrypt = {}
-encrypt.version = 'e1.4.1'
+encrypt.version = 'e1.4.2'
 encrypt.color = Color3.fromRGB(255,255,255)
 encrypt.ui_object = nil
 
@@ -352,7 +352,7 @@ function encrypt.new_window(title_text)
 				end
 
 				function category.new_toggle(options)
-					category.toggle_count = 0
+					category.toggle_count += 1
 					
 					local default = {
 						text = 'toggle',
@@ -363,8 +363,8 @@ function encrypt.new_window(title_text)
 					}
 
 					local options	 = options or default
-					local text		 = options.text or default.text
-					local yield		 = options.yield or default.yield
+					local text	 = options.text or default.text
+					local yield	 = options.yield or default.yield
 					local callback	 = options.callback or default.callback
 					
 					local toggle = { value = false }
@@ -535,8 +535,8 @@ function encrypt.new_window(title_text)
 					}
 					
 					local options		   = options or default
-					local text			   = options.text
-					local placeholder_text = options.placeholder_text or default.placeholder_text
+					local text	           = options.text
+					local placeholder_text     = options.placeholder_text or default.placeholder_text
 					local callback		   = options.callback or default.callback
 
 					local text_box = { text = text }
@@ -689,8 +689,6 @@ function encrypt.new_window(title_text)
 					end)
 
 					input_service.InputBegan:Connect(function(input)
-						if keybind.key == '...' then return end
-
 						local focused = input_service:GetFocusedTextBox()
 						if focused then return end
 
@@ -699,7 +697,7 @@ function encrypt.new_window(title_text)
 							button.Text = keybind.key
 
 							keybind.editing = false
-						elseif input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] then
+						elseif input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] and keybind.key ~= '...' then
 							callback()
 						end
 					end)
@@ -723,7 +721,7 @@ function encrypt.new_window(title_text)
 						text = 'slider',
 						default_value = 0,
 						min_value = 1,
-						max_value = 1,
+						max_value = 100,
 						allow_decimals = false,
 						callback = function()
 							warn(string.format('[❗] Slider %d > no callback set.', category.slider_count))
