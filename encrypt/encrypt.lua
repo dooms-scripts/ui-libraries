@@ -12,10 +12,9 @@
 
 --> CONFIG <------------------------------------------------
 local encrypt = {
-	version = 'e1.4.1',
+	version = 'e1.4.2',
 	ui_object = nil,
 	font = 'Gotham',
-	size =  UDim2.new(0, 380, 0, 425),
 }
 
 encrypt.colors = {
@@ -66,7 +65,16 @@ local _,err = pcall(function() EncryptedName.Parent = game.CoreGui end)
 if err then  warn('[⚠️] ENCRYPT > LIBRARY ERROR: ' ..tostring(err)) end
 
 --> CREATE UI <---------------------------------------------
-function encrypt.new_window(title_text)
+function encrypt.new_window(options)
+	default = {
+		title_text = 'encrypt // '..encrypt.version
+		size = UDim2.new(0, 380, 0, 425)
+	}
+	
+	local options = options or default
+	local title_text = options.title_text or default.title_text
+	local size = options.size or default.size
+	
 	local window = {}
 
 	-- Creating UI
@@ -76,7 +84,7 @@ function encrypt.new_window(title_text)
 		BackgroundColor3 = encrypt.colors.background,
 		BorderColor3 = Color3.fromRGB(35, 35, 35),
 		Position = UDim2.new(0.711538434, 0, 0.436090231, 0),
-		Size = encrypt.size,
+		Size = size,
 		Active = true,
 		Selectable = true,
 		Draggable = true,
