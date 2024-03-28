@@ -455,11 +455,11 @@ function encrypt.new_window(options)
 						if yield then
 							toggle.value = true
 							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
-							callback()
+							callback(toggle.value)
 							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
 							toggle.value = false
 						elseif not yield then
-							callback()
+							callback(toggle.value)
 							toggle.value = not toggle.value
 							if toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
 							elseif not toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground) end
