@@ -242,7 +242,7 @@ function encrypt.new_window(options)
 			local ContentHolder = encrypt.create('ScrollingFrame', {
 				Parent = TabFrame,
 				Name = group_name,
-				Size = UDim2.new(0, 179, 0, 387),
+				Size = UDim2.new(0.5, -4, 1, 0),
 				Position = UDim2.new(0, 0, 0, 0),
 				CanvasSize = UDim2.new(0, 0, 0, 0),
 				Active = true,
