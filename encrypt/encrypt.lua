@@ -1166,8 +1166,6 @@ function encrypt.new_window(options)
 	return window
 end
 
-warn('[✔️] ENCRYPT UI LIBRARY: LOADED')
-
 function encrypt:exit()
 	EncryptedName:Destroy()
 
@@ -1188,6 +1186,10 @@ function encrypt:exit()
 	warn('[❌] ENCRYPT UI; CLOSED')
 end
 
-function encrypt:toggle() EncryptedName.Enabled = not EncryptedName.Enabled end
+function encrypt:toggle() 
+	EncryptedName.Enabled = not EncryptedName.Enabled 
+end
+
+warn('[✔️] ENCRYPT UI LIBRARY: LOADED')
 
 return encrypt
