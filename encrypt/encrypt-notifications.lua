@@ -1,16 +1,21 @@
 --[[
-						    __
-		  ___  ____  ____________  ______  / /_   
-		 / _ \/ __ \/ ___/ ___/ / / / __ \/ __/  
-		/  __/ / / / /__/ /  / /_/ / /_/ / /_  
-		\___/_/ /_/\___/_/   \__, / .___/\__/  
-				    /____/_/             
-    		---------------------------------------
-    		> notification library
-    		> doom#1000
+
+	    ###########  #####       #####  ##########  ##############  #####  #####  ##############  ################
+	   #####        ########    #####  #####       #####    #####  #####  #####  #####    #####        #####      
+	  ###########  #####  ###  #####  #####       ############    ############  ##############        #####       
+	 #####        #####    ########  #####       #####    #####         #####  #####                 #####        
+	###########  #####       #####  ##########  #####    #####  ############  #####                 #####         
+
+	::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+	# notification library
+	# doom#1000
+	
 ]]--
 
-local encrypt_notification_lib = { loaded = true }
+local encrypt_notification_lib = { 
+	loaded = false, 
+	padding = 0
+}
 
 --> Services
 local players = game:GetService('Players')
@@ -21,48 +26,79 @@ local ti = TweenInfo
 local encrypted_name = nil
 local notification_container = nil
 
-if game.CoreGui:FindFirstChild('encrypt_notifications') then
-	encrypted_name = game.CoreGui['encrypt_notifications']
-	notification_container = game.CoreGui['encrypt_notifications']['Frame']
-else
-	encrypted_name = Instance.new("ScreenGui")
-	notification_container = Instance.new("Frame")
+function encrypt_notification_lib.initialize()
+	local _,err = pcall(function()
+		if game.CoreGui:FindFirstChild('encrypt_notifications') then
+			encrypted_name = game.CoreGui['encrypt_notifications']
+			notification_container = game.CoreGui['encrypt_notifications']['Frame']
+		else
+			encrypted_name = Instance.new("ScreenGui")
+			notification_container = Instance.new("Frame")
+
+			local list_layout = Instance.new("UIListLayout")
+			local padding = Instance.new("UIPadding")
+
+			notification_container.Parent = encrypted_name
+			notification_container.AnchorPoint = Vector2.new(0.5, 0.5)
+			notification_container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			notification_container.BackgroundTransparency = 1.000
+			notification_container.BorderColor3 = Color3.fromRGB(0, 0, 0)
+			notification_container.BorderSizePixel = 0
+			notification_container.Position = UDim2.new(0.5, 0, 0.5, 0)
+			notification_container.Size = UDim2.new(1, 0, 1, 0)
+
+			list_layout.Parent = notification_container
+			list_layout.SortOrder = Enum.SortOrder.LayoutOrder
+			list_layout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+
+			padding.Parent = notification_container
+			padding.PaddingBottom = UDim.new(0, 4)
+			padding.PaddingLeft = UDim.new(0, 4)
+			padding.PaddingTop = UDim.new(0, encrypt_notification_lib.padding)
+			padding.PaddingBottom = UDim.new(0, encrypt_notification_lib.padding)
+
+			encrypted_name.Parent = game.CoreGui
+			encrypted_name.Name = 'encrypt_notifications'
+			encrypted_name.ResetOnSpawn = false
+		end
+	end)
 	
-	local list_layout = Instance.new("UIListLayout")
-	local padding = Instance.new("UIPadding")
-	
-	
-	notification_container.Parent = encrypted_name
-	notification_container.AnchorPoint = Vector2.new(0.5, 1)
-	notification_container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	notification_container.BackgroundTransparency = 1.000
-	notification_container.BorderColor3 = Color3.fromRGB(0, 0, 0)
-	notification_container.BorderSizePixel = 0
-	notification_container.Position = UDim2.new(0.5, 0, 0.85, 0)
-	notification_container.Size = UDim2.new(0, 400, 0, 200)
-	
-	list_layout.Parent = notification_container
-	list_layout.SortOrder = Enum.SortOrder.LayoutOrder
-	list_layout.VerticalAlignment = Enum.VerticalAlignment.Bottom
-	
-	padding.Parent = notification_container
-	padding.PaddingBottom = UDim.new(0, 4)
-	padding.PaddingLeft = UDim.new(0, 4)
+	if err then
+		encrypted_name = Instance.new("ScreenGui")
+		notification_container = Instance.new("Frame")
+
+		local list_layout = Instance.new("UIListLayout")
+		local padding = Instance.new("UIPadding")
+
+		notification_container.Parent = encrypted_name
+		notification_container.AnchorPoint = Vector2.new(0.5, 0.5)
+		notification_container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		notification_container.BackgroundTransparency = 1.000
+		notification_container.BorderColor3 = Color3.fromRGB(0, 0, 0)
+		notification_container.BorderSizePixel = 0
+		notification_container.Position = UDim2.new(0.5, 0, 0.5, 0)
+		notification_container.Size = UDim2.new(1, 0, 1, 0)
+
+		list_layout.Parent = notification_container
+		list_layout.SortOrder = Enum.SortOrder.LayoutOrder
+		list_layout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+
+		padding.Parent = notification_container
+		padding.PaddingBottom = UDim.new(0, 4)
+		padding.PaddingLeft = UDim.new(0, 4)
+		padding.PaddingTop = UDim.new(0, encrypt_notification_lib.padding)
+		padding.PaddingBottom = UDim.new(0, encrypt_notification_lib.padding)
+
+		encrypted_name.Parent = game:GetService('Players').LocalPlayer:WaitForChild('PlayerGui')
+		encrypted_name.Name = 'encrypt_notifications'
+		encrypted_name.ResetOnSpawn = false
+
+		warn('[⚠️] ENCRYPT LIBRARY ERROR: ' ..tostring(err))
+		encrypted_name.Parent = game:GetService('Players').LocalPlayer:WaitForChild('PlayerGui')
+	end
 end
 
 -- Functions
-local _,err = pcall(function()
-	encrypted_name.Parent = game.CoreGui
-	--encrypted_name.Name = tostring('doom_'..math.random(10000000000,99999999999))
-	encrypted_name.Name = 'encrypt_notifications'
-	encrypted_name.ResetOnSpawn = false
-end)
-
-if err then 
-	warn('⚠️ ENCRYPT LIBRARY ERROR: ' ..tostring(err))
-	encrypted_name.Parent = game:GetService('Players').LocalPlayer:WaitForChild('PlayerGui')
-end
-
 function tween(instance, info, property, value)
 	ts:Create(instance, info, { [property] = value }):Play()
 end
@@ -82,7 +118,7 @@ function encrypt_notification_lib.notify(text, duration)
 	notification.TextSize = 16.000
 	notification.TextStrokeTransparency = 0.750
 	notification.TextXAlignment = Enum.TextXAlignment.Center
-	
+
 	coroutine.wrap(function()
 		task.wait(duration)
 		--tween(notification, ti.new(.35, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), 'TextSize', 0)
@@ -92,6 +128,7 @@ function encrypt_notification_lib.notify(text, duration)
 	end)()
 end
 
-warn('✅ ENCRYPT NOTIFICATION LIBRARY: LOADED V1.0.1')
+warn('[✅] ENCRYPT NOTIFICATION LIBRARY: LOADED V1.0.1')
+encrypt_notification_lib.loaded = true
 
 return encrypt_notification_lib
