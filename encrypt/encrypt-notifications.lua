@@ -13,7 +13,7 @@
 ]]--
 
 local encrypt_notification_lib = { 
-	loaded = false, 
+	loaded = true, 
 	padding = 0
 }
 
