@@ -1,32 +1,39 @@
 --[[
-				   		    __
-		  ___  ____  ____________  ______  / /_   
-		 / _ \/ __ \/ ___/ ___/ / / / __ \/ __/  
-		/  __/ / / / /__/ /  / /_/ / /_/ / /_  
-		\___/_/ /_/\___/_/   \__, / .___/\__/  
-				    /____/_/             
-		---------------------------------------
-		> ui library
-		> doom#1000
+
+	    ###########  #####       #####  ##########  ##############  #####  #####  ##############  ################
+	   #####        ########    #####  #####       #####    #####  #####  #####  #####    #####        #####      
+	  ###########  #####  ###  #####  #####       ############    ############  ##############        #####       
+	 #####        #####    ########  #####       #####    #####         #####  #####                 #####        
+	###########  #####       #####  ##########  #####    #####  ############  #####                 #####         
+
+	::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+	> ui library
+	> doom#1000
+
 ]]--
 
 --> CONFIG <------------------------------------------------
 local encrypt = {
-	version = 'e1.4.7',
-	ui_object = nil,
+	version = 'e1.4.8',
 	font = 'Gotham',
-	threads = { 
-		keybinds = {},
-		toggles = {},
-	},
-}
+	ui_object = nil,
 
-encrypt.colors = {
-	main_color = Color3.fromRGB(255, 255, 255),
-	foreground = Color3.fromRGB(23, 23, 23),
-	background = Color3.fromRGB(10, 10, 10),
-	categories = Color3.fromRGB(10, 10, 10),
-	topbar = Color3.fromRGB(10, 10, 10),
+	threads = { 
+		dropdowns = {},
+		keybinds = {},
+		textbox = {},
+		toggles = {},
+		buttons = {},
+		sliders = {},
+	},
+
+	colors = {
+		main_color = Color3.fromRGB(255, 255, 255),
+		foreground = Color3.fromRGB(23, 23, 23),
+		background = Color3.fromRGB(10, 10, 10),
+		categories = Color3.fromRGB(10, 10, 10),
+		topbar = Color3.fromRGB(10, 10, 10),
+	},
 }
 
 warn(string.format('[🔃] ENCRYPT (%s): LOADING', encrypt.version))
@@ -115,7 +122,7 @@ function encrypt.new_window(options)
 		BorderColor3 = Color3.fromRGB(0, 0, 0),
 		BorderSizePixel = 0,
 		Position = UDim2.new(0.5, 0, 1, 0),
-		Size = UDim2.new(1, 0, 0, 399),
+		Size = UDim2.new(1, 0, 1, -25),
 	})
 
 	local ButtonHolder = encrypt.create('Frame', {
@@ -263,6 +270,11 @@ function encrypt.new_window(options)
 				Padding = UDim.new(0, 4)
 			})
 
+			encrypt.create('UIPadding', {
+				Parent = ContentHolder,
+				PaddingRight = UDim.new(0, 8)
+			})
+
 			-- Functions
 			group.categoryCount = 0
 
@@ -276,6 +288,7 @@ function encrypt.new_window(options)
 				category.slider_count = 0
 				category.keybind_count = 0
 				category.textbox_count = 0
+				category.dropdown_count = 0
 
 				-- Creating UI
 				local CategoryFrame = encrypt.create('Frame', {
@@ -285,7 +298,7 @@ function encrypt.new_window(options)
 					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BackgroundTransparency = 0,
 					BorderSizePixel = 0,
-					Size = UDim2.new(0, 170, 0, 24),
+					Size = UDim2.new(1, 0, 0, 44),
 				})
 
 				local TitleText = encrypt.create('TextLabel', {
@@ -311,6 +324,12 @@ function encrypt.new_window(options)
 				encrypt.create('UIListLayout', {
 					Parent = CategoryFrame,
 					SortOrder = Enum.SortOrder.LayoutOrder,
+				})
+				
+				encrypt.create('UIPadding', {
+					Parent = CategoryFrame,
+					PaddingLeft = UDim.new(0, 6),
+					PaddingRight = UDim.new(0, 6),
 				})
 
 				ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 28)
@@ -348,7 +367,7 @@ function encrypt.new_window(options)
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(0.0294117648, 0, 0, 0),
-						Size = UDim2.new(0, 165, 0, 20),
+						Size = UDim2.new(1, 0, 0, 20),
 						Font = Enum.Font.Gotham,
 						Text = text,
 						TextColor3 = encrypt.colors.main_color,
@@ -411,7 +430,7 @@ function encrypt.new_window(options)
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(0, 0, 0.13333334, 0),
-						Size = UDim2.new(0, 170, 0, 20),
+						Size = UDim2.new(1, 0, 0, 20),
 					})
 
 					local label = encrypt.create('TextLabel', {
@@ -421,8 +440,9 @@ function encrypt.new_window(options)
 						BackgroundTransparency = 1.000,
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
-						Position = UDim2.new(0.0294117648, 0, 0, 0),
-						Size = UDim2.new(0, 165, 0, 20),
+						AnchorPoint = Vector2.new(0, 0.5),
+						Position = UDim2.new(0, 0, 0.5, 0),
+						Size = UDim2.new(1, 0, 0, 20),
 						Font = Enum.Font.Gotham,
 						Text = text,
 						TextColor3 = Color3.fromRGB(255, 255, 255),
@@ -433,12 +453,12 @@ function encrypt.new_window(options)
 					local button = encrypt.create('TextButton', {
 						Name = "button",
 						Parent = container,
-						AnchorPoint = Vector2.new(0, 0.5),
+						AnchorPoint = Vector2.new(1, 0.5),
 						BackgroundColor3 = encrypt.colors.foreground,
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
-						Position = UDim2.new(0.875, 0, 0.5, 0),
-						Size = UDim2.new(0, 16, 0,16),
+						Position = UDim2.new(1, 0, 0.5, 0),
+						Size = UDim2.new(0, 16, 0, 16),
 						AutoButtonColor = false,
 						Font = Enum.Font.SourceSans,
 						Text = "",
@@ -455,21 +475,30 @@ function encrypt.new_window(options)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
 
 					-- Functions
-					encrypt.threads.toggles[category.toggle_count] = task.spawn(function()
-						button.MouseButton1Click:Connect(function()
-							if yield then
-								toggle.value = true
-								encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
+					local call = nil
+					
+					encrypt.threads.toggles[category.toggle_count] = button.MouseButton1Click:Connect(function()
+						if yield then
+							toggle.value = true
+							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
+							call = coroutine.create(function()
 								callback(toggle.value)
-								encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
-								toggle.value = false
-							elseif not yield then
-								callback(toggle.value)
+							end)
+							
+							coroutine.resume(call)
+						
+							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
+							toggle.value = false
+						elseif not yield then
+							--encrypt.threads.toggles[category.toggle_count] = task.spawn(function()
 								toggle.value = not toggle.value
 								if toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
-								elseif not toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground) end
+								callback(toggle.value)
+							elseif not toggle.value then 
+								encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
+								callback(toggle.value)
 							end
-						end)
+						end
 					end)
 
 					function toggle:get_value()
@@ -519,7 +548,7 @@ function encrypt.new_window(options)
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(0, 0, 0.13333334, 0),
-						Size = UDim2.new(0, 170, 0, 20),
+						Size = UDim2.new(1, 0, 0, 20),
 					})
 
 					local button = encrypt.create('TextButton', {
@@ -530,7 +559,7 @@ function encrypt.new_window(options)
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(0.5, 0, 0.5, 0),
-						Size = UDim2.new(0, 160, 0, 16),
+						Size = UDim2.new(1, 0, 0, 16),
 						AutoButtonColor = true,
 						Font = Enum.Font.Gotham,
 						Text = text,
@@ -584,7 +613,7 @@ function encrypt.new_window(options)
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(0, 0, 0.13333334, 0),
-						Size = UDim2.new(0, 170, 0, 20),
+						Size = UDim2.new(1, 0, 0, 20),
 					})
 
 					local label = encrypt.create('TextLabel', {
@@ -594,7 +623,7 @@ function encrypt.new_window(options)
 						BackgroundTransparency = 1.000,
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
-						Position = UDim2.new(0.0294117648, 0, 0, 0),
+						Position = UDim2.new(0, 0, 0, 0),
 						Size = UDim2.new(0, 93, 0, 20),
 						Font = Enum.Font.Gotham,
 						Text = text,
@@ -606,11 +635,11 @@ function encrypt.new_window(options)
 					local textbox = encrypt.create('TextBox', {
 						Name = "input",
 						Parent = container,
-						AnchorPoint = Vector2.new(0, 0.5),
+						AnchorPoint = Vector2.new(1, 0.5),
 						BackgroundColor3 = encrypt.colors.foreground,
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
-						Position = UDim2.new(0.616176486, 0, 0.5, 0),
+						Position = UDim2.new(1, 0, 0.5, 0),
 						Size = UDim2.new(0, 60, 0, 16),
 						Font = Enum.Font.Gotham,
 						PlaceholderText = placeholder_text,
@@ -653,6 +682,7 @@ function encrypt.new_window(options)
 							warn(string.format('[❗] Keybind %d > no callback set.', category.keybind_count))
 						end,
 					}
+					
 
 					local options  = options or default
 					local text	   = options.text or default.text
@@ -669,7 +699,7 @@ function encrypt.new_window(options)
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(0, 0, 0.13333334, 0),
-						Size = UDim2.new(0, 170, 0, 20),
+						Size = UDim2.new(1, 0, 0, 20),
 					})
 
 					local label = encrypt.create('TextLabel', {
@@ -679,7 +709,7 @@ function encrypt.new_window(options)
 						BackgroundTransparency = 1.000,
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
-						Position = UDim2.new(0.0289999992, 0, 0, 0),
+						Position = UDim2.new(0, 0, 0, 0),
 						Size = UDim2.new(0, 140, 0, 20),
 						Font = Enum.Font.Gotham,
 						Text = text,
@@ -691,11 +721,11 @@ function encrypt.new_window(options)
 					local button = encrypt.create('TextButton', {
 						Name = "button",
 						Parent = container,
-						AnchorPoint = Vector2.new(0, 0.5),
+						AnchorPoint = Vector2.new(1, 0.5),
 						BackgroundColor3 = encrypt.colors.foreground,
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
-						Position = UDim2.new(0.875, 0, 0.5, 0),
+						Position = UDim2.new(1, 0, 0.5, 0),
 						Size = UDim2.new(0, 16, 0,16),
 						ZIndex = 2,
 						AutoButtonColor = false,
@@ -720,22 +750,23 @@ function encrypt.new_window(options)
 						button.Text = '...'
 						print('editing...')
 					end)
-
-					encrypt.threads.keybinds[category.keybind_count] = task.spawn(function()
-						input_service.InputBegan:Connect(function(input)
+					
+					local thread = nil
+					coroutine.wrap(function()	
+						encrypt.threads.keybinds[category.keybind_count] = input_service.InputBegan:Connect(function(input)
 							local focused = input_service:GetFocusedTextBox()
 							if focused then return end
-	
+
 							if keybind.editing then
 								keybind.key = tostring(input.KeyCode):gsub('Enum.KeyCode.', '')
 								button.Text = keybind.key
-	
+
 								keybind.editing = false
 							elseif keybind.key ~= '...' and input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] then
 								callback()
 							end
 						end)
-					end)
+					end)()
 
 					function keybind:get_value()
 						return keybind.key
@@ -745,6 +776,10 @@ function encrypt.new_window(options)
 						container:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
+					end
+					
+					function keybind:close_thread()
+						thread:Disconnect()
 					end
 
 					return keybind
@@ -781,7 +816,7 @@ function encrypt.new_window(options)
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(0, 0, 0.13333334, 0),
-						Size = UDim2.new(0, 170, 0, 20),
+						Size = UDim2.new(1, 0, 0, 20),
 					})
 
 					local button = encrypt.create('TextButton', {
@@ -807,7 +842,7 @@ function encrypt.new_window(options)
 						BackgroundTransparency = 0.750,
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
-						Size = UDim2.new(0.282352954, 0, 1, 0),
+						Size = UDim2.new(0, 0, 1, 0),
 						ZIndex = 2,
 					})
 
@@ -840,11 +875,14 @@ function encrypt.new_window(options)
 						Parent = fill,
 					})
 
-					encrypt.create('UIPadding', {
-						PaddingLeft = UDim.new(0, 5),
-						PaddingRight = UDim.new(0, 5),
-						Parent = container
-					})
+					--encrypt.create('UIPadding', {
+					--	PaddingLeft = UDim.new(0, 5),
+					--	PaddingRight = UDim.new(0, 5),
+					--	Parent = container
+					--})
+					
+					CategoryFrame.Size += UDim2.new(0, 0, 0, 20)
+					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
 
 					--> Values
 					local min = min_value
@@ -902,7 +940,7 @@ function encrypt.new_window(options)
 							fill.Size = UDim2.new((slider.value - min) / (max - min), 0, 1, 0)
 							label.Text = tostring(slider.value):sub(1,4)
 							local s, err = pcall(function()
-								callback()
+								callback(slider.value)
 							end)
 
 							if err then warn('err') end
@@ -919,11 +957,203 @@ function encrypt.new_window(options)
 
 					function slider:delete()
 						container:destroy()
+						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
+						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
 					end
 
 					return slider
 				end
+				
+				function category.new_dropdown(properties)
+					category.dropdown_count += 1
+					local default = {
+						text = 'dropdown',
+						options = {},
+						default_selection = nil,
+						callback = function()
+							warn(string.format('[❗] Toggle %d > no callback set.', category.dropdown_count))
+						end,
+					}
 
+					local showing_options = false
+					local properties = properties or default 
+					local options = properties.options or default.options
+					local callback = properties.callback or default.callback
+					local selection = properties.default_selection or default.default_selection
+					local dropdown = { selection = selection, options = {} }
+
+					function encrypt.create(instance, properties)
+						local i = Instance.new(instance)
+						for p,v in pairs(properties) do
+							local s, err = pcall(function()
+								i[p] = v
+							end)
+
+							if err then warn('[⚠️] ENCRYPT > PROBLEM CREATING INSTANCE "'..tostring(instance)..'": '..err) end
+						end
+
+						return i
+					end
+
+					local container = encrypt.create('Frame', {
+						Name = "dropdown",
+						Parent = CategoryFrame,
+						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+						BackgroundTransparency = 1.000,
+						BorderColor3 = Color3.fromRGB(0, 0, 0),
+						BorderSizePixel = 0,
+						Position = UDim2.new(0, 0, 0.13333334, 0),
+						Size = UDim2.new(1, 0, 0, 20),
+					})
+
+					local button = encrypt.create('TextButton', {
+						Name = "1button",
+						Parent = container,
+						AnchorPoint = Vector2.new(0.5, 0),
+						BackgroundColor3 = Color3.fromRGB(23, 23, 23),
+						BorderColor3 = Color3.fromRGB(0, 0, 0),
+						BorderSizePixel = 0,
+						Position = UDim2.new(0.5, 0, 0, 0),
+						Size = UDim2.new(1, 0, 0, 16),
+						Font = Enum.Font.Gotham,
+						Text = "dropdown",
+						TextColor3 = Color3.fromRGB(255, 255, 255),
+						TextSize = 12.000,
+					})
+
+					local arrow = encrypt.create('ImageLabel', {
+						Parent = button,
+						AnchorPoint = Vector2.new(1, 0),
+						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+						BackgroundTransparency = 1.000,
+						BorderColor3 = Color3.fromRGB(0, 0, 0),
+						BorderSizePixel = 0,
+						Position = UDim2.new(1, 0, 0.125, 0),
+						Size = UDim2.new(0, 20, 0, 12),
+						Image = "rbxassetid://13273265041",
+						ScaleType = Enum.ScaleType.Fit,
+					})
+
+					local options_frame = encrypt.create('Frame', {
+						Parent = container,
+						BackgroundColor3 = Color3.fromRGB(23, 23, 23),
+						BorderColor3 = Color3.fromRGB(0, 0, 0),
+						BorderSizePixel = 0,
+						Size = UDim2.new(1, 0, 0, 0),
+						Visible = false,
+					})
+
+					encrypt.create('UIListLayout', {
+						Parent = container,
+						SortOrder = Enum.SortOrder.Name,
+					})
+
+					encrypt.create('UIPadding', {
+						PaddingTop = UDim.new(0, 2),
+						PaddingBottom = UDim.new(0, 2),
+						Parent = container,
+					})
+
+
+					encrypt.create('UICorner', {
+						CornerRadius = UDim.new(0, 2),
+						Parent = button,
+					})
+
+					encrypt.create('UICorner', {
+						CornerRadius = UDim.new(0, 2),
+						Parent = options_frame,
+					})
+
+					encrypt.create('UIListLayout', {
+						Parent = options_frame,
+						SortOrder = Enum.SortOrder.LayoutOrder,
+					})
+
+					CategoryFrame.Size += UDim2.new(0, 0, 0, 20)
+					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
+
+					button.MouseButton1Click:Connect(function()
+						showing_options = not showing_options
+						options_frame.Visible = showing_options
+
+						if showing_options then
+							container.Size += UDim2.new(0, 0, 0, options_frame.Size.Y.Offset)
+							CategoryFrame.Size += UDim2.new(0, 0, 0, options_frame.Size.Y.Offset)
+							ContentHolder.CanvasSize += UDim2.new(0, 0, 0, options_frame.Size.Y.Offset)
+							
+							arrow.Rotation = 180
+						elseif not showing_options then
+							container.Size -= UDim2.new(0, 0, 0, options_frame.Size.Y.Offset)
+							CategoryFrame.Size -= UDim2.new(0, 0, 0, options_frame.Size.Y.Offset)
+							ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, options_frame.Size.Y.Offset)
+
+							arrow.Rotation = 0	
+						end
+					end)
+
+					function dropdown.add_option(option)
+						table.insert(dropdown.options, option)
+
+						local option_button = encrypt.create('TextButton', {
+							Parent = options_frame,
+							BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+							BackgroundTransparency = 1.000,
+							BorderColor3 = Color3.fromRGB(0, 0, 0),
+							BorderSizePixel = 0,
+							Size = UDim2.new(1, 0, 0, 20),
+							Font = Enum.Font.Gotham,
+							Name = option,
+							Text = option,
+							TextColor3 = Color3.fromRGB(125, 125, 125),
+							TextSize = 12.000,
+						})
+						
+						if option == dropdown.selection then
+							option_button.BackgroundTransparency = .95
+							option_button.TextColor3 = Color3.fromRGB(125, 125, 125)
+						end
+						
+						option_button.MouseButton1Click:Connect(function()
+							for _, b in ipairs(options_frame:GetChildren()) do
+								if b:IsA('TextButton') then
+									b.TextColor3 = Color3.fromRGB(125, 125, 125)
+									b.BackgroundTransparency = 1
+								end
+							end
+							
+							option_button.TextColor3 = Color3.fromRGB(255, 255, 255)
+							option_button.BackgroundTransparency = .95
+							dropdown.selection = option
+							
+							callback(dropdown.selection)
+						end)
+
+						options_frame.Size += UDim2.new(0, 0, 0, 20)
+					end
+
+					function dropdown.remove_option(option)
+						if not table.find(option) then return warn("[⚠️] ENCRYPT > Could not remove option because it doesn't exist") end
+
+						table.remove(dropdown.options, option)
+						options_frame[option]:Destroy()
+
+						options_frame.Size -= UDim2.new(0, 0, 0, 20)
+					end
+					
+					function dropdown:get_selection()
+						return dropdown.selection
+					end
+
+					function dropdown:delete()
+						container:Destroy()
+						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
+						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
+					end
+
+					return dropdown
+				end
+				
 				return category
 			end
 
@@ -933,25 +1163,28 @@ function encrypt.new_window(options)
 		return tab
 	end
 
-
-
-
 	return window
 end
 
 warn('[✔️] ENCRYPT UI LIBRARY: LOADED')
 
 function encrypt:exit()
-	-- destroy UI
 	EncryptedName:Destroy()
 
-	-- close threads
-	for _, thread_table in encrypt.threads do
-		for _, thread in thread_table do
-			if type(thread) == 'thread' then task.close(thread) end
+	for _, thread_table in pairs(encrypt.threads) do
+		for _n, thread in pairs(thread_table) do
+			pcall(function()
+				task.cancel(thread_table[_n])
+				print('Closed thread: '.. thread)
+			end)
+
+			pcall(function()
+				thread:Disconnect()
+				print('Closed thread: '.. thread)
+			end)
 		end
 	end
-	
+
 	warn('[❌] ENCRYPT UI; CLOSED')
 end
 
