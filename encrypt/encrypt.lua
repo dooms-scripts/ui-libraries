@@ -12,9 +12,13 @@
 
 --> CONFIG <------------------------------------------------
 local encrypt = {
-	version = 'e1.4.6',
+	version = 'e1.4.7',
 	ui_object = nil,
 	font = 'Gotham',
+	threads = { 
+		keybinds = {},
+		toggles = {},
+	},
 }
 
 encrypt.colors = {
@@ -451,19 +455,21 @@ function encrypt.new_window(options)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
 
 					-- Functions
-					button.MouseButton1Click:Connect(function()
-						if yield then
-							toggle.value = true
-							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
-							callback(toggle.value)
-							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
-							toggle.value = false
-						elseif not yield then
-							callback(toggle.value)
-							toggle.value = not toggle.value
-							if toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
-							elseif not toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground) end
-						end
+					encrypt.threads.toggles[category.toggle_count] = task.spawn(function()
+						button.MouseButton1Click:Connect(function()
+							if yield then
+								toggle.value = true
+								encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
+								callback(toggle.value)
+								encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
+								toggle.value = false
+							elseif not yield then
+								callback(toggle.value)
+								toggle.value = not toggle.value
+								if toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
+								elseif not toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground) end
+							end
+						end)
 					end)
 
 					function toggle:get_value()
@@ -715,18 +721,20 @@ function encrypt.new_window(options)
 						print('editing...')
 					end)
 
-					input_service.InputBegan:Connect(function(input)
-						local focused = input_service:GetFocusedTextBox()
-						if focused then return end
-
-						if keybind.editing then
-							keybind.key = tostring(input.KeyCode):gsub('Enum.KeyCode.', '')
-							button.Text = keybind.key
-
-							keybind.editing = false
-						elseif keybind.key ~= '...' and input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] then
-							callback()
-						end
+					encrypt.threads.keybinds[category.keybind_count] = task.spawn(function()
+						input_service.InputBegan:Connect(function(input)
+							local focused = input_service:GetFocusedTextBox()
+							if focused then return end
+	
+							if keybind.editing then
+								keybind.key = tostring(input.KeyCode):gsub('Enum.KeyCode.', '')
+								button.Text = keybind.key
+	
+								keybind.editing = false
+							elseif keybind.key ~= '...' and input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] then
+								callback()
+							end
+						end)
 					end)
 
 					function keybind:get_value()
@@ -934,7 +942,16 @@ end
 warn('[✔️] ENCRYPT UI LIBRARY: LOADED')
 
 function encrypt:exit()
+	-- destroy UI
 	EncryptedName:Destroy()
+
+	-- close threads
+	for _, thread_table in encrypt.threads do
+		for _, thread in thread_table do
+			if type(thread) == 'thread' then task.close(thread) end
+		end
+	end
+	
 	warn('[❌] ENCRYPT UI; CLOSED')
 end
 
