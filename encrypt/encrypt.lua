@@ -14,7 +14,7 @@
 
 --> CONFIG <------------------------------------------------
 local encrypt = {
-	version = 'e1.4.8',
+	version = 'e1.4.9',
 	font = 'Gotham',
 	ui_object = nil,
 
@@ -257,7 +257,7 @@ function encrypt.new_window(options)
 				BorderSizePixel = 0,
 				BorderColor3 = Color3.fromRGB(0, 0, 0),
 				BackgroundColor3 = Color3.fromRGB(15, 15, 15),
-				ScrollBarImageColor3 = encrypt.color,
+				ScrollBarImageColor3 = encrypt.colors.main_color,
 				BackgroundTransparency = 1.000,
 				TopImage = "http://www.roblox.com/asset/?id=16747999837",
 				BottomImage = "http://www.roblox.com/asset/?id=16748002234",
