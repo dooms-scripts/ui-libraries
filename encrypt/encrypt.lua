@@ -980,6 +980,7 @@ function encrypt.new_window(options)
 					local options = properties.options or default.options
 					local callback = properties.callback or default.callback
 					local selection = properties.default_selection or default.default_selection
+					local text = properties.text or default.text
 					local dropdown = { selection = selection, options = {} }
 
 					function encrypt.create(instance, properties)
@@ -1016,7 +1017,7 @@ function encrypt.new_window(options)
 						Position = UDim2.new(0.5, 0, 0, 0),
 						Size = UDim2.new(1, 0, 0, 16),
 						Font = Enum.Font.Gotham,
-						Text = "dropdown",
+						Text = text,
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 					})
