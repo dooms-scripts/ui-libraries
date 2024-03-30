@@ -128,7 +128,7 @@ function encrypt_notification_lib.notify(text, duration)
 	end)()
 end
 
-warn('[✅] ENCRYPT NOTIFICATION LIBRARY: LOADED V1.0.1')
+warn('[✅] ENCRYPT NOTIFICATION LIBRARY: LOADED V1.0.2')
 encrypt_notification_lib.loaded = true
 
 return encrypt_notification_lib
