@@ -669,6 +669,11 @@ function encrypt.new_window(options)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
 					end
 
+					function text_box.update(new_text)
+						text_box.text = new_text
+						textbox.Text = new_text
+					end
+
 					return text_box
 				end
 
