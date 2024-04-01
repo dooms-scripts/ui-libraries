@@ -173,9 +173,13 @@ function encrypt.watermark(options)
 	local text = options.text or default.text
 	local size = options.size or default.size
 
+	local gui = encrypt.create('ScreenGui', {
+		Parent = game.CoreGui
+	})
+
 	local container = encrypt.create('Frame', {
 		Name = "Watermark",
-		Parent = EncryptedName,
+		Parent = gui,
 		AnchorPoint = Vector2.new(1, 0),
 		BackgroundColor3 = Color3.fromRGB(10, 10, 10),
 		BorderColor3 = Color3.fromRGB(0, 0, 0),
