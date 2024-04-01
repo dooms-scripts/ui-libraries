@@ -174,7 +174,8 @@ function encrypt.watermark(options)
 	local size = options.size or default.size
 
 	local gui = encrypt.create('ScreenGui', {
-		Parent = game.CoreGui
+		Parent = game.CoreGui,
+		Name = 'ENCRYPT_WATERMARK',
 	})
 
 	local container = encrypt.create('Frame', {
