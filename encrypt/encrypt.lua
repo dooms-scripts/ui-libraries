@@ -14,7 +14,7 @@
 
 --> CONFIG <------------------------------------------------
 local encrypt = {
-	version = 'e1.5.1',
+	version = 'e1.5.2',
 	instance = nil,
 	drop_shadow = false,
 	encrypt_names = false,
@@ -517,7 +517,7 @@ function encrypt.new_window(options)
 					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BackgroundTransparency = 0,
 					BorderSizePixel = 0,
-					Size = UDim2.new(1, 0, 0, 20),
+					Size = UDim2.new(1, 0, 0, 24),
 				})
 
 				local TitleText = encrypt.create('TextLabel', {
