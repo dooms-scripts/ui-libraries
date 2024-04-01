@@ -102,8 +102,8 @@ local EncryptedName = encrypt.create("ScreenGui", {
 local _,err = pcall(function() EncryptedName.Parent = game.CoreGui end)
 
 if err then
-	-- return warn('[!] ENCRYPT > Your executor is not supported.')
-	EncryptedName.Parent = game:GetService('Players').LocalPlayer.PlayerGui
+	return warn('[!] ENCRYPT > Your executor is not supported.')
+	-- EncryptedName.Parent = game:GetService('Players').LocalPlayer.PlayerGui
 end
 
 encrypt.instance = EncryptedName
