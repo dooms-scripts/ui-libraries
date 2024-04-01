@@ -1127,7 +1127,7 @@ function encrypt.new_window(options)
 					local fill = button.fill
 					fill.Size = UDim2.new((slider.value - min) / (max - min), 0, 1, 0)
 
-					local text = 'slider'
+					-- local text = 'slider'
 					local label = button.label
 
 					local mouse_down = false
