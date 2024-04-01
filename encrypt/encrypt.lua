@@ -206,7 +206,7 @@ function encrypt.watermark(options)
 		Name = "Color",
 		Parent = container,
 		AnchorPoint = Vector2.new(0.5, 1),
-		BackgroundColor3 = Color3.fromRGB(255, 0, 4),
+		BackgroundColor3 = encrypt.colors.main_color,
 		BorderColor3 = Color3.fromRGB(0, 0, 0),
 		BorderSizePixel = 0,
 		Position = UDim2.new(0.5, 0, 0, 0),
