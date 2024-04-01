@@ -14,7 +14,7 @@
 
 --> CONFIG <------------------------------------------------
 local encrypt = {
-	version = 'e1.5.2',
+	version = 'e1.5.3',
 	instance = nil,
 	drop_shadow = false,
 	encrypt_names = false,
@@ -319,6 +319,7 @@ function encrypt.new_window(options)
 		TextColor3 = Color3.fromRGB(255, 255, 255),
 		TextSize = 12.000,
 		TextXAlignment = Enum.TextXAlignment.Left,
+		RichText = true,
 	})
 
 	local TopbarDivider = encrypt.create('Frame', {
