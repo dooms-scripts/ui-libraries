@@ -993,7 +993,7 @@ function encrypt.new_window(options)
 								button.Text = keybind.key
 
 								keybind.editing = false
-							elseif keybind.key ~= '...' and input.KeyCode == Enum.KeyCode[string.upper(keybind.key)] then
+							elseif keybind.key ~= '...' and input.KeyCode == Enum.KeyCode[keybind.key] then
 								callback()
 							end
 						end)
