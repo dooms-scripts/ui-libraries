@@ -897,7 +897,7 @@ function encrypt.new_window(options)
 
 					function text_box:disable()
 						textbox.TextEditable = false
-						textbox.TextColor3 = Color3.fromRGB(125,125,125)
+						textbox.TextColor3 = Color3.fromRGB(75,75,75)
 					end
 					
 					function text_box:enable()
