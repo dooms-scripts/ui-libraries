@@ -581,7 +581,7 @@ function encrypt.new_window(options)
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(0, 0, 0.13333334, 0),
-						Size = UDim2.new(0, 170, 0, 20),
+						Size = UDim2.new(1, 0, 0, 20),
 					})
 
 					local label = encrypt.create('TextLabel', {
