@@ -195,7 +195,7 @@ function encrypt_esp.new_text(player, properties)
 	text_drawing.Visible = true
 
 	if outline then
-		text_drawing.Outline = outline_thickness
+		text_drawing.Outline = 1
 		text_drawing.OutlineColor = outline_color
 	end
 
