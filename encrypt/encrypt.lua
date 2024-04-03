@@ -1423,7 +1423,7 @@ function encrypt.new_window(options)
 						Position = UDim2.new(0, 0, 0.5, 0),
 						Size = UDim2.new(1, 0, 0, 20),
 						Font = Enum.Font[encrypt.fonts.main],
-						Text = "color picker",
+						Text = text,
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 						TextXAlignment = Enum.TextXAlignment.Left,
