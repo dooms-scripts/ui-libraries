@@ -14,7 +14,7 @@ __=[[
 Drawing = Drawing or assert(Drawing, 'Your executor is not supported.') 
 
 -- [ ATTRIBUTES ] ----------------------------------------------------------------------------------
-local encrypt_esp = { version = 'e1.0.1' }
+local encrypt_esp = { version = 'e1.0.2' }
 -- warn(__, encrypt_esp.version)
 
 -- [ SERVICES ] ------------------------------------------------------------------------------------
@@ -167,8 +167,9 @@ function encrypt_esp.new_box(player, properties)
 	end)
 
 	local drawings = { bound1, bound2, bound3, bound4 }
-	-- return box, drawings
-	return drawings
+	
+	return box --, drawings
+	--return drawings
 end
 
 function encrypt_esp.new_text(player, properties)
@@ -228,8 +229,8 @@ function encrypt_esp.new_text(player, properties)
 		task.wait(properties.update_speed)
 	end)
 
-	--return text, text_drawing
-	return text_drawing
+	return text --, text_drawing
+	--return text_drawing
 end
 
 function encrypt_esp.new_tracer(player, properties)
@@ -296,8 +297,8 @@ function encrypt_esp.new_tracer(player, properties)
 		task.wait(update_speed)
 	end)
 
-	--return tracer, line
-	return line
+	return tracer --, line
+	--return line
 end
 
 return encrypt_esp
