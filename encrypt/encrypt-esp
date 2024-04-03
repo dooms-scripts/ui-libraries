@@ -14,7 +14,7 @@ __=[[
 Drawing = Drawing or assert(Drawing, 'Your executor is not supported.') 
 
 -- [ ATTRIBUTES ] ----------------------------------------------------------------------------------
-local encrypt_esp = { version = 'e1.0.0' }
+local encrypt_esp = { version = 'e1.0.1' }
 -- warn(__, encrypt_esp.version)
 
 -- [ SERVICES ] ------------------------------------------------------------------------------------
