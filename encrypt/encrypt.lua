@@ -1412,7 +1412,7 @@ function encrypt.new_window(options)
 						ZIndex = 99999,
 					})
 
-					local text = encrypt.create("TextLabel", {
+					local label = encrypt.create("TextLabel", {
 						Name = "text",
 						Parent = container,
 						AnchorPoint = Vector2.new(0, 0.5),
