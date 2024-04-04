@@ -218,7 +218,7 @@ function encrypt.watermark(options)
 		Size = UDim2.new(1, 0, 0, 1),
 	})
 	
-	function watermark.update(options)
+	function watermark:update(options)
 		text = options.text or text
 		size = options.size or size
 		
