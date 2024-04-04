@@ -1670,6 +1670,7 @@ warn('[+] ENCRYPT > LOADED IN '..tostring(tick() - start_time):sub(1,4) .. ' SEC
 encrypt.is_loaded = true
 encrypt.on_loaded()
 _G.ENCRYPT_LIB_LOADED = true
+_G.ENCRYPT_INSTANCE = encrypt.instance
 
 game.StarterGui:SetCore('SendNotification', {
 	Title = string.format('ENCRYPT %s', encrypt.version),
