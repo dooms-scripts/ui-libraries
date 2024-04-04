@@ -607,7 +607,7 @@ function encrypt.new_window(options)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
 
 					--> Functions
-					function text_label.update_text(new_text)
+					function text_label:update_text(new_text)
 						label.Text = new_text
 					end
 
@@ -906,7 +906,7 @@ function encrypt.new_window(options)
 						textbox.TextColor3 = Color3.fromRGB(255,255,255)
 					end
 
-					function text_box.update(new_text)
+					function text_box:update(new_text)
 						text_box.text = new_text
 						textbox.Text = new_text
 					end
@@ -994,8 +994,8 @@ function encrypt.new_window(options)
 					end)
 
 					local thread = nil
-					coroutine.wrap(function()	
-						encrypt.threads.keybinds[category.keybind_count] = input_service.InputBegan:Connect(function(input)
+					coroutine.wrap(function()
+						thread = input_service.InputBegan:Connect(function(input)
 							local focused = input_service:GetFocusedTextBox()
 							if focused then return end
 
@@ -1008,20 +1008,22 @@ function encrypt.new_window(options)
 								callback()
 							end
 						end)
+							
+						encrypt.threads.keybinds[category.keybind_count] = thread
 					end)()
 
-					function keybind:get_value()
+					function keybind:get_key()
 						return keybind.key
+					end
+
+					function keybind:disconnect()
+						thread:Disconnect()
 					end
 
 					function keybind:delete()
 						container:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
-					end
-
-					function keybind:close_thread()
-						thread:Disconnect()
 					end
 
 					return keybind
@@ -1197,6 +1199,10 @@ function encrypt.new_window(options)
 						end
 					end)
 
+					function slider:get_value()
+						return(slider.value)
+					end
+
 					function slider:delete()
 						container:destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
@@ -1322,7 +1328,7 @@ function encrypt.new_window(options)
 						end
 					end)
 
-					function dropdown.add_option(option)
+					function dropdown:add_option(option)
 						table.insert(dropdown.options, option)
 
 						local option_button = encrypt.create('TextButton', {
@@ -1362,7 +1368,7 @@ function encrypt.new_window(options)
 						options_frame.Size += UDim2.new(0, 0, 0, 20)
 					end
 
-					function dropdown.remove_option(option)
+					function dropdown:remove_option(option)
 						if not table.find(option) then return warn("[!] ENCRYPT > Could not remove option because it doesn't exist") end
 
 						table.remove(dropdown.options, option)
