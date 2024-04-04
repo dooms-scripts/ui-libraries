@@ -1,7 +1,7 @@
 # 🔺 ENCRYPT UI LIBRARY
 🎯 [Official Docs](https://dooms-scripts.gitbook.io/encrypt-docs)
 
-🎯 Version: 1.4.0
+🎯 Version: 1.5.3
 
 🎯 Patch Notes
 > Completely revamped UI element creation
@@ -15,5 +15,5 @@
 [See what's new](https://dooms-scripts.gitbook.io/encrypt-docs#version-and-patch-notes)
 
 # EXAMPLES
-![IMG_4707](https://github.com/dooms-scripts/ui-libraries/assets/140380232/3f4a3579-50f1-4d34-9799-63eb523c0d8d)
-(nothing here yet)
+![image](https://github.com/dooms-scripts/ui-libraries/assets/140380232/ba0884a0-135a-41ff-a38f-11dcc473adc3)
+adding more later :p
