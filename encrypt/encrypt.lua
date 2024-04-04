@@ -436,6 +436,7 @@ function encrypt.new_window(options)
 			TextColor3 = Color3.fromRGB(100, 100, 100),
 			TextSize = 12.000,
 			TextWrapped = true,
+			RichText = true,
 		})
 
 		local UIListLayout = encrypt.create('UIListLayout', {
