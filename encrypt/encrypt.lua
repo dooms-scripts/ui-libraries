@@ -222,7 +222,7 @@ function encrypt.watermark(options)
 		text = options.text or text
 		size = options.size or size
 		
-		label.Text = text
+		label.Text = '  ' ..text
 		container.Size = size
 	end
 	
