@@ -14,7 +14,7 @@ __=[[
 Drawing = Drawing or assert(Drawing, 'Your executor is not supported.') 
 
 -- [ ATTRIBUTES ] ----------------------------------------------------------------------------------
-local encrypt_esp = { version = 'e1.0.2' }
+local encrypt_esp = { version = 'e1.0.3' }
 -- warn(__, encrypt_esp.version)
 
 -- [ SERVICES ] ------------------------------------------------------------------------------------
@@ -195,7 +195,7 @@ function encrypt_esp.new_text(player, properties)
 	text_drawing.Visible = true
 
 	if outline then
-		text_drawing.Outline = 1
+		text_drawing.Outline = outline
 		text_drawing.OutlineColor = outline_color
 	end
 
