@@ -54,7 +54,7 @@ function encrypt_notification_lib.initialize()
 			padding.Parent = notification_container
 			padding.PaddingBottom = UDim.new(0, 4)
 			padding.PaddingLeft = UDim.new(0, 4)
-			padding.PaddingTop = UDim.new(0, encrypt_notification_lib.padding)
+			padding.PaddingTop = UDim.new(0, 4)
 			padding.PaddingBottom = UDim.new(0, encrypt_notification_lib.padding)
 
 			encrypted_name.Parent = game.CoreGui
