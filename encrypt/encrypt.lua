@@ -1603,12 +1603,16 @@ function encrypt.new_window(options)
 					
 					update_rgb()
 
-					color_pick.MouseEnter:Connect(function()
-						encrypt.custom_cursor.enabled = true
+					color_pick.MouseEnter:Connect(function()	
+						input_service.MouseIconEnabled = false
+						custom_cursor.Visible = true
+						-- encrypt.custom_cursor.enabled = true
 					end)
 
-					color_pick.MouseLeave:Connect(function()
-						encrypt.custom_cursor.enabled = false
+					color_pick.MouseLeave:Connect(function()	
+						input_service.MouseIconEnabled = true
+						custom_cursor.Visible = false
+						-- encrypt.custom_cursor.enabled = false
 					end)
 
 					rgb_map.MouseLeave:Connect(function() mouse_down = false end)
