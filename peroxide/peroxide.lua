@@ -1,4 +1,4 @@
---[[
+__=[[
 
                                   88""Yb 888888 88""Yb  dP"Yb  Yb  dP 88 8888b.  888888 
                                   88__dP 88__   88__dP dP   Yb  YbdP  88  8I  Yb 88__   
@@ -10,7 +10,7 @@
 	::                             HOW TO USE: dooms-scripts.gitbook.io/peroxide-docs                             ::
 	::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-]]--
+]]
 
 getgenv = getgenv or assert(getgenv, 'Your executor is not supported.')
 
