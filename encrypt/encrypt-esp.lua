@@ -366,8 +366,7 @@ function encrypt_esp.draw_skeleton(player, properties)
     end
 
     --> draw adornment
-    local line_adornment = Instance.new('LineHandleAdornment', char.UpperTorso)
-    line_adornment.Adornee = char.UpperTorso
+    local line_adornment = Instance.new('LineHandleAdornment')
     line_adornment.Length = 2
     line_adornment.Thickness = 2
     line_adornment.ZIndex = 999
@@ -376,6 +375,8 @@ function encrypt_esp.draw_skeleton(player, properties)
 
     run.Stepped:Connect(function()
         local char = player.Character
+	line_adornment.Parent = char.UpperTorso
+    	line_adornment.Adornee = char.UpperTorso
         
         if char then 
             local root = char.HumanoidRootPart or char:WaitForChild('HumanoidRootPart')
