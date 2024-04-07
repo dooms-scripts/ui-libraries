@@ -32,6 +32,7 @@ local encrypt = {
 	},
 	
 	custom_cursor = {
+		use_custom_cursor = false,
 		enabled = false,
 		icon = 'http://www.roblox.com/asset/?id=16710247795',
 	},
@@ -156,10 +157,15 @@ local custom_cursor = encrypt.create('ImageLabel', {
 
 coroutine.wrap(function()
 	run_service.Stepped:Connect(function()
-		input_service.MouseIconEnabled = not encrypt.custom_cursor.enabled
-		custom_cursor.Visible = encrypt.custom_cursor.enabled
+		if encrypt.use_custom_cursor then
+			input_service.MouseIconEnabled = not encrypt.custom_cursor.enabled
+			custom_cursor.Visible = encrypt.custom_cursor.enabled
 
-		custom_cursor.Position = UDim2.new(0, mouse.X, 0, mouse.Y)
+			custom_cursor.Position = UDim2.new(0, mouse.X, 0, mouse.Y)
+		else
+			input_service.MouseIconEnabled = true
+			custom_cursor.Visible = false
+		end
 	end)
 end)()
 
