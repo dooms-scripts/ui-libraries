@@ -372,7 +372,7 @@ end
 --# INITIALIE LIBRARY #--------------
 getgenv().PEROXIDE_LOADED = true
 getgenv().PEROXIDE_INSTANCE = peroxide.instance
-getgenv().PEROXIDE_ONLOAD = getgenv().PEROXIDE_ONLOAD() or function() warn(string.format('PEROXIDE: LOADED IN %s SECONDS', tostring(tick() - peroxide.start_time):sub(1,4))) end
+getgenv().PEROXIDE_ONLOAD = getgenv().PEROXIDE_ONLOAD or function() warn(string.format('PEROXIDE: LOADED IN %s SECONDS', tostring(tick() - peroxide.start_time):sub(1,4))) end
 
 getgenv().PEROXIDE_ONLOAD()
 
