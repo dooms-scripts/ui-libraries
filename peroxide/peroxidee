@@ -123,6 +123,12 @@ coroutine.wrap(function()
     end)
 end)()
 
+local _, failed = pcall(function()
+	peroxide.instance.Parent = game.CoreGui
+end)
+
+if failed then return warn('Your executor is not supported.') end
+
 --# MAKE WINDOW #--------------------
 function peroxide.new_window(name, size)
     local window = { tab_count = 0 }
@@ -136,6 +142,7 @@ function peroxide.new_window(name, size)
     window_frame.BorderColor3 = Color3.fromRGB(50, 50, 50)
     window_frame.Position = UDim2.new(0.588466287, 0, 0.424580991, 0)
     window_frame.Size = size
+    window_frame.Visible = true
 
     local line = Instance.new("Frame")
     line.Name = "Line"
