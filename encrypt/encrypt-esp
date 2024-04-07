@@ -309,9 +309,9 @@ function encrypt_esp.draw_skeleton(player, properties)
 		update_speed = 0,
 		outline = false,
 	}
-
+	
 	if player == nil then return warn('[!] ENCRYPT ESP > Player is nil.') end
-
+	
 	local properties    = properties or default
 	local color         = properties.color or default.color
 	local thickness     = properties.thickness or default.thickness
@@ -319,163 +319,168 @@ function encrypt_esp.draw_skeleton(player, properties)
 	local outline       = properties.outline or default.outline
 	local outline_color = properties.outline_color or default.outline_color
 
-    function attachment_to_vector(attachment)
-        local camera = workspace.CurrentCamera
-        local vector, _ = camera:WorldToViewportPoint(attachment.WorldPosition)
-        return Vector2.new(vector.X, vector.Y)
-    end
+	function attachment_to_vector(attachment)
+		local camera = workspace.CurrentCamera
+		local vector, _ = camera:WorldToViewportPoint(attachment.WorldPosition)
+		return Vector2.new(vector.X, vector.Y)
+	end
 
-    function new_line()
-        local drawing = Drawing.new('Line')
-        drawing.Visible = true
-        drawing.Color = color
-        
-        return drawing
-    end
+	function new_line()
+		local drawing = Drawing.new('Line')
+		drawing.Visible = true
+		drawing.Color = color
+	
+		return drawing
+	end
 
-    head = new_line()
-    waist = new_line()
-    left_hand = new_line()
-    left_shoulder = new_line()
-    right_hand = new_line()
-    right_shoulder = new_line()
-    left_arm_joint = new_line()
-    right_arm_joint = new_line()
-    left_foot = new_line()
-    left_hip = new_line()
-    right_foot = new_line()
-    right_hip = new_line()
-    right_waist_joint = new_line()
-    left_waist_joint = new_line()
+    	head = new_line()
+    	waist = new_line()
+    	left_hand = new_line()
+    	left_shoulder = new_line()
+    	right_hand = new_line()
+    	right_shoulder = new_line()
+    	left_arm_joint = new_line()
+    	right_arm_joint = new_line()
+    	left_foot = new_line()
+    	left_hip = new_line()
+    	right_foot = new_line()
+    	right_hip = new_line()
+    	right_waist_joint = new_line()
+    	left_waist_joint = new_line()
 
-    function skeleton.visibility(bool)
-        head.Visible = bool
-        waist.Visible = bool
-        left_hand.Visible = bool
-        left_shoulder.Visible = bool
-        right_hand.Visible = bool
-        right_shoulder.Visible = bool
-        left_arm_joint.Visible = bool
-        right_arm_joint.Visible = bool
-        left_foot.Visible = bool
-        left_hip.Visible = bool
-        right_foot.Visible = bool
-        right_hip.Visible = bool
-        right_waist_joint.Visible = bool
-        left_waist_joint.Visible = bool
-    end
+	function skeleton.visibility(bool)
+		head.Visible = bool
+		waist.Visible = bool
+		left_hand.Visible = bool
+		left_shoulder.Visible = bool
+		right_hand.Visible = bool
+		right_shoulder.Visible = bool
+		left_arm_joint.Visible = bool
+		right_arm_joint.Visible = bool
+		left_foot.Visible = bool
+		left_hip.Visible = bool
+		right_foot.Visible = bool
+		right_hip.Visible = bool
+		right_waist_joint.Visible = bool
+		left_waist_joint.Visible = bool
+	end
 
-    --> draw adornment
-    local line_adornment = Instance.new('LineHandleAdornment')
-    line_adornment.Length = 2
-    line_adornment.Thickness = 2
-    line_adornment.ZIndex = 999
-    line_adornment.Color3 = color
-    line_adornment.AlwaysOnTop = true
+	function skeleton.destroy()
+		head:Remove()
+		waist:Remove()
+		left_hand:Remove()
+		left_shoulder:Remove()
+		right_hand:Remove()
+		right_shoulder:Remove()
+		left_arm_joint:Remove()
+		right_arm_joint:Remove()
+		left_foot:Remove()
+		left_hip:Remove()
+		right_foot:Remove()
+		right_hip:Remove()
+		right_waist_joint:Remove()
+		left_waist_joint:Remove()
+	end
 
-    run.Stepped:Connect(function()
-        local char = player.Character
-	line_adornment.Parent = char.UpperTorso
-    	line_adornment.Adornee = char.UpperTorso
-        
-        if char then 
-            local root = char.HumanoidRootPart or char:WaitForChild('HumanoidRootPart')
-            local _, on_screen = camera:WorldToViewportPoint(root.Position)
+	--> draw adornment
+	local line_adornment = Instance.new('LineHandleAdornment')
+	line_adornment.Length = 2
+	line_adornment.Thickness = 2
+	line_adornment.ZIndex = 999
+	line_adornment.Color3 = color
+	line_adornment.AlwaysOnTop = true
 
-            skeleton.visibility(on_screen)
+	run.Stepped:Connect(function()
+		local char = player.Character
 
-	    --> get attachments
-	    local attachments = {
-		--> Head
-		Head = char["Head"]["HatAttachment"],
-		Neck = char["Head"]["NeckRigAttachment"],
-		
-		--> Hip
-		Waist = char["LowerTorso"]["WaistRigAttachment"],
-		
-		-- Left Arm
-		LeftHand = char["LeftHand"]["LeftGripAttachment"],
-		LeftElbow = char["LeftUpperArm"]["LeftElbowRigAttachment"],
-		LeftShoulder = char["LeftUpperArm"]["LeftShoulderAttachment"],
-		
-		-- Right Arm
-		RightHand = char["RightHand"]["RightGripAttachment"],
-		RightElbow = char["RightUpperArm"]["RightElbowRigAttachment"],
-		RightShoulder = char["RightUpperArm"]["RightShoulderAttachment"],
-		
-		--> Left Leg
-		LeftFoot = char["LeftFoot"]["LeftFootAttachment"],
-		LeftKnee = char["LeftLowerLeg"]["LeftKneeRigAttachment"],
-		LeftHip = char["LowerTorso"]["LeftHipRigAttachment"],
-		
-		--> Right Leg
-		RightFoot = char["RightFoot"]["RightFootAttachment"],
-		RightKnee = char["RightLowerLeg"]["RightKneeRigAttachment"],
-		RightHip = char["RightUpperLeg"]["RightHipRigAttachment"],
-	    }
-
-            if on_screen then
-                head.From = attachment_to_vector(attachments.Neck)
-                head.To = attachment_to_vector(attachments.Head)
-                
-                waist.From = attachment_to_vector(attachments.Neck)
-                waist.To = attachment_to_vector(attachments.Waist)
-                
-                left_hand.From = attachment_to_vector(attachments.LeftHand)
-                left_hand.To = attachment_to_vector(attachments.LeftElbow)
-                
-                left_shoulder.From = attachment_to_vector(attachments.LeftElbow)
-                left_shoulder.To = attachment_to_vector(attachments.LeftShoulder)
-                
-                right_hand.From = attachment_to_vector(attachments.RightHand)
-                right_hand.To = attachment_to_vector(attachments.RightElbow)
-
-                right_shoulder.From = attachment_to_vector(attachments.RightElbow)
-                right_shoulder.To = attachment_to_vector(attachments.RightShoulder)
-                
-                left_arm_joint.From = attachment_to_vector(attachments.LeftShoulder)
-                left_arm_joint.To = attachment_to_vector(attachments.Neck)
-                
-                right_arm_joint.From = attachment_to_vector(attachments.RightShoulder)
-                right_arm_joint.To = attachment_to_vector(attachments.Neck)
-                
-                left_foot.From = attachment_to_vector(attachments.LeftFoot)
-                left_foot.To = attachment_to_vector(attachments.LeftKnee)
-                    
-                left_hip.From = attachment_to_vector(attachments.LeftKnee)
-                left_hip.To = attachment_to_vector(attachments.LeftHip)
-            
-                right_foot.From = attachment_to_vector(attachments.RightFoot)
-                right_foot.To = attachment_to_vector(attachments.RightKnee)
-            
-                right_hip.From = attachment_to_vector(attachments.RightKnee)
-                right_hip.To = attachment_to_vector(attachments.RightHip)
-            
-                right_waist_joint.From = attachment_to_vector(attachments.RightHip)
-                right_waist_joint.To = attachment_to_vector(attachments.Waist)
-            
-                left_waist_joint.From = attachment_to_vector(attachments.LeftHip)
-                left_waist_joint.To = attachment_to_vector(attachments.Waist)
-            end
-        elseif char == nil then
-            head:Remove()
-            waist:Remove()
-            left_hand:Remove()
-            left_shoulder:Remove()
-            right_hand:Remove()
-            right_shoulder:Remove()
-            left_arm_joint:Remove()
-            right_arm_joint:Remove()
-            left_foot:Remove()
-            left_hip:Remove()
-            right_foot:Remove()
-            right_hip:Remove()
-            right_waist_joint:Remove()
-            left_waist_joint:Remove()
-        end
-    end)
-
-    return skeleton
+		if char then
+			line_adornment.Parent = char.UpperTorso
+			line_adornment.Adornee = char.UpperTorso
+					
+			local root = char.HumanoidRootPart or char:WaitForChild('HumanoidRootPart')
+			local _, on_screen = camera:WorldToViewportPoint(root.Position)
+			
+			skeleton.visibility(on_screen)
+			
+			--> get attachments
+			local attachments = {
+				--> Head
+				Head = char["Head"]["HatAttachment"],
+				Neck = char["Head"]["NeckRigAttachment"],
+				
+				--> Hip
+				Waist = char["LowerTorso"]["WaistRigAttachment"],
+				
+				-- Left Arm
+				LeftHand = char["LeftHand"]["LeftGripAttachment"],
+				LeftElbow = char["LeftUpperArm"]["LeftElbowRigAttachment"],
+				LeftShoulder = char["LeftUpperArm"]["LeftShoulderAttachment"],
+				
+				-- Right Arm
+				RightHand = char["RightHand"]["RightGripAttachment"],
+				RightElbow = char["RightUpperArm"]["RightElbowRigAttachment"],
+				RightShoulder = char["RightUpperArm"]["RightShoulderAttachment"],
+				
+				--> Left Leg
+				LeftFoot = char["LeftFoot"]["LeftFootAttachment"],
+				LeftKnee = char["LeftLowerLeg"]["LeftKneeRigAttachment"],
+				LeftHip = char["LowerTorso"]["LeftHipRigAttachment"],
+				
+				--> Right Leg
+				RightFoot = char["RightFoot"]["RightFootAttachment"],
+				RightKnee = char["RightLowerLeg"]["RightKneeRigAttachment"],
+				RightHip = char["RightUpperLeg"]["RightHipRigAttachment"],
+			}
+	
+			if on_screen then
+				head.From = attachment_to_vector(attachments.Neck)
+				head.To = attachment_to_vector(attachments.Head)
+				
+				waist.From = attachment_to_vector(attachments.Neck)
+				waist.To = attachment_to_vector(attachments.Waist)
+				
+				left_hand.From = attachment_to_vector(attachments.LeftHand)
+				left_hand.To = attachment_to_vector(attachments.LeftElbow)
+				
+				left_shoulder.From = attachment_to_vector(attachments.LeftElbow)
+				left_shoulder.To = attachment_to_vector(attachments.LeftShoulder)
+				
+				right_hand.From = attachment_to_vector(attachments.RightHand)
+				right_hand.To = attachment_to_vector(attachments.RightElbow)
+				
+				right_shoulder.From = attachment_to_vector(attachments.RightElbow)
+				right_shoulder.To = attachment_to_vector(attachments.RightShoulder)
+				
+				left_arm_joint.From = attachment_to_vector(attachments.LeftShoulder)
+				left_arm_joint.To = attachment_to_vector(attachments.Neck)
+				
+				right_arm_joint.From = attachment_to_vector(attachments.RightShoulder)
+				right_arm_joint.To = attachment_to_vector(attachments.Neck)
+				
+				left_foot.From = attachment_to_vector(attachments.LeftFoot)
+				left_foot.To = attachment_to_vector(attachments.LeftKnee)
+				    
+				left_hip.From = attachment_to_vector(attachments.LeftKnee)
+				left_hip.To = attachment_to_vector(attachments.LeftHip)
+				
+				right_foot.From = attachment_to_vector(attachments.RightFoot)
+				right_foot.To = attachment_to_vector(attachments.RightKnee)
+				
+				right_hip.From = attachment_to_vector(attachments.RightKnee)
+				right_hip.To = attachment_to_vector(attachments.RightHip)
+				
+				right_waist_joint.From = attachment_to_vector(attachments.RightHip)
+				right_waist_joint.To = attachment_to_vector(attachments.Waist)
+				
+				left_waist_joint.From = attachment_to_vector(attachments.LeftHip)
+				left_waist_joint.To = attachment_to_vector(attachments.Waist)
+			end
+		elseif char == nil then
+			skeleton.destroy()
+		end
+	end)
+	
+	return skeleton
 end
 
 return encrypt_esp
