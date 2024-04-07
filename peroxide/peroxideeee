@@ -296,7 +296,7 @@ function peroxide.new_window(name, size)
         tab_button.BackgroundTransparency = 1.000
         tab_button.BorderColor3 = Color3.fromRGB(0, 0, 0)
         tab_button.BorderSizePixel = 0
-        tab_button.Size = UDim2.new(0, 45, 0, 15)
+        tab_button.Size = UDim2.new(0, tab_button.TextBounds.X + 5, 0, 15)
         tab_button.Font = Enum.Font.Code
         tab_button.Text = tab_name
         tab_button.TextColor3 = Color3.fromRGB(255, 255, 255)
