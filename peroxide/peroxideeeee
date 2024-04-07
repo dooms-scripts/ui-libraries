@@ -140,7 +140,8 @@ function peroxide.new_window(name, size)
     window_frame.Parent = peroxide.instance
     window_frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
     window_frame.BorderColor3 = Color3.fromRGB(50, 50, 50)
-    window_frame.Position = UDim2.new(0.588466287, 0, 0.424580991, 0)
+    window_frame.Position = UDim2.new(0.588466287, 0, 0.424580991, 0.5)
+    window_frame.AnchorPoint = UDim.new(0, 0.5)
     window_frame.Size = size
     window_frame.Visible = true
     window_frame.Active = true
