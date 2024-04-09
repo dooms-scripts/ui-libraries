@@ -23,6 +23,55 @@ local players = game:GetService('Players')
 local camera = game:GetService('Workspace').CurrentCamera
 
 -- [ FUNCTIONS ] -----------------------------------------------------------------------------------
+function encrypt_esp.new_highlight(player, properties)
+	local highlight, default = {}, {
+		color = Color3.fromRGB(255, 255, 255),
+		outline_color = Color3.fromRGB(0, 0, 0),
+		outline_transparency = 0,
+		fill_transparency = 0,
+		outline = false,
+	}
+
+	if player == nil then return warn('[!] ENCRYPT ESP > Player is nil.') end
+
+	local properties    = properties or default
+	local color         = properties.color or default.color
+	local outline	    = properties.outline or default.outline
+	local outline_color = properties.outline_color or default.outline_color
+	local outline_transparency = properties.outline_transparency or default.outline_transparency
+	local fill_transparency = properties.fill_transparency or default.fill_transparency
+	
+	local char = player.Character or player.CharacterAdded:Wait()
+	
+	local highlight = nil
+	local highlight_connection = nil
+
+	function highlight.destroy()
+		if highlight then highlight:Destroy()
+		if highlight_connection then highlight_connection:Disconnect() end
+	end
+
+	function create_highlight()
+		highlight = Instance.new('Highlight')
+		highlight.Parent = char
+		highlight.DepthMode = 'AlwaysOnTop'
+		highlight.Adornee = char
+		highlight.Enabled = true
+		highlight.FillColor = color
+		highlight.OutlineColor = outline_color
+		highlight.OutlineTransparency = 1
+		highlight.FillTransparency = fill_transparency
+		
+		if outline then
+			highlight.OutlineTransparency = outline_transparency
+		end
+	end
+	
+	highlight_connection = player.CharacterAdded:Connect(create_highlight)
+
+	return highlight
+end
+
 function encrypt_esp.new_box(player, properties)
 	local box, default = {}, {
 		color = Color3.fromRGB(255, 255, 255),
@@ -311,6 +360,7 @@ function encrypt_esp.draw_skeleton(player, properties)
 	}
 	
 	if player == nil then return warn('[!] ENCRYPT ESP > Player is nil.') end
+	if player.Character == nil then return warn('[!] ENCRYPT ESP > Character is nil.') end
 	
 	local properties    = properties or default
 	local color         = properties.color or default.color
