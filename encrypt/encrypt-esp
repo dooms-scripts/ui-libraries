@@ -394,6 +394,7 @@ function encrypt_esp.draw_skeleton(player, properties)
 		local char = player.Character
 
 		if char then
+			pcall(function()
 			line_adornment.Parent = char.UpperTorso
 			line_adornment.Adornee = char.UpperTorso
 					
@@ -475,6 +476,7 @@ function encrypt_esp.draw_skeleton(player, properties)
 				left_waist_joint.From = attachment_to_vector(attachments.LeftHip)
 				left_waist_joint.To = attachment_to_vector(attachments.Waist)
 			end
+			end)
 		elseif char == nil then
 			skeleton.destroy()
 		end
