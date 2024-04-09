@@ -15,7 +15,7 @@ __=[[
 Drawing = Drawing or nil
 
 -- [ ATTRIBUTES ] ----------------------------------------------------------------------------------
-local encrypt_esp = { version = 'e1.0.4' }
+local encrypt_esp = { version = 'e1.0.5' }
 -- warn(__, encrypt_esp.version)
 
 -- [ SERVICES ] ------------------------------------------------------------------------------------
@@ -53,19 +53,21 @@ function encrypt_esp.new_highlight(player, properties)
 	end
 
 	local function create_highlight()
-		highlight_instance = Instance.new('Highlight')
-		highlight_instance.Parent = char
-		highlight_instance.DepthMode = 'AlwaysOnTop'
-		highlight_instance.Adornee = char
-		highlight_instance.Enabled = true
-		highlight_instance.FillColor = color
-		highlight_instance.OutlineColor = outline_color
-		highlight_instance.OutlineTransparency = 1
-		highlight_instance.FillTransparency = fill_transparency
-
-		if outline then
-			highlight_instance.OutlineTransparency = outline_transparency
-		end
+		pcall(function()
+			highlight_instance = Instance.new('Highlight')
+			highlight_instance.Parent = char
+			highlight_instance.DepthMode = 'AlwaysOnTop'
+			highlight_instance.Adornee = char
+			highlight_instance.Enabled = true
+			highlight_instance.FillColor = color
+			highlight_instance.OutlineColor = outline_color
+			highlight_instance.OutlineTransparency = 1
+			highlight_instance.FillTransparency = fill_transparency
+	
+			if outline then
+				highlight_instance.OutlineTransparency = outline_transparency
+			end
+		end)
 	end
 
 	create_highlight()
