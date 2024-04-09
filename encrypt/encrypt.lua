@@ -411,6 +411,10 @@ function encrypt.new_window(options)
 	end
 
 	-- Functions
+	function window.toggle()
+		WindowFrame.Visible = not WindowFrame.Visible
+	end
+	
 	function window.new_tab(tab_name)
 		window.tab_count += 1
 		local tab = { group_count = 0 }
