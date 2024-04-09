@@ -43,31 +43,37 @@ function encrypt_esp.new_highlight(player, properties)
 	
 	local char = player.Character or player.CharacterAdded:Wait()
 	
-	local highlight = nil
+	local highlight_instance = nil
 	local highlight_connection = nil
 
 	function highlight.destroy()
-		if highlight then highlight:Destroy()
+		if highlight_instance then highlight_instance:Destroy() end
 		if highlight_connection then highlight_connection:Disconnect() end
 	end
 
 	function create_highlight()
-		highlight = Instance.new('Highlight')
-		highlight.Parent = char
-		highlight.DepthMode = 'AlwaysOnTop'
-		highlight.Adornee = char
-		highlight.Enabled = true
-		highlight.FillColor = color
-		highlight.OutlineColor = outline_color
-		highlight.OutlineTransparency = 1
-		highlight.FillTransparency = fill_transparency
+		highlight_instance = Instance.new('Highlight')
+		highlight_instance.Parent = char
+		highlight_instance.DepthMode = 'AlwaysOnTop'
+		highlight_instance.Adornee = char
+		highlight_instance.Enabled = true
+		highlight_instance.FillColor = color
+		highlight_instance.OutlineColor = outline_color
+		highlight_instance.OutlineTransparency = 1
+		highlight_instance.FillTransparency = fill_transparency
 		
 		if outline then
-			highlight.OutlineTransparency = outline_transparency
+			highlight_instance.OutlineTransparency = outline_transparency
 		end
 	end
+
+    	create_highlight()
 	
-	highlight_connection = player.CharacterAdded:Connect(create_highlight)
+	highlight_connection = player.CharacterAdded:Connect(function()
+		print('yeah')
+		task.wait(1)
+		create_highlight()
+	end)
 
 	return highlight
 end
@@ -534,5 +540,3 @@ function encrypt_esp.draw_skeleton(player, properties)
 	
 	return skeleton
 end
-
-return encrypt_esp
