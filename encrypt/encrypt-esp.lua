@@ -392,6 +392,14 @@ function encrypt_esp.draw_skeleton(player, properties)
 		return drawing
 	end
 
+	--> draw adornment
+	local line_adornment = Instance.new('LineHandleAdornment')
+	line_adornment.Length = 2
+	line_adornment.Thickness = 2
+	line_adornment.ZIndex = 999
+	line_adornment.Color3 = color
+	line_adornment.AlwaysOnTop = true
+
 	local head = new_line()
 	local waist = new_line()
 	local left_hand = new_line()
@@ -439,16 +447,9 @@ function encrypt_esp.draw_skeleton(player, properties)
 		right_hip:Remove()
 		right_waist_joint:Remove()
 		left_waist_joint:Remove()
+		line_adornment:Destroy()
 	end
-
-	--> draw adornment
-	local line_adornment = Instance.new('LineHandleAdornment')
-	line_adornment.Length = 2
-	line_adornment.Thickness = 2
-	line_adornment.ZIndex = 999
-	line_adornment.Color3 = color
-	line_adornment.AlwaysOnTop = true
-
+	
 	run.Stepped:Connect(function()
 		local char = player.Character
 
