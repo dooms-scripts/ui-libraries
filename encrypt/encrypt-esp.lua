@@ -15,7 +15,7 @@ __=[[
 Drawing = Drawing or nil
 
 -- [ ATTRIBUTES ] ----------------------------------------------------------------------------------
-local encrypt_esp = { version = 'e1.0.5' }
+local encrypt_esp = { version = 'e1.0.6' }
 -- warn(__, encrypt_esp.version)
 
 -- [ SERVICES ] ------------------------------------------------------------------------------------
