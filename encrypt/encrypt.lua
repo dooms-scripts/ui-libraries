@@ -187,7 +187,7 @@ function encrypt.watermark(options)
 
 	local container = encrypt.create('Frame', {
 		Name = "Watermark",
-		Parent = gui,
+		Parent = encrypt.instance,
 		AnchorPoint = Vector2.new(1, 0),
 		BackgroundColor3 = Color3.fromRGB(10, 10, 10),
 		BorderColor3 = Color3.fromRGB(0, 0, 0),
