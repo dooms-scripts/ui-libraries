@@ -15,13 +15,14 @@ __=[[
 Drawing = Drawing or nil
 
 -- [ ATTRIBUTES ] ----------------------------------------------------------------------------------
-local encrypt_esp = { version = 'e1.0.6' }
+local encrypt_esp = { version = 'e1.0.7' }
 -- warn(__, encrypt_esp.version)
 
 -- [ SERVICES ] ------------------------------------------------------------------------------------
 local run = game:GetService('RunService')
 local players = game:GetService('Players')
 local camera = game:GetService('Workspace').CurrentCamera
+local drawings = {}
 
 -- [ FUNCTIONS ] -----------------------------------------------------------------------------------
 function encrypt_esp.new_highlight(player, properties)
@@ -44,12 +45,14 @@ function encrypt_esp.new_highlight(player, properties)
 
 	local char = player.Character or player.CharacterAdded:Wait()
 
-	local highlight_instance = nil
-	local highlight_connection = nil
+	local highlight_instance
+	local highlight_connection
+	local highlight_runc
 
 	function highlight.destroy()
 		if highlight_instance then highlight_instance:Destroy() end
 		if highlight_connection then highlight_connection:Disconnect() end
+		if highlight_runc then highlight_runc:Disconnect() end
 	end
 
 	local function create_highlight()
@@ -76,6 +79,18 @@ function encrypt_esp.new_highlight(player, properties)
 		print('yeah')
 		task.wait(1)
 		create_highlight()
+	end)
+
+	highlight_runc = run.Stepped:Connect(function()
+		if char then pcall(function()
+			local camera = workspace.CurrentCamera
+			local _, visible = camera:WorldToViewportPoint(char.HumanoidRootPart.Position)
+	
+			highlight_instance.Enabled = visible
+			end)
+		elseif char == nil then
+			highlight.destroy()
+		end
 	end)
 
 	return highlight
