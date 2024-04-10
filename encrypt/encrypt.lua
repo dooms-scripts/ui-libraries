@@ -251,11 +251,13 @@ end
 function encrypt.new_window(options)
 	local default = {
 		title_text = 'encrypt // '..encrypt.version,
+		title_alignment = 'Center',
 		size = UDim2.new(0, 380, 0, 425),
 	}
 
 	local options = options or default
 	local title_text = options.title_text or default.title_text
+	local title_alignment = options.title_alignment or default.title_alignment
 	local size = options.size or default.size
 
 	local window = { tab_count = 0 }
@@ -330,7 +332,7 @@ function encrypt.new_window(options)
 		Text = "  "..tostring(title_text),
 		TextColor3 = Color3.fromRGB(255, 255, 255),
 		TextSize = 12.000,
-		TextXAlignment = Enum.TextXAlignment.Left,
+		TextXAlignment = Enum.TextXAlignment[title_alignment],
 		RichText = true,
 	})
 
@@ -411,7 +413,7 @@ function encrypt.new_window(options)
 	end
 
 	-- Functions
-	function window.toggle()
+	function window:toggle()
 		WindowFrame.Visible = not WindowFrame.Visible
 	end
 	
