@@ -515,7 +515,7 @@ function encrypt.new_window(options)
 			-- Functions
 			group.categoryCount = 0
 
-			function group.new_category(title_text)
+			function group.new_category(title_text, title_alignment)
 				local category = {
 					label_count = 0,
 					button_count = 0,
@@ -528,6 +528,8 @@ function encrypt.new_window(options)
 				}
 
 				group.categoryCount += 1
+
+				title_alignment = title_alignment or 'Center'
 
 				-- Creating UI
 				local CategoryFrame = encrypt.create('Frame', {
@@ -553,6 +555,7 @@ function encrypt.new_window(options)
 					Text = tostring(title_text),
 					TextColor3 = Color3.fromRGB(255, 255, 255),
 					TextSize = 14.000,
+					TextXAlignment = Enum.TextXAlignment[title_alignment]
 				})
 
 				encrypt.create('UICorner', {
