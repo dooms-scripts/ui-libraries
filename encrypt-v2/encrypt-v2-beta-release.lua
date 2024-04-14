@@ -178,14 +178,16 @@ gui = encrypt:new("ScreenGui", {Parent = nil;ZIndexBehavior = Enum.ZIndexBehavio
 safe_load(gui, false)
 
 --// CREATE UI ######################################################
-function encrypt.new_window(name)
-	local window = { tab_count = 0 }
+function encrypt.new_window(window_data)
+	local window, defaults = { tab_count = 0 }, { name = '<font color="rgb(255, 51, 54)">encrypt v2</font><font color="rgb(150,150,150)"> | doom#1000 </font>', size = UDim2.new(0, 400, 0, 475) }
+
+	local window_data = override(defaults, window_data or {})
 	
-	local window_frame = encrypt:new("Frame", {Active = true;Parent = gui;BorderSizePixel = 0;Size = UDim2.new(0, 400, 0, 475);Draggable = true;BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[window]];Position = UDim2.new(0.75, -683, 0.494415849, -137);Selectable = true;BackgroundColor3 = Color3.fromRGB(20, 20, 20);})
+	local window_frame = encrypt:new("Frame", {Active = true;Parent = gui;BorderSizePixel = 0;Size = window_data.size;Draggable = true;BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[window]];Position = UDim2.new(0.75, -683, 0.494415849, -137);Selectable = true;BackgroundColor3 = Color3.fromRGB(20, 20, 20);})
 	local tab_buttons = encrypt:new("Frame", {Parent = window_frame;AnchorPoint = Vector2.new(0.5, 0);ZIndex = 2;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 20);BorderColor3 = Color3.fromRGB(0, 0, 0);LayoutOrder = 2;Name = [[tab_buttons]];Position = UDim2.new(0.5, 0, 0, 0);BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(20, 20, 20);})
 	local tab_holder = encrypt:new("Frame", {Parent = window_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 1, -45);BorderColor3 = Color3.fromRGB(0, 0, 0);LayoutOrder = 3;Name = [[tabs]];Position = UDim2.new(0, 0, 0, 30);BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 	local top_bar = encrypt:new("Frame", {Parent = window_frame;AnchorPoint = Vector2.new(0.5, 0);ZIndex = 2;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 25);BorderColor3 = Color3.fromRGB(0, 0, 0);LayoutOrder = 1;Name = [[top_bar]];Position = UDim2.new(0.5, 0, 0, 0);BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(20, 20, 20);})
-	local title = encrypt:new("TextLabel", {BorderSizePixel = 0;RichText = true;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = top_bar;TextSize = 12;Size = UDim2.new(1, 0, 1, 0);TextXAlignment = Enum.TextXAlignment.Left;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = [[<font color="rgb(255, 51, 54)">encrypt v2</font><font color="rgb(150,150,150)"> | doom#1000 </font>]];Font = Enum.Font.Gotham;Name = [[title]];TextColor3 = Color3.fromRGB(225, 225, 225);BackgroundTransparency = 1;})
+	local title = encrypt:new("TextLabel", {BorderSizePixel = 0;RichText = true;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = top_bar;TextSize = 12;Size = UDim2.new(1, 0, 1, 0);TextXAlignment = Enum.TextXAlignment.Left;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = window_data.name;Font = Enum.Font.Gotham;Name = [[title]];TextColor3 = Color3.fromRGB(225, 225, 225);BackgroundTransparency = 1;})
 	local fade = encrypt:new("ImageLabel", {Parent = tab_holder;AnchorPoint = Vector2.new(0.5, 1);Image = [[rbxassetid://1679440786]];BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 100);BorderColor3 = Color3.fromRGB(0, 0, 0);ImageColor3 = Color3.fromRGB(20, 20, 20);Name = [[fade]];Position = UDim2.new(0.5, 0, 1, 0);BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 	local divider = encrypt:new("Frame", {Visible = false;Parent = top_bar;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 1);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[Divider]];Position = UDim2.new(0, 0, 1, 0);BackgroundColor3 = Color3.fromRGB(36, 36, 36);})
 	local background_image = encrypt:new("Frame", {Visible = false;Parent = window_frame;BorderSizePixel = 0;BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[background_image]];BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
@@ -194,8 +196,6 @@ function encrypt.new_window(name)
 	local padding_2 = encrypt:new("UIPadding", {Parent = title;PaddingLeft = UDim.new(0, 8);})
 	local list_layout = encrypt:new("UIListLayout", {Parent = window_frame;SortOrder = Enum.SortOrder.LayoutOrder;})
 	local list_layout_2 = encrypt:new("UIListLayout", {FillDirection = Enum.FillDirection.Horizontal;Parent = tab_buttons;Padding = UDim.new(0, 8);SortOrder = Enum.SortOrder.LayoutOrder;})
-
-	if name then title.Text = name end
 
 	function window.new_tab(tab_data)
 		window.tab_count += 1
