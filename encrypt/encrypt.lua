@@ -749,11 +749,13 @@ function encrypt.new_window(options)
 					end
 
 					function toggle:update_value(bool)
+						warn('updated toggle to ' .. tostring(bool))
 						toggle.value = bool
-						if toggle.value then
-							tween_service:Create(button, tween_info.new(.15), { BackgroundColor3 = encrypt.colors.main_color }):Play()
-						elseif not toggle.value then 
-							tween_service:Create(button, tween_info.new(.15), { BackgroundColor3 = encrypt.colors.foreground }):Play()
+						
+						if bool then
+							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
+						elseif not bool then 
+							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
 						end
 					end
 
