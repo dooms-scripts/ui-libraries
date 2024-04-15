@@ -53,7 +53,7 @@ function encrypt_notification_lib.initialize()
 			list_layout.VerticalAlignment = Enum.VerticalAlignment.Bottom
 
 			padding.Parent = notification_container
-			padding.PaddingBottom = UDim.new(0, 4)
+			padding.PaddingRight = UDim.new(0, 4)
 			padding.PaddingLeft = UDim.new(0, 4)
 			padding.PaddingTop = UDim.new(0, 4)
 			padding.PaddingBottom = UDim.new(0, encrypt_notification_lib.padding)
@@ -138,7 +138,7 @@ function encrypt_notification_lib.notify(text, duration)
 	notification.Font = Enum.Font.SourceSans
 	notification.Text = formatted
 	notification.RichText = true
-	notification.TextColor3 = Color3.fromRGB(0, 0, 0)
+	notification.TextColor3 = Color3.fromRGB(255, 255, 255)
 	notification.TextSize = 16.000
 	notification.TextStrokeTransparency = 0.750
 	notification.TextXAlignment = Enum.TextXAlignment.Center
