@@ -14,7 +14,8 @@
 
 local encrypt_notification_lib = { 
 	loaded = true, 
-	padding = 0
+	padding = 0,
+	custom_color = '255, 255, 255',
 }
 
 --> Services
@@ -103,7 +104,30 @@ function tween(instance, info, property, value)
 	ts:Create(instance, info, { [property] = value }):Play()
 end
 
-function encrypt_notification_lib.notify(text, duration)
+function encrypt_notification_lib.notify(text, duration)	
+	local formatted = text:gsub('#(%a+)%s([^#]+)', function(tag, text)
+		local color = false
+		local format = '255, 255, 255'
+		local prefix = '<font color="rgb(%s)">'
+		local suffix = '</font>'
+		
+		if tag == 'custom' then format = custom_color;    color = true end
+		
+		if tag == 'white'  then format = '255, 255, 255'; color = true end
+		
+		if tag == 'red'    then format = '255, 0, 0';     color = true end
+		if tag == 'green'  then format = '0, 255, 0';     color = true end
+		if tag == 'blue'   then format = '0, 0, 255';     color = true end
+		if tag == 'orange' then format = '255, 125, 0';   color = true end
+	
+		if tag == 'bold' then color = false; format = ''; prefix = '<b>'; suffix = '</b>'; end
+		if tag == 'italic' then color = false; format = ''; prefix = '<i>'; suffix = '</i>'; end
+
+		if color == true then prefix = '<font color="rgb(%s)">'; suffix = '</font>' end
+		
+		return string.format(' ' .. prefix .. text .. suffix, format)
+	end)
+	
 	local notification = Instance.new('TextLabel', notification_container)
 	notification.Parent = notification_container
 	notification.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -112,7 +136,7 @@ function encrypt_notification_lib.notify(text, duration)
 	notification.BorderSizePixel = 0
 	notification.Size = UDim2.new(1, 0, 0, 15)
 	notification.Font = Enum.Font.SourceSans
-	notification.Text = text
+	notification.Text = formatted
 	notification.RichText = true
 	notification.TextColor3 = Color3.fromRGB(0, 0, 0)
 	notification.TextSize = 16.000
