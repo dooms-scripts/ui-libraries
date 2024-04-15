@@ -111,7 +111,7 @@ function encrypt_notification_lib.notify(text, duration)
 		local prefix = '<font color="rgb(%s)">'
 		local suffix = '</font>'
 		
-		if tag == 'custom' then format = custom_color;    color = true end
+		if tag == 'custom' then format = encrypt_notification_lib.custom_color;    color = true end
 		
 		if tag == 'white'  then format = '255, 255, 255'; color = true end
 		
