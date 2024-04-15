@@ -125,7 +125,7 @@ function encrypt_notification_lib.notify(text, duration)
 
 		if color == true then prefix = '<font color="rgb(%s)">'; suffix = '</font>' end
 		
-		return string.format(' ' .. prefix .. text .. suffix, format)
+		return string.format(prefix .. text .. suffix, format)
 	end)
 	
 	local notification = Instance.new('TextLabel', notification_container)
@@ -152,7 +152,7 @@ function encrypt_notification_lib.notify(text, duration)
 	end)()
 end
 
-warn('[✅] ENCRYPT NOTIFICATION LIBRARY: LOADED V1.0.2')
+warn('[✅] ENCRYPT NOTIFICATION LIBRARY: LOADED V1.1.0')
 encrypt_notification_lib.loaded = true
 
 return encrypt_notification_lib
