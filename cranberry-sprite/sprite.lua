@@ -33,8 +33,6 @@ local services = setmetatable({}, {__index = function(self, name)
 end})
 
 --[[ DEPENDENCIES ]]-------------------------------------------------
-
---// SERVICES
 local run_service = services.RunService
 local input_service = services.UserInputService
 local tween_service = services.TweenService
@@ -51,8 +49,6 @@ local plr = players.LocalPlayer
 local mouse = plr:GetMouse()
 
 --[[ FUNCTIONS ]]----------------------------------------------------
-
---// LIBRARY FUNCTIONS
 function library:exit_threads()
 	if pcall(function() 
 			for _, thread in pairs(library.threads) do
