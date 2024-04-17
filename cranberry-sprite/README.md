@@ -7,7 +7,7 @@
 ```lua
 local sprite = loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/ui-libraries/main/cranberry-sprite/sprite.lua')()
 ```
-
+\n
 > Library settings
 ```lua
 -- ↓↓↓ these are optional settings, if you dont wish to edit a specific thing, simply take it out.
@@ -18,7 +18,7 @@ sprite.colors = {
 	background = Color3.fromRGB(),
 }
 ```
-
+\n
 > Creating a window
 ```lua
 -- ↓↓↓ these are optional settings, if you dont wish to edit a specific thing, simply take it out.
@@ -31,14 +31,14 @@ local window = sprite:new_window({
 	draggable = true,
 })
 ```
-
+\n
 > Creating a tab
 ```lua
 local tab = window:add_tab({
 	name = 'tab'
 })
 ```
-
+\n
 > Creating a category
 ```lua
 local category = tab:add_category({
