@@ -213,8 +213,16 @@ function library:new_window(window_data)
 		local outline = create("UIStroke", {Name = [[outline]];Parent = tab_frame;Enabled = false;Color = Color3.fromRGB(20, 20, 20);})
 		local gradient = create("UIGradient", {Name = [[gradient]];Parent = tab_frame;Rotation = 90;Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255));ColorSequenceKeypoint.new(0.8287197351455688, Color3.fromRGB(253, 253, 253));ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 200, 200));});})
 		local padding = create("UIPadding", {Name = [[padding]];Parent = tab_frame;})
+
+		-->> automatically resize tab buttons based on text
+		coroutine.wrap(function() 
+			task.wait(0.1)
+			local bounds = tab_button.TextBounds
+			local bound_x = bounds.X
+				
+			tab_button.Size = UDim2.new(0, bound_x, 1, 0)
+		end)()
 		
-		tab_button.Size = UDim2.new(0, tab_button.TextBounds.X, 1, 0)
 		tab_button.MouseButton1Click:Connect(function()
 			for _, button in ipairs(tab_buttons:GetChildren()) do 
 				if button:IsA('TextButton') then
