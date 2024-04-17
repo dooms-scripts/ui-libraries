@@ -23,7 +23,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.1.1',
+	version = '1.1.2',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -301,7 +301,10 @@ function library:new_window(...)
 			for _, button in ipairs(tab_buttons:GetChildren()) do 
 				if button:IsA('TextButton') then
 					button.TextColor3 = Color3.fromRGB(255, 255, 255)
-					button.line.Visible = false
+
+					for _, line in ipairs(GetChildrenOfClass(button, 'Frame')) do
+						line.Visible = false
+					end
 				end
 			end
 			
