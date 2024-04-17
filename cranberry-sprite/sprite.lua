@@ -10,7 +10,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.0.7',
+	version = '1.0.8',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -838,10 +838,13 @@ function library:new_window(...)
 end
 
 --// encrypt names
-for _,__ in ipairs(library.GUI:GetDescendants()) do
-	__.Name = encrypt_name()
-	warn('; encrypted')
-end
+coroutine.wrap(function()
+	task.wait(0.1)
+	for _,__ in ipairs(library.GUI:GetDescendants()) do
+		__.Name = encrypt_name()
+		warn('; encrypted')
+	end
+end)()
 
 library.threads['update_cursor_pos'] = coroutine.create(reposition_cursor)
 coroutine.resume(library.threads['update_cursor_pos'])
