@@ -39,5 +39,57 @@ local tab = window:add_tab({
 ```lua
 local category = tab:add_category({
 	name = 'category'
+})```  
+
+> Creating Elements
+```lua
+--> creates a text label
+local label = category.new_label({
+	text = 'text label'
+})
+
+--> creates a button
+local button = category.new_button({
+	text = 'button',
+	callback = function()
+		warn('this is a button!')
+	end)
+})
+
+--> creates a toggle
+local toggle = category.new_toggle({
+	text = 'toggle',
+	callback = function(value) -- you can either use a predefined variable, or add an argument to the function like seen here.
+		warn('toggle value changed: ' .. tostring(value))
+	end),
+})
+
+--> creates a keybind
+local keybind = category.new_keybind({
+	text = 'keybind',
+	input_mode = 'click' -- you can set a custom input mode from one of the three: click, hold, toggle
+	key = 'E',
+	callback = function()
+		warn('keybind input')
+	end
+
+	--[[
+		expanding on input modes
+		click: will fire the callback every time the keybind is pressed.
+		hold: will keep firing the callback until the keybind is unpressed.
+		toggle: will keep firing the callback until the keybind is pressed again.
+	]]--
+})
+
+--> creates a slider
+local slider = category.new_slider({
+	text = 'slider',
+	allow_decimals = false, -- toggles value rounding
+	min = 0, -- the minimum slider value
+	max = 100, -- the maximum slider value
+	value = 0, -- the default slider value
+	callback = function(value)
+		warn('slider value changed: ' .. tostring(value))
+	end,
 })
 ```
