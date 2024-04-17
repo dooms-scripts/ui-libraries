@@ -1,6 +1,16 @@
+--[[
+
+		CRANBERRY SPRITE UI LIB
+		-----------------------
+		: FULLY UNDETECTABLE UI LIB (Safe to use in games with CoreGui checks like Peroxide etc.)
+		: MADE BY DOOM.LOL
+		: MADE WITH DOOMS GUI TO LUA CONVERTER
+
+]]--
+
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.0.3',
+	version = '1.0.4',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -13,20 +23,26 @@ local library = {
 	}
 }
 
---[[ DEPENDENCIES ]]-------------------------------------------------
-cloneref = cloneref or nil
-local cloneref = cloneref or function(...) return ... end
-local services = setmetatable({},{__index = function(self,name)
-	local serv = cloneref(game:GetService(name))
-	self[name] = serv
-	return serv
+--[[ + ]]------------------------------------------------------------
+library.GUI = create("ScreenGui", {Name = [[cranberry sprite ]] .. encrypt_name();Parent = nil;ZIndexBehavior = Enum.ZIndexBehavior.Sibling;})
+library.custom_cursor.image = create('ImageLabel', { Parent = library.GUI, AnchorPoint = Vector2.new(0.5, 0.5), BackgroundColor3 = Color3.fromRGB(255, 255, 255), BackgroundTransparency = 1.000, BorderColor3 = Color3.fromRGB(0, 0, 0), BorderSizePixel = 0, Position = UDim2.new(0.5, 0, 0.5, 0), Size = UDim2.new(0, 25, 0, 25), Image = 'http://www.roblox.com/asset/?id=16710247795', Visible = false, ZIndex = 99999, })
+
+local clone_service = cloneref or function(...) return ... end
+local services = setmetatable({}, {__index = function(self, name)
+	local new_service = clone_service(game:GetService(name))
+	self[name] = new_service
+	return new_service
 end})
 
+--[[ DEPENDENCIES ]]-------------------------------------------------
+
+--// SERVICES
 local run_service = services.RunService
 local input_service = services.UserInputService
 local tween_service = services.TweenService
 local players = services.Players
 
+--// METHODS
 local tween_info = TweenInfo
 local easing_style = Enum.EasingStyle
 local easing_direction = Enum.EasingDirection
@@ -37,18 +53,57 @@ local plr = players.LocalPlayer
 local mouse = plr:GetMouse()
 
 --[[ FUNCTIONS ]]----------------------------------------------------
+--// LIBRARY FUNCTIONS
+function library:exit_threads()
+	if pcall(function() 
+			for _, thread in pairs(library.threads) do
+				pcall(function() task.cancel(thread) end)
+				pcall(function() coroutine.close(thread) end)
+			end
+		end) then 
+		warn('Successfully exited threads.')
+	end
+end
+
+--// CLOSE ALL RBX_SCRIPT_CONNECTIONS WITHIN THE LIBRARY
+function library:exit_connections()
+	if pcall(function() 
+			for _, connection in pairs(library.connections) do
+				if typeof(connection) == 'RBXScriptConnection' then
+					connection:Disconnect()
+				end
+			end
+		end) then
+		warn('Successfully exited connections.')
+	end
+end
+
+--// CLOSE ALL COROUTINES, TASKS WITHIN THE LIBRARY
+function library:exit()
+	if library.GUI then library.GUI:Destroy() end
+	
+	if not pcall(function() library:exit_threads() end) then warn('Failed to exit lib threads') end
+	if not pcall(function() library:exit_connections() end) then warn('Failed to exit lib connections') end
+	
+	warn('> sprite closed')
+end
+
+--// ENCRYPT NAMES FUNCTION
 local function encrypt_name()
-	local characters = [[]]
+	local characters = [[救效须介首助职例热毕节害击乱态嗯宝倒注]]
 	local str = ''
 	for i=1, 99 do
-		str = str .. characters:sub(math.random(1,7), math.random(1,7))
+		str = str .. characters:sub(
+			math.random(1, #characters), 
+			math.random(1, #characters)
+		)
 	end
 
 	return str
 end
 
 --// SAFELOAD FUNCTION
-local function safe_load(instance, encrypt_names)
+local function safe_load(instance : Instance, encrypt_names : boolean)
 	local cloneref = cloneref or function(...) return ... end
 	local elevated_state = pcall(function() local a = cloneref(game:GetService("CoreGui")):GetFullName() end)
 
@@ -67,8 +122,8 @@ local function safe_load(instance, encrypt_names)
 	instance.Parent = elevated_state and service.CoreGui
 end
 
---// CREATE FUNCTION
-local function create(instance, properties)
+--// INSTANCE CREATE FUNCTION
+local function create(instance : string, properties : {})
 	local i = Instance.new(instance)
 	for p,v in pairs(properties) do
 		local s, err = pcall(function()
@@ -76,26 +131,28 @@ local function create(instance, properties)
 		end)
 
 		if err then 
-			warn('[!] PROBLEM CREATING INSTANCE "'..instance..'": '..err) 
+			warn('[...] PROBLEM CREATING INSTANCE "'..instance..'": '..err) 
 		end
 	end
 
 	return i
 end
 
-local function override(to_override, override_with)
-	for i, v in pairs(override_with) do
+--// TABLE OVERWRITE FUNCTION
+local function overwrite(to_overwrite : {}, overwrite_with : {})
+	for i, v in pairs(overwrite_with) do
 		if type(v) == 'table' then
-			to_override[i] = override(to_override[i] or {}, v)
+			to_overwrite[i] = overwrite(to_overwrite[i] or {}, v)
 		else
-			to_override[i] = v
+			to_overwrite[i] = v
 		end
 	end
 
-	return to_override
+	return to_overwrite or nil
 end
 
-local function GetChildrenOfClass(instance, class)
+--// GET CHILDREN OF CLASS
+local function GetChildrenOfClass(instance : Instance, class : string)
 	local children = {}
 
 	for _,__ in ipairs(instance:GetChildren()) do
@@ -104,50 +161,57 @@ local function GetChildrenOfClass(instance, class)
 		end
 	end
 
-	return children
+	return children or nil
 end
 
---// CREATE UI
-library.GUI = create("ScreenGui", {Name = [[null lib]];Parent = nil;ZIndexBehavior = Enum.ZIndexBehavior.Sibling;})
+--// GET DESCENDANTS OF CLASS
+local function GetDescendantsOfClass(instance : Instance, class : string)
+	local descendants = {}
 
-local custom_cursor = create('ImageLabel', {
-	Parent = library.GUI,
-	AnchorPoint = Vector2.new(0.5, 0.5),
-	BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-	BackgroundTransparency = 1.000,
-	BorderColor3 = Color3.fromRGB(0, 0, 0),
-	BorderSizePixel = 0,
-	Position = UDim2.new(0.5, 0, 0.5, 0),
-	Size = UDim2.new(0, 25, 0, 25),
-	Image = 'http://www.roblox.com/asset/?id=16710247795',
-	Visible = false,
-	ZIndex = 99999,
-})
+	for _,__ in ipairs(instance:GetDescendants()) do
+		if __:IsA(class) then
+			descendants[#descendants+1] = __
+		end
+	end
 
-library.threads['update_cursor_pos'] = coroutine.create(function()
+	return descendants or nil
+end
+
+--// UPDATE CUSTOM CURSOR POSITION
+local function update_cursor(...)
+	local position = ...
+
+	library.custom_cursor.image.Position = UDim2.new(0, position.x, 0, position.y)
+end
+
+--// LOOP UPDATE CURSOR POSITION AND VISIBILITY
+local function reposition_cursor()
 	repeat task.wait()
 		if library.use_custom_cursor then
 			input_service.MouseIconEnabled = not library.custom_cursor.enabled
-			custom_cursor.Visible = library.custom_cursor.enabled
+			library.custom_cursor.image.Visible = library.custom_cursor.enabled
 
-			custom_cursor.Position = UDim2.new(0, mouse.X, 0, mouse.Y)
+			--library.custom_cursor.image.Position = UDim2.new(0, mouse.X, 0, mouse.Y)
+			update_cursor(mouse.X, mouse.Y)
 		else
 			input_service.MouseIconEnabled = true
-			custom_cursor.Visible = false
-		end
+			library.custom_cursor.image.Visible = false
+		end		
 	until nil
-end)
+end
 
+--[[ CREATE UI ]]----------------------------------------------------
+
+--// ATTEMPT TO SAFELY LOAD THE LIBRARY TO THE CORE, DEPLOY FAILSAFES IF FAILED
 if not pcall(function() safe_load(library.GUI, false) end) then
-	warn('Cranberry Sprite failed to load: failed to load to an elevated state. ')
+	warn('Cranberry Sprite failed to load: cannot load sprite to an elevated state; For your safety, sprite is closing.')
 	library.GUI:Destroy()
 	return
 end
 
-coroutine.resume(library.threads['update_cursor_pos'])
-
-function library:new_window(window_data)
-	local window, defaults = {}, {
+--// WINDOW CREATION FUNCTION
+function library:new_window(...)
+	local window, data = {}, {
 		title = 'cranberry sprite // ui library<font color="rgb(185,185,185)"> | doom#1000</font>',
 		size = UDim2.new(0, 450, 0, 550),
 		position = UDim2.new(0, 500, 0, 200),
@@ -157,7 +221,7 @@ function library:new_window(window_data)
 		bg_img_transparency = 0.95,
 	}
 	
-	local window_data = override(defaults, window_data or {})
+	local window_data = overwrite(data, ... or {})
 	
 	local window_frame = create("Frame", {Parent = library.GUI;Draggable = window_data.draggable;AnchorPoint = window_data.anchor; BorderSizePixel = 0;Size = window_data.size;BorderColor3 = Color3.fromRGB(45, 45, 45);BorderMode = Enum.BorderMode.Inset;Name = [[window_frame]];Position = window_data.position;BackgroundColor3 = Color3.fromRGB(40, 40, 40);Active=true;Selectable=true;})
 	local tab_holder = create("Frame", {Parent = window_frame;AnchorPoint = Vector2.new(0.5, 1);ZIndex = 2;BorderSizePixel = 0;Size = UDim2.new(1, 0, 1, -45);BorderColor3 = Color3.fromRGB(0, 0, 0);LayoutOrder = 2;Name = [[tab_holder]];Position = UDim2.new(0.5, 0, 1, 0);BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
@@ -179,12 +243,12 @@ function library:new_window(window_data)
 		window_frame.Visible = not window_frame.Visible
 	end
 
-	function window:close()
+	function window:close() 
 		window_frame:Destroy()
 	end
 
 	function window:update(data)
-		local data = override(defaults, data or {})
+		local data = overwrite(defaults, data or {})
 
 		label.Text = data.title
 		window_frame.Size = data.size
@@ -202,12 +266,12 @@ function library:new_window(window_data)
 		library.custom_cursor.enabled = false
 	end)
 	
-	function window:add_tab(tab_data)
-		local tab, defaults = {}, {
+	function window:add_tab(...)
+		local tab, data = {}, {
 			name = 'tab',
 		}
 		
-		local tab_data = override(defaults, tab_data or {})
+		local tab_data = overwrite(data, ... or {})
 		
 		local tab_frame = create("Frame", {Parent = tab_holder;Size = UDim2.new(1, 0, 1, 0);Visible=false;ClipsDescendants = false;BorderColor3 = Color3.fromRGB(255, 255, 255);BorderMode = Enum.BorderMode.Inset;Name = [[tab_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(35, 35, 35);})
 		local tab_button = create("TextButton", {TextStrokeTransparency = 0;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = tab_buttons;TextSize = 13;Size = UDim2.new(0, 75, 1, 0);BorderColor3 = Color3.fromRGB(0, 0, 0);Text = tab_data.name;TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[tab_button]];TextColor3 = Color3.fromRGB(255, 255, 255);BackgroundTransparency = 1;})
@@ -242,12 +306,12 @@ function library:new_window(window_data)
 			tab_frame.Visible = true
 		end)
 		
-		function tab:add_category(category_data)
-			local category, defaults = { elements = 0 }, {
+		function tab:add_category(...)
+			local category, data = { elements = 0 }, {
 				name = 'category'
 			}
 			
-			local category_data = override(defaults, category_data or {})
+			local category_data = overwrite(data, ... or {})
 			
 			local category_frame = create("Frame", {Parent = tab_frame;Size = UDim2.new(0.5, -5, 0, 18);BorderColor3 = Color3.fromRGB(50, 50, 50);BorderMode = Enum.BorderMode.Inset;Name = [[category_frame]];BackgroundTransparency = 0.15000000596046448;BackgroundColor3 = Color3.fromRGB(30, 30, 30);})
 			local top_bar = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 10);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[top_bar]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
@@ -265,7 +329,7 @@ function library:new_window(window_data)
 					alignment = 'Left',
 				}
 				
-				local data = override(defaults, data or {})
+				local data = overwrite(defaults, data or {})
 				
 				local label_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 20);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[label_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 				local label_text = create("TextLabel", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = label_frame;AnchorPoint = Vector2.new(0, 0.5);TextSize = 13;Size = UDim2.new(0.75, 0, 1, 0);TextXAlignment = Enum.TextXAlignment[data.alignment];BorderColor3 = Color3.fromRGB(0, 0, 0);Text = data.text;TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[label_text]];Position = UDim2.new(0, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
@@ -284,7 +348,7 @@ function library:new_window(window_data)
 					end
 				}
 				
-				local data = override(defaults, data or {})
+				local data = overwrite(defaults, data or {})
 
 				local button_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 22);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[button_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 				local text_button = create("TextButton", {TextStrokeTransparency = 0.5;AutoButtonColor = false;BackgroundColor3 = Color3.fromRGB(29, 29, 29);BorderMode = Enum.BorderMode.Inset;Parent = button_frame;AnchorPoint = Vector2.new(0, 0.5);TextSize = 13;Size = UDim2.new(1, 0, 0, 18);BorderColor3 = Color3.fromRGB(50, 50, 50);Text = [[button]];TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Position = UDim2.new(0, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);})
@@ -312,7 +376,7 @@ function library:new_window(window_data)
 					end,
 				}
 				
-				local data = override(defaults, data or {})
+				local data = overwrite(defaults, data or {})
 				
 				local toggle_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 20);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[toggle_frame]];Position = UDim2.new(-1.41860461, 0, 0.309090912, 0);BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 				local toggle_text = create("TextLabel", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = toggle_frame;AnchorPoint = Vector2.new(1, 0.5);TextSize = 13;Size = UDim2.new(1, -20, 1, 0);TextXAlignment = Enum.TextXAlignment.Left;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = data.text;TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[toggle_text]];Position = UDim2.new(1, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
@@ -357,7 +421,7 @@ function library:new_window(window_data)
 						end,
 					}
 
-					local data = override(defaults, data or {})
+					local data = overwrite(defaults, data or {})
 
 					local keybind_button = create("TextButton", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;AutoButtonColor = false;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = toggle_frame;AnchorPoint = Vector2.new(1, 0.5);TextSize = 13;Size = UDim2.new(0, 30, 0, 15);TextXAlignment = Enum.TextXAlignment.Right;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = '[...]';TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[keybind_button]];Position = UDim2.new(1, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
 					
@@ -462,7 +526,7 @@ function library:new_window(window_data)
 					end,
 				}
 				
-				local data = override(defaults, data or {})
+				local data = overwrite(defaults, data or {})
 				
 				local textbox_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 36);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[textbox_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 				local textbox_label = create("TextLabel", {TextStrokeTransparency = 0.5;Position = UDim2.new(0,0,0,0);BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = textbox_frame;TextSize = 14;Size = UDim2.new(1, 0, 0.5, 0);TextXAlignment = Enum.TextXAlignment.Left;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = data.text;TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[textbox_label]];TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
@@ -511,7 +575,7 @@ function library:new_window(window_data)
 					end,
 				}
 				
-				local data = override(defaults, data or {})
+				local data = overwrite(defaults, data or {})
 				slider.value = data.value
 				
 				local slider_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 36);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[slider_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
@@ -583,7 +647,7 @@ function library:new_window(window_data)
 					end,
 				}
 				
-				local data = override(defaults, data or {})
+				local data = overwrite(defaults, data or {})
 				
 				local keybind_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 20);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[keybind_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 				local keybind_label = create("TextLabel", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = keybind_frame;AnchorPoint = Vector2.new(0, 0.5);TextSize = 13;Size = UDim2.new(0.75, 0, 1, 0);TextXAlignment = Enum.TextXAlignment.Left;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = [[keybind]];TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[keybind_label]];Position = UDim2.new(0, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
@@ -686,7 +750,7 @@ function library:new_window(window_data)
 					end,
 				}
 				
-				local color_picker_data = override(defaults, data or {})
+				local color_picker_data = overwrite(defaults, data or {})
 				
 				local color_picker_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 20);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[keybind_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 				local color_picker_label = create("TextLabel", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = color_picker_frame;AnchorPoint = Vector2.new(0, 0.5);TextSize = 13;Size = UDim2.new(0.75, 0, 1, 0);TextXAlignment = Enum.TextXAlignment.Left;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = [[keybind]];TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[keybind_label]];Position = UDim2.new(0, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
@@ -774,37 +838,7 @@ function library:new_window(window_data)
 	return window
 end
 
-function library:exit_threads()
-	if pcall(function() 
-			for _, thread in pairs(library.threads) do
-				pcall(function() task.cancel(thread) end)
-				pcall(function() coroutine.close(thread) end)
-			end
-		end) then 
-		warn('Successfully exited threads.')
-	end
-end
-
-function library:exit_connections()
-	if pcall(function() 
-			for _, connection in pairs(library.connections) do
-				if typeof(connection) == 'RBXScriptConnection' then
-					connection:Disconnect()
-				end
-			end
-		end) then
-		warn('Successfully exited connections.')
-	end
-end
-
-function library:exit()
-	library.GUI:Destroy()
-	
-	if not pcall(function() library:exit_threads() end) then warn('Failed to exit lib threads') end
-	if not pcall(function() library:exit_connections() end) then warn('Failed to exit lib connections') end
-	
-	warn('> Library exit')
-end
-
+library.threads['update_cursor_pos'] = coroutine.create(reposition_cursor)
+coroutine.resume(library.threads['update_cursor_pos'])
 warn('loaded sprite: ' .. library.version)
 return library
