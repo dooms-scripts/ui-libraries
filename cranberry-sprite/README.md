@@ -16,7 +16,7 @@ sprite.colors = {
 	foreground = Color3.fromRGB(),
 	background = Color3.fromRGB(),
 }
-```  
+```
 > Creating a window
 ```lua
 -- ↓↓↓ these are optional settings, if you dont wish to edit a specific thing, simply take it out.
@@ -39,8 +39,8 @@ local tab = window:add_tab({
 ```lua
 local category = tab:add_category({
 	name = 'category'
-})```  
-
+})
+```
 > Creating Elements
 ```lua
 --> creates a text label
