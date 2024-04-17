@@ -10,7 +10,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.0.9',
+	version = '1.1.0',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -179,23 +179,20 @@ end
 local function update_cursor(...)
 	local position = ...
 
-	library.custom_cursor.image.Position = UDim2.new(0, position.x, 0, position.y)
+	if library.use_custom_cursor then
+		input_service.MouseIconEnabled = not library.custom_cursor.enabled
+		library.custom_cursor.image.Visible = library.custom_cursor.enabled
+
+		library.custom_cursor.image.Position = UDim2.new(0, position.x, 0, position.y)
+	else
+		input_service.MouseIconEnabled = true
+		library.custom_cursor.image.Visible = false
+	end
 end
 
 --// LOOP UPDATE CURSOR POSITION AND VISIBILITY
 local function reposition_cursor()
-	repeat task.wait()
-		if library.use_custom_cursor then
-			input_service.MouseIconEnabled = not library.custom_cursor.enabled
-			library.custom_cursor.image.Visible = library.custom_cursor.enabled
-
-			--library.custom_cursor.image.Position = UDim2.new(0, mouse.X, 0, mouse.Y)
-			update_cursor({ x = mouse.X, y = mouse.Y })
-		else
-			input_service.MouseIconEnabled = true
-			library.custom_cursor.image.Visible = false
-		end		
-	until nil
+	repeat task.wait() update_cursor({ x = mouse.X, y = mouse.Y }) until nil
 end
 
 --[[ CREATE UI ]]----------------------------------------------------
