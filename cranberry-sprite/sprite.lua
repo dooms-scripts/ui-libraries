@@ -149,16 +149,17 @@ coroutine.resume(library.threads['update_cursor_pos'])
 function library:new_window(window_data)
 	local window, defaults = {}, {
 		title = 'cranberry sprite // ui library<font color="rgb(185,185,185)"> | doom#1000</font>',
+		size = UDim2.new(0, 450, 0, 550),
+		position = UDim2.new(0, 500, 0, 200),
+		anchor = Vector2.new(0, 0),
+		draggable = true,
 		bg_img = 'rbxassetid://15688752899',
 		bg_img_transparency = 0.95,
-		size = UDim2.new(0, 450, 0, 550),
-		pos = UDim2.new(0, 500, 0, 200),
-		draggable = true,
 	}
 	
 	local window_data = override(defaults, window_data or {})
 	
-	local window_frame = create("Frame", {Parent = library.GUI;Draggable = window_data.draggable;BorderSizePixel = 0;Size = UDim2.new(0, 450, 0, 550);BorderColor3 = Color3.fromRGB(45, 45, 45);BorderMode = Enum.BorderMode.Inset;Name = [[window_frame]];Position = window_data.pos;BackgroundColor3 = Color3.fromRGB(40, 40, 40);Active=true;Selectable=true;})
+	local window_frame = create("Frame", {Parent = library.GUI;Draggable = window_data.draggable;AnchorPoint = window_data.anchor; BorderSizePixel = 0;Size = window_data.size;BorderColor3 = Color3.fromRGB(45, 45, 45);BorderMode = Enum.BorderMode.Inset;Name = [[window_frame]];Position = window_data.position;BackgroundColor3 = Color3.fromRGB(40, 40, 40);Active=true;Selectable=true;})
 	local tab_holder = create("Frame", {Parent = window_frame;AnchorPoint = Vector2.new(0.5, 1);ZIndex = 2;BorderSizePixel = 0;Size = UDim2.new(1, 0, 1, -45);BorderColor3 = Color3.fromRGB(0, 0, 0);LayoutOrder = 2;Name = [[tab_holder]];Position = UDim2.new(0.5, 0, 1, 0);BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 	local top_bar = create("Frame", {Parent = window_frame;Size = UDim2.new(1, 0, 0, 25);BorderColor3 = Color3.fromRGB(58, 58, 58);BorderMode = Enum.BorderMode.Inset;Name = [[top_bar]];BackgroundColor3 = Color3.fromRGB(40, 40, 40);})
 	local label = create("TextLabel", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;RichText = true;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = top_bar;AnchorPoint = Vector2.new(0.5, 0);TextSize = 14;Size = UDim2.new(1, 0, 1, 0);TextXAlignment = Enum.TextXAlignment.Left;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = string.format(window_data.title);TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[label]];Position = UDim2.new(0.5, 0, 0, 0);TextColor3 = library.colors.accent;BackgroundTransparency = 1;})
