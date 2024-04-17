@@ -138,10 +138,12 @@ library.threads['update_cursor_pos'] = coroutine.create(function()
 end)
 
 if not pcall(function() safe_load(library.GUI, false) end) then
-	warn('Failed to load to an elevated state. Returning to PlrGui')
-	library.GUI.Parent = game.Players.LocalPlayer:WaitForChild('PlayerGui')
-	coroutine.resume(library.threads['update_cursor_pos'])
+	warn('Cranberry Sprite failed to load: failed to load to an elevated state. ')
+	library.GUI:Destroy()
+	return
 end
+
+coroutine.resume(library.threads['update_cursor_pos'])
 
 function library:new_window(window_data)
 	local window, defaults = {}, {
