@@ -10,7 +10,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.0.6',
+	version = '1.0.7',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -839,7 +839,7 @@ end
 
 --// encrypt names
 for _,__ in ipairs(library.GUI:GetDescendants()) do
-	if __.Name then __.Name = encrypt_name() end
+	__.Name = encrypt_name()
 	warn('; encrypted')
 end
 
