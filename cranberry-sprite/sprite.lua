@@ -1,5 +1,6 @@
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
+	version = '1.0.1',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -805,4 +806,5 @@ function library:exit()
 	warn('> Library exit')
 end
 
+warn('loaded sprite: ' .. library.version)
 return library
