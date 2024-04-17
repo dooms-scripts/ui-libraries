@@ -25,6 +25,7 @@ local library = {
 
 --[[ + ]]------------------------------------------------------------
 local clone_service = cloneref or function(...) return ... end
+
 local services = setmetatable({}, {__index = function(self, name)
 	local new_service = clone_service(game:GetService(name))
 	self[name] = new_service
@@ -89,6 +90,7 @@ end
 --// ENCRYPT NAMES FUNCTION
 local function encrypt_name()
 	local characters = [[救效须介首助职例热毕节害击乱态嗯宝倒注]]
+	local characters = "azxcvnmiopqyu1234567890"
 	local str = ''
 	for i=1, 99 do
 		str = str .. characters:sub(
@@ -196,7 +198,7 @@ local function reposition_cursor()
 end
 
 --[[ CREATE UI ]]----------------------------------------------------
-library.GUI = create("ScreenGui", {Name = [[cranberry sprite | doom.lol ]] .. encrypt_name();Parent = nil;ZIndexBehavior = Enum.ZIndexBehavior.Sibling;})
+library.GUI = create("ScreenGui", {Name = [[cranberry sprite | doom.lol | ]] .. encrypt_name();Parent = nil;ZIndexBehavior = Enum.ZIndexBehavior.Sibling;})
 library.custom_cursor.image = create('ImageLabel', { Parent = library.GUI, AnchorPoint = Vector2.new(0.5, 0.5), BackgroundColor3 = Color3.fromRGB(255, 255, 255), BackgroundTransparency = 1.000, BorderColor3 = Color3.fromRGB(0, 0, 0), BorderSizePixel = 0, Position = UDim2.new(0.5, 0, 0.5, 0), Size = UDim2.new(0, 25, 0, 25), Image = 'http://www.roblox.com/asset/?id=16710247795', Visible = false, ZIndex = 99999, })
 
 --// ATTEMPT TO SAFELY LOAD THE LIBRARY TO THE CORE, EXIT LIBRARY IF FAILED
@@ -862,20 +864,20 @@ function library:new_window(...)
 	return window
 end
 
---// encrypt names
 coroutine.wrap(function()
 	task.wait(0.1)
+	
+	--// encrypt names
 	for _,__ in ipairs(library.GUI:GetDescendants()) do
 		__.Name = encrypt_name()
-		warn('; encrypted')
 	end
-end)()
-
---// start threads
-library.threads['update_cursor_pos'] = coroutine.create(reposition_cursor)
-coroutine.resume(library.threads['update_cursor_pos'])
-
-warn('; started threads')
-warn('loaded sprite: ' .. library.version)
+		
+	--// start threads
+	library.threads['update_cursor_pos'] = coroutine.create(reposition_cursor)
+	coroutine.resume(library.threads['update_cursor_pos'])
+		
+	warn('. encrypted')
+	warn('. started threads')
+end)() warn('loaded sprite: ' .. library.version)
 
 return library
