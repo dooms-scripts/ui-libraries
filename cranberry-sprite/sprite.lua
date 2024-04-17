@@ -1,6 +1,6 @@
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.0.2',
+	version = '1.0.3',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
