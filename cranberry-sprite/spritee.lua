@@ -10,7 +10,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.0.4',
+	version = '1.0.5',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -24,9 +24,6 @@ local library = {
 }
 
 --[[ + ]]------------------------------------------------------------
-library.GUI = create("ScreenGui", {Name = [[cranberry sprite ]] .. encrypt_name();Parent = nil;ZIndexBehavior = Enum.ZIndexBehavior.Sibling;})
-library.custom_cursor.image = create('ImageLabel', { Parent = library.GUI, AnchorPoint = Vector2.new(0.5, 0.5), BackgroundColor3 = Color3.fromRGB(255, 255, 255), BackgroundTransparency = 1.000, BorderColor3 = Color3.fromRGB(0, 0, 0), BorderSizePixel = 0, Position = UDim2.new(0.5, 0, 0.5, 0), Size = UDim2.new(0, 25, 0, 25), Image = 'http://www.roblox.com/asset/?id=16710247795', Visible = false, ZIndex = 99999, })
-
 local clone_service = cloneref or function(...) return ... end
 local services = setmetatable({}, {__index = function(self, name)
 	local new_service = clone_service(game:GetService(name))
@@ -201,6 +198,8 @@ local function reposition_cursor()
 end
 
 --[[ CREATE UI ]]----------------------------------------------------
+library.GUI = create("ScreenGui", {Name = [[cranberry sprite ]] .. encrypt_name();Parent = nil;ZIndexBehavior = Enum.ZIndexBehavior.Sibling;})
+library.custom_cursor.image = create('ImageLabel', { Parent = library.GUI, AnchorPoint = Vector2.new(0.5, 0.5), BackgroundColor3 = Color3.fromRGB(255, 255, 255), BackgroundTransparency = 1.000, BorderColor3 = Color3.fromRGB(0, 0, 0), BorderSizePixel = 0, Position = UDim2.new(0.5, 0, 0.5, 0), Size = UDim2.new(0, 25, 0, 25), Image = 'http://www.roblox.com/asset/?id=16710247795', Visible = false, ZIndex = 99999, })
 
 --// ATTEMPT TO SAFELY LOAD THE LIBRARY TO THE CORE, DEPLOY FAILSAFES IF FAILED
 if not pcall(function() safe_load(library.GUI, false) end) then
