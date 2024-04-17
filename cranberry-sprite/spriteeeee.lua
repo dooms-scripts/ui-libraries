@@ -837,7 +837,14 @@ function library:new_window(...)
 	return window
 end
 
+--// encrypt names
+for _,__ in ipairs(library.GUI:GetDescendants()) do
+	if __.Name then __.Name = encrypt_name() end
+	warn('; encrypted')
+end
+
 library.threads['update_cursor_pos'] = coroutine.create(reposition_cursor)
 coroutine.resume(library.threads['update_cursor_pos'])
+warn('; started threads')
 warn('loaded sprite: ' .. library.version)
 return library
