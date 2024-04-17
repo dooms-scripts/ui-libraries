@@ -257,7 +257,7 @@ function library:new_window(window_data)
 			
 			label.Size = UDim2.new(0, label.TextBounds.X + 10, 0, 10)
 			
-			function category.new_label(data)
+			function category:new_label(data)
 				local label, defaults = {}, {
 					text = 'text label',
 					alignment = 'Left',
@@ -273,7 +273,7 @@ function library:new_window(window_data)
 				return label
 			end
 			
-			function category.new_button(data)
+			function category:new_button(data)
 				category.elements += 1
 				local button, defaults = {}, {
 					text = 'button',
@@ -301,7 +301,7 @@ function library:new_window(window_data)
 				return button
 			end
 			
-			function category.new_toggle(data)
+			function category:new_toggle(data)
 				category.elements += 1
 				local toggle, defaults = { value = false }, {
 					text = 'toggle',
@@ -340,7 +340,7 @@ function library:new_window(window_data)
 						--> toggle_button.BorderColor3 = Color3.fromRGB(50, 50, 50)
 					end
 					
-					if not pcall(function() data.callback() end) then 
+					if not pcall(function() data.callback(toggle.value) end) then 
 						warn('Callback failed. Check your code bud')
 					end
 				end)
@@ -450,7 +450,7 @@ function library:new_window(window_data)
 				return toggle
 			end
 			
-			function category.new_textbox(data)
+			function category:new_textbox(data)
 				category.elements += 1
 				local textbox, defaults = { value = '' }, {
 					text = 'textbox',
@@ -484,7 +484,10 @@ function library:new_window(window_data)
 				end
 				
 				textbox_text.FocusLost:Connect(function()
-					if textbox_text.Text == '' then textbox_text.Text = '...' else textbox_text.Text = data.text_prefix .. textbox_text.Text end 
+					if textbox_text.Text == '' then textbox_text.Text = '...' else
+						textbox.value = textbox_text.Text
+						textbox_text.Text = data.text_prefix .. textbox_text.Text 
+					end 
 					if not pcall(function() data.callback(textbox.value) end) then
 						warn('Callback failed. Check your code bud')
 					end
@@ -494,7 +497,7 @@ function library:new_window(window_data)
 				return textbox
 			end
 			
-			function category.new_slider(data)
+			function category:new_slider(data)
 				category.elements += 1
 				local slider, defaults = { value = 0 }, {
 					text = 'slider',
@@ -568,7 +571,7 @@ function library:new_window(window_data)
 				return slider	
 			end
 			
-			function category.new_keybind(data)
+			function category:new_keybind(data)
 				category.elements += 1
 				local keybind, defaults = { key = nil, editing = false, clicked = false }, {
 					text = 'keybind',
@@ -673,7 +676,7 @@ function library:new_window(window_data)
 				return keybind
 			end
 			
-			function category.new_colorpicker(data)
+			function category:new_colorpicker(data)
 				category.elements += 1
 				local color_picker, defaults = {}, {
 					text = 'color picker',
