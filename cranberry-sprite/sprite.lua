@@ -88,7 +88,7 @@ end
 
 --// ENCRYPT NAMES FUNCTION
 local function encrypt_name()
-	local characters = [[救效须介首助职例热毕节害击乱态嗯宝倒注]]
+	local characters = [[救效须介首助职例热毕节害击乱态嗯宝倒注]]
 	local str = ''
 	for i=1, 99 do
 		str = str .. characters:sub(
