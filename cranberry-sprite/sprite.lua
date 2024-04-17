@@ -861,7 +861,7 @@ function library:new_window(...)
 end
 
 coroutine.wrap(function()
-	task.wait(0.1)
+	task.wait()
 	
 	--// encrypt names
 	for _,__ in ipairs(library.GUI:GetDescendants()) do
