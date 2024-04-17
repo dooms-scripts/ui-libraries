@@ -1,6 +1,6 @@
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.0.1',
+	version = '1.0.2',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -443,7 +443,6 @@ function library:new_window(window_data)
 						end
 					end)
 
-					category_frame.Size += UDim2.new(0, 0, 0, 20)
 					return keybind
 				end
 
