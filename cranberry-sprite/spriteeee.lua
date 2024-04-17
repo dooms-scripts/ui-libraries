@@ -10,7 +10,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.0.5',
+	version = '1.0.6',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -189,7 +189,7 @@ local function reposition_cursor()
 			library.custom_cursor.image.Visible = library.custom_cursor.enabled
 
 			--library.custom_cursor.image.Position = UDim2.new(0, mouse.X, 0, mouse.Y)
-			update_cursor({ mouse.X, mouse.Y })
+			update_cursor({ x = mouse.X, y = mouse.Y })
 		else
 			input_service.MouseIconEnabled = true
 			library.custom_cursor.image.Visible = false
