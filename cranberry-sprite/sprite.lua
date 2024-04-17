@@ -1,12 +1,12 @@
 --[[
                                                                                                                                                                                              
 --	              .:-==--:                       =+++:     :-                  
---	            .=++=--=++.                     :++++=    -+-                  
+--	            :=++=--=++.                     :++++=    -+-                  
 --	           .+++-    -: ::::::.     .::. :-:  .:-:  .-+++::  .::--:.        
 --	           .++++:     :+++==+++=   +++-=++-:+==:.==++++==::=++-.=++:       
---	            .++++-   .+++=  -+++- =+++:  :.+++=   -+++:  =+++. .++=.       
+--	            :++++-   .+++=  -+++- =+++:  :.+++=   -+++:  =+++. .++=.       
 --	             .=+++=  =++=   =+++:-+++:    =+++.  :+++-  =+++:.-+=:         
---	        .-    .++++ -+++:  -+++-.+++-    -+++:  .+++=  :+++=               
+--	        :-    .++++ -+++:  -+++-.+++-    -+++:  .+++=  :+++=               
 --	        =+=:..-+++::+++-  -++=. =++=    .+++=   =+++.  .++++:  .:.         
 --	       .=++++++=- .=++=.:=-:.  -===.    ==+=   -+++:    :=+++=-:           
 --	                  =+++.                                                    
@@ -23,7 +23,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.1.0',
+	version = '1.1.1',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -506,15 +506,15 @@ function library:new_window(...)
 							if data.input_mode == 'hold' then
 								keybind.clicked = true
 								while keybind.clicked do task.wait()
-									data.callback(toggle.value)
+									data.callback(keybind.key, toggle.value)
 								end
 							elseif data.input_mode == 'toggle' then
 								keybind.clicked = not keybind.clicked
 								while keybind.clicked do task.wait()
-									data.callback(toggle.value)
+									data.callback(keybind.key, toggle.value)
 								end
 							elseif data.input_mode == 'click' then
-								data.callback(toggle.value)
+								data.callback(keybind.key, toggle.value)
 							end
 						end
 					end)
@@ -746,15 +746,15 @@ function library:new_window(...)
 						if data.input_mode == 'hold' then
 							keybind.clicked = true
 							while keybind.clicked do task.wait()
-								data.callback()
+								data.callback(keybind.key)
 							end
 						elseif data.input_mode == 'toggle' then
 							keybind.clicked = not keybind.clicked
 							while keybind.clicked do task.wait()
-								data.callback()
+								data.callback(keybind.key)
 							end
 						elseif data.input_mode == 'click' then
-							data.callback()
+							data.callback(keybind.key)
 						end
 					end
 				end)
