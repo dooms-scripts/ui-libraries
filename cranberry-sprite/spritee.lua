@@ -417,15 +417,16 @@ function library:new_window(...)
 				
 				toggle_button.MouseButton1Click:Connect(function()
 					toggle.value = not toggle.value
-					data.callback(toggle.value)
 					
 					if not toggle.value then
 						toggle_button.BackgroundColor3 = library.colors.accent
+						data.callback(toggle.value)
 						--> toggle_button.BorderColor3 = library.colors.accent
 					end
 					
 					if toggle.value then
 						toggle_button.BackgroundColor3 = Color3.fromRGB(29, 29, 29)
+						data.callback(toggle.value)
 						--> toggle_button.BorderColor3 = Color3.fromRGB(50, 50, 50)
 					end
 				end)
