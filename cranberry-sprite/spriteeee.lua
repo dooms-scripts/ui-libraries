@@ -23,7 +23,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.2.0',
+	version = '1.2.1',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -391,7 +391,7 @@ function library:new_window(...)
 				category.elements += 1
 				category_frame.Size += UDim2.new(0, 0, 0, 20)
 				
-				local toggle, data = { value = false }, {
+				local toggle, data = {}, {
 					text = 'toggle',
 					callback = function()
 						warn('No callback has been set to toggle')
@@ -399,6 +399,7 @@ function library:new_window(...)
 				}
 				
 				local data = overwrite(data, ... or {})
+				toggle.value = false
 				
 				local toggle_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 20);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[toggle_frame]];Position = UDim2.new(-1.41860461, 0, 0.309090912, 0);BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 				local toggle_text = create("TextLabel", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = toggle_frame;AnchorPoint = Vector2.new(1, 0.5);TextSize = 13;Size = UDim2.new(1, -20, 1, 0);TextXAlignment = Enum.TextXAlignment.Left;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = data.text;TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[toggle_text]];Position = UDim2.new(1, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
@@ -417,6 +418,7 @@ function library:new_window(...)
 				
 				toggle_button.MouseButton1Click:Connect(function()
 					toggle.value = not toggle.value
+					warn(toggle.value)
 					
 					if toggle.value then
 						toggle_button.BackgroundColor3 = library.colors.accent
