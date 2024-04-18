@@ -1,3 +1,5 @@
+--[[ gui safe loader ]]--
+--[[    doom.lol     ]]--
 safe_load = function(instance : Instance, encrypt_names : boolean)
 	local cloneref = cloneref or function(...) return ... end
 	local elevated_state = pcall(function() local a = cloneref(game:GetService("CoreGui")):GetFullName() end)
