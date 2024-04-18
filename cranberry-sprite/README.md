@@ -1,8 +1,7 @@
 # CRANBERRY SPRITE UI LIBRARY
 
 # SHOWCASE
-![sc-1](https://github.com/dooms-scripts/ui-libraries/assets/140380232/cdec74f9-8231-482c-b0d7-9f1035440eee)
-![sc-2](https://github.com/dooms-scripts/ui-libraries/assets/140380232/ce8e0995-d881-43d1-8df4-84b1b1e3ea0a)
+![sc-1](https://github.com/dooms-scripts/ui-libraries/assets/140380232/cdec74f9-8231-482c-b0d7-9f1035440eee) ![sc-2](https://github.com/dooms-scripts/ui-libraries/assets/140380232/ce8e0995-d881-43d1-8df4-84b1b1e3ea0a)
 
 # HOW TO USE
 > Initializing the library
