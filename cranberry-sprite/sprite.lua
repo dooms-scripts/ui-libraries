@@ -23,7 +23,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.2.1',
+	version = '1.2.2',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -37,6 +37,7 @@ local library = {
 }
 
 --[[ + ]]------------------------------------------------------------
+cloneref = cloneref or nil
 local clone_service = cloneref or function(...) return ... end
 
 local services = setmetatable({}, {__index = function(self, name)
@@ -76,12 +77,12 @@ end
 --// CLOSE ALL RBX_SCRIPT_CONNECTIONS WITHIN THE LIBRARY
 function library:exit_connections()
 	if pcall(function() 
-		for _, connection in pairs(library.connections) do
-			if typeof(connection) == 'RBXScriptConnection' then
-				connection:Disconnect()
+			for _, connection in pairs(library.connections) do
+				if typeof(connection) == 'RBXScriptConnection' then
+					connection:Disconnect()
+				end
 			end
-		end
-	end) then
+		end) then
 		warn('Successfully exited connections.')
 	end
 end
@@ -89,10 +90,10 @@ end
 --// CLOSE ALL COROUTINES, TASKS WITHIN THE LIBRARY
 function library:exit()
 	if library.GUI then library.GUI:Destroy() end
-	
+
 	if not pcall(function() library:exit_threads() end) then warn('Failed to exit lib threads') end
 	if not pcall(function() library:exit_connections() end) then warn('Failed to exit lib connections') end
-	
+
 	warn('> sprite closed')
 end
 
@@ -179,7 +180,7 @@ local function GetDescendantsOfClass(instance : Instance, class : string)
 
 	for _,__ in ipairs(instance:GetDescendants()) do
 		if __:IsA(class) then
-			table.insert(descendant, __)
+			table.insert(descendants, __)
 		end
 	end
 
@@ -228,9 +229,9 @@ function library:new_window(...)
 		bg_img = 'rbxassetid://15688752899',
 		bg_img_transparency = 0.95,
 	}
-	
+
 	local window_data = overwrite(data, ... or {})
-	
+
 	local window_frame = create("Frame", {Name = encrypt_name();Parent = library.GUI;Draggable = window_data.draggable;AnchorPoint = window_data.anchor; BorderSizePixel = 0;Size = window_data.size;BorderColor3 = Color3.fromRGB(45, 45, 45);BorderMode = Enum.BorderMode.Inset;Position = window_data.position;BackgroundColor3 = Color3.fromRGB(40, 40, 40);Active=true;Selectable=true;})
 	local tab_holder = create("Frame", {Name = encrypt_name();Parent = window_frame;AnchorPoint = Vector2.new(0.5, 1);ZIndex = 2;BorderSizePixel = 0;Size = UDim2.new(1, 0, 1, -45);BorderColor3 = Color3.fromRGB(0, 0, 0);LayoutOrder = 2;Position = UDim2.new(0.5, 0, 1, 0);BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 	local top_bar = create("Frame", {Name = encrypt_name();Parent = window_frame;Size = UDim2.new(1, 0, 0, 25);BorderColor3 = Color3.fromRGB(58, 58, 58);BorderMode = Enum.BorderMode.Inset;BackgroundColor3 = Color3.fromRGB(40, 40, 40);})
@@ -246,7 +247,7 @@ function library:new_window(...)
 	create("UIPadding", {Name = encrypt_name();Parent = tab_buttons;PaddingRight = UDim.new(0, 6);PaddingLeft = UDim.new(0, 6);})
 	create("UIListLayout", {Name = encrypt_name(); FillDirection = Enum.FillDirection.Horizontal;Parent = tab_buttons;Padding = UDim.new(0, 10);SortOrder = Enum.SortOrder.LayoutOrder;})
 	create("UIListLayout", {Name = encrypt_name();Parent = window_frame;SortOrder = Enum.SortOrder.LayoutOrder;})
-	
+
 	function window:toggle()
 		window_frame.Visible = not window_frame.Visible
 	end
@@ -255,8 +256,8 @@ function library:new_window(...)
 		window_frame:Destroy()
 	end
 
-	function window:update(data)
-		local data = overwrite(defaults, data or {})
+	function window:update(...)
+		local data = overwrite(data, ... or {})
 
 		label.Text = data.title
 		window_frame.Size = data.size
@@ -273,14 +274,14 @@ function library:new_window(...)
 	window_frame.MouseLeave:Connect(function()
 		library.custom_cursor.enabled = false
 	end)
-	
+
 	function window:add_tab(...)
 		local tab, data = {}, {
 			name = 'tab',
 		}
-		
+
 		local tab_data = overwrite(data, ... or {})
-		
+
 		local tab_frame = create("Frame", {Parent = tab_holder;Size = UDim2.new(1, 0, 1, 0);Visible=false;ClipsDescendants = false;BorderColor3 = Color3.fromRGB(255, 255, 255);BorderMode = Enum.BorderMode.Inset;Name = [[tab_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(35, 35, 35);})
 		local tab_button = create("TextButton", {TextStrokeTransparency = 0;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = tab_buttons;TextSize = 13;Size = UDim2.new(0, 75, 1, 0);BorderColor3 = Color3.fromRGB(0, 0, 0);Text = tab_data.name;TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[tab_button]];TextColor3 = Color3.fromRGB(255, 255, 255);BackgroundTransparency = 1;})
 		local line = create("Frame", {Visible = false;Parent = tab_button;AnchorPoint = Vector2.new(0, 1);Size = UDim2.new(1, 0, 0, 1);BorderColor3 = Color3.fromRGB(28, 28, 28);Name = [[line]];Position = UDim2.new(0, 0, 1, 0);BackgroundColor3 = library.colors.accent;})
@@ -293,10 +294,10 @@ function library:new_window(...)
 			task.wait(0.1)
 			local bounds = tab_button.TextBounds
 			local bound_x = bounds.X
-				
+
 			tab_button.Size = UDim2.new(0, bound_x, 1, 0)
 		end)()
-		
+
 		tab_button.MouseButton1Click:Connect(function()
 			for _, button in ipairs(tab_buttons:GetChildren()) do 
 				if button:IsA('TextButton') then
@@ -307,23 +308,23 @@ function library:new_window(...)
 					end
 				end
 			end
-			
+
 			for _, tab in ipairs(tab_holder:GetChildren()) do
 				if tab:IsA('Frame') then tab.Visible = false end
 			end
-			
+
 			tab_button.TextColor3 = library.colors.accent
 			line.Visible = true
 			tab_frame.Visible = true
 		end)
-		
+
 		function tab:add_category(...)
 			local category, data = { elements = 0 }, {
 				name = 'category'
 			}
-			
+
 			local category_data = overwrite(data, ... or {})
-			
+
 			local category_frame = create("Frame", {Parent = tab_frame;Size = UDim2.new(0.5, -5, 0, 18);BorderColor3 = Color3.fromRGB(50, 50, 50);BorderMode = Enum.BorderMode.Inset;Name = [[category_frame]];BackgroundTransparency = 0.15000000596046448;BackgroundColor3 = Color3.fromRGB(30, 30, 30);})
 			local top_bar = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 10);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[top_bar]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 			local line = create("Frame", {Parent = top_bar;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 1);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[line]];BackgroundColor3 = library.colors.accent;})
@@ -336,39 +337,39 @@ function library:new_window(...)
 				task.wait(0.1)
 				local bounds = label.TextBounds
 				local bound_x = bounds.X
-					
+
 				label.Size = UDim2.new(0, bound_x + 10, 0, 10)
 			end)()
-			
+
 			function category:new_label(...)
 				category.elements += 1
 				category_frame.Size += UDim2.new(0, 0, 0, 20)
-				
+
 				local label, data = {}, {
 					text = 'text label',
 					alignment = 'Left',
 				}
-				
+
 				local data = overwrite(data, ... or {})
-				
+
 				local label_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 20);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[label_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 				local label_text = create("TextLabel", {TextStrokeTransparency = 0.5;RichText=true;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = label_frame;AnchorPoint = Vector2.new(0, 0.5);TextSize = 13;Size = UDim2.new(1, 0, 1, 0);TextXAlignment = Enum.TextXAlignment[data.alignment];BorderColor3 = Color3.fromRGB(0, 0, 0);Text = data.text;TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[label_text]];Position = UDim2.new(0, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
 				local padding = create("UIPadding", {Name = [[padding]];Parent = label_frame;PaddingRight = UDim.new(0, 6);PaddingLeft = UDim.new(0, 6);})
-				
+
 				return label
 			end
-			
+
 			function category:new_button(...)
 				category.elements += 1
 				category_frame.Size += UDim2.new(0, 0, 0, 22)
-				
+
 				local button, data = {}, {
 					text = 'button',
 					callback = function ()
 						warn('No callback has been set to button')
 					end
 				}
-				
+
 				local data = overwrite(data, ... or {})
 
 				local button_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 22);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[button_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
@@ -377,7 +378,7 @@ function library:new_window(...)
 				create("UIStroke", {ApplyStrokeMode = Enum.ApplyStrokeMode.Border;Parent = text_button;Color = Color3.fromRGB(21, 21, 21);})
 				create("UIGradient", {Parent = text_button;Rotation = 90;Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255));ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 200, 200));});})
 				create("UIPadding", {Parent = button_frame;PaddingRight = UDim.new(0, 6);PaddingLeft = UDim.new(0, 6);})
-				
+
 				text_button.MouseEnter:Connect(function() button_highlight.Visible = true end)
 				text_button.MouseLeave:Connect(function() button_highlight.Visible = false end)
 				text_button.MouseButton1Up:Connect(function() button_highlight.BackgroundTransparency = 0.85 end)
@@ -386,40 +387,40 @@ function library:new_window(...)
 
 				return button
 			end
-			
+
 			function category:new_toggle(...)
 				category.elements += 1
 				category_frame.Size += UDim2.new(0, 0, 0, 20)
-				
+
 				local toggle, data = {}, {
 					text = 'toggle',
 					callback = function()
 						warn('No callback has been set to toggle')
 					end,
 				}
-				
+
 				local data = overwrite(data, ... or {})
 				toggle.value = false
-				
+
 				local toggle_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 20);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[toggle_frame]];Position = UDim2.new(-1.41860461, 0, 0.309090912, 0);BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 				local toggle_text = create("TextLabel", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = toggle_frame;AnchorPoint = Vector2.new(1, 0.5);TextSize = 13;Size = UDim2.new(1, -20, 1, 0);TextXAlignment = Enum.TextXAlignment.Left;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = data.text;TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[toggle_text]];Position = UDim2.new(1, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
 				local toggle_button = create("TextButton", {AutoButtonColor = false;BackgroundColor3 = Color3.fromRGB(29, 29, 29);BorderMode = Enum.BorderMode.Inset;Parent = toggle_frame;AnchorPoint = Vector2.new(0, 0.5);TextSize = 14;Size = UDim2.new(0, 15, 0, 15);BorderColor3 = Color3.fromRGB(50, 50, 50);Text = [[]];Font = Enum.Font.SourceSans;Name = [[toggle_button]];Position = UDim2.new(0, 0, 0.5, 0);TextColor3 = Color3.fromRGB(0, 0, 0);})
 				local outline = create("UIStroke", {ApplyStrokeMode = Enum.ApplyStrokeMode.Border;Parent = toggle_button;Color = Color3.fromRGB(21, 21, 21);})
 				local UIGradient = create("UIGradient", {Enabled = false;Parent = toggle_button;Rotation = 90;Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255));ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 200, 200));});})
 				local UIPadding = create("UIPadding", {Parent = toggle_frame;PaddingRight = UDim.new(0, 6);PaddingLeft = UDim.new(0, 6);})
-				
+
 				toggle_button.MouseEnter:Connect(function()
 					outline.Color = library.colors.accent
 				end)
-				
+
 				toggle_button.MouseLeave:Connect(function()
 					outline.Color = Color3.fromRGB(21, 21, 21)
 				end)
-				
+
 				toggle_button.MouseButton1Click:Connect(function()
 					toggle.value = not toggle.value
 					warn(toggle.value)
-					
+
 					if toggle.value then
 						toggle_button.BackgroundColor3 = library.colors.accent
 						data.callback(toggle.value)
@@ -430,7 +431,7 @@ function library:new_window(...)
 						--> toggle_button.BorderColor3 = Color3.fromRGB(50, 50, 50)
 					end
 				end)
-				
+
 				function toggle:add_keybind(...)
 					local keybind, defaults = { key = nil, editing = false, clicked = false }, {
 						text = 'keybind',
@@ -442,9 +443,9 @@ function library:new_window(...)
 					}
 
 					local data = overwrite(data, ... or {})
-					
+
 					local keybind_button = create("TextButton", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;AutoButtonColor = false;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = toggle_frame;AnchorPoint = Vector2.new(1, 0.5);TextSize = 13;Size = UDim2.new(0, 30, 0, 15);TextXAlignment = Enum.TextXAlignment.Right;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = '[...]';TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[keybind_button]];Position = UDim2.new(1, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
-					
+
 					if data.key then
 						keybind_button.Text = string.format('[%s]', keybind.key)
 						keybind.key = data.key
@@ -531,17 +532,17 @@ function library:new_window(...)
 					return keybind
 				end
 
-				function toggle:value()
+				function toggle:get_value()
 					return toggle.value
 				end
 
 				return toggle
 			end
-			
+
 			function category:new_textbox(...)
 				category.elements += 1
 				category_frame.Size += UDim2.new(0, 0, 0, 36)
-				
+
 				local textbox, data = { value = '' }, {
 					text = 'textbox',
 					text_prefix = '',
@@ -550,9 +551,9 @@ function library:new_window(...)
 						warn('No callback set to textbox.')
 					end,
 				}
-				
+
 				local data = overwrite(data, ... or {})
-				
+
 				local textbox_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 36);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[textbox_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 				local textbox_label = create("TextLabel", {TextStrokeTransparency = 0.5;Position = UDim2.new(0,0,0,0);BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = textbox_frame;TextSize = 14;Size = UDim2.new(1, 0, 0.5, 0);TextXAlignment = Enum.TextXAlignment.Left;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = data.text;TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[textbox_label]];TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
 				local textbox_text = create("TextBox", {CursorPosition = -1;TextStrokeTransparency = 0.5;PlaceholderColor3 = Color3.fromRGB(178, 178, 178);BackgroundColor3 = Color3.fromRGB(25, 25, 25);BorderMode = Enum.BorderMode.Inset;Parent = textbox_frame;AnchorPoint = Vector2.new(0, 1);TextXAlignment = Enum.TextXAlignment.Left;TextSize = 13;Size = UDim2.new(1, 0, 0, 18);TextStrokeColor3 = Color3.fromRGB(18, 18, 18);TextColor3 = Color3.fromRGB(150, 150, 150);BorderColor3 = Color3.fromRGB(50, 50, 50);Text = data.text_prefix .. data.placeholder_text;Font = Enum.Font.Code;Name = [[textbox_text]];Position = UDim2.new(0, 0, 1, 0);})
@@ -560,7 +561,7 @@ function library:new_window(...)
 				create("UIGradient", {Parent = textbox_text;Rotation = 90;Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255));ColorSequenceKeypoint.new(1, Color3.fromRGB(191, 191, 191));});})
 				create("UIPadding", {Parent = textbox_frame;PaddingRight = UDim.new(0, 6);PaddingLeft = UDim.new(0, 6);PaddingBottom = UDim.new(0, 1);})
 				create("UIPadding", {Parent = textbox_text;PaddingLeft = UDim.new(0, 4);})
-				
+
 				textbox_text.MouseEnter:Connect(function()
 					outline.Color = library.colors.accent
 				end)
@@ -568,7 +569,7 @@ function library:new_window(...)
 				textbox_text.MouseLeave:Connect(function()
 					outline.Color = Color3.fromRGB(21, 21, 21)
 				end)
-				
+
 				textbox_text.FocusLost:Connect(function()
 					if textbox_text.Text == '' then textbox_text.Text = '...' else
 						textbox.value = textbox_text.Text
@@ -578,8 +579,8 @@ function library:new_window(...)
 						warn('Callback failed. Check your code bud')
 					end
 				end)
-				
-				function textbox:value()
+
+				function textbox:get_value()
 					return textbox.value
 				end
 
@@ -590,11 +591,11 @@ function library:new_window(...)
 
 				return textbox
 			end
-			
+
 			function category:new_slider(...)
 				category.elements += 1
 				category_frame.Size += UDim2.new(0, 0, 0, 36)
-				
+
 				local slider, data = { value = 0 }, {
 					text = 'slider',
 					allow_decimals = false,
@@ -605,10 +606,10 @@ function library:new_window(...)
 						warn('No callback set to slider.')
 					end,
 				}
-				
+
 				local data = overwrite(data, ... or {})
 				slider.value = data.value
-				
+
 				local slider_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 36);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[slider_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 				local slider_button = create("TextButton", {AutoButtonColor = false;BackgroundColor3 = Color3.fromRGB(29, 29, 29);BorderMode = Enum.BorderMode.Inset;Parent = slider_frame;AnchorPoint = Vector2.new(0, 1);TextSize = 14;Size = UDim2.new(1, 0, 0, 18);BorderColor3 = Color3.fromRGB(50, 50, 50);Text = [[]];Font = Enum.Font.SourceSans;Name = [[slider_button]];Position = UDim2.new(0, 0, 1, 0);TextColor3 = Color3.fromRGB(0, 0, 0);})
 				local slider_label = create("TextLabel", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = slider_frame;TextSize = 14;Size = UDim2.new(1, 0, 0.5, 0);TextXAlignment = Enum.TextXAlignment.Left;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = data.text;TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[slider_label]];TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
@@ -617,7 +618,7 @@ function library:new_window(...)
 				local fill = create("Frame", {Parent = slider_button;BorderSizePixel = 0;Size = UDim2.new(0.25, 0, 1, 0);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[fill]];BackgroundColor3 = library.colors.accent;})
 				local UIPadding = create("UIPadding", {Parent = slider_frame;PaddingRight = UDim.new(0, 6);PaddingLeft = UDim.new(0, 6);PaddingBottom = UDim.new(0, 2);})
 				local UIGradient = create("UIGradient", {Parent = slider_button;Rotation = 90;Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255));ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 200, 200));});})
-				
+
 				slider_button.MouseEnter:Connect(function()
 					outline.Color = library.colors.accent
 				end)
@@ -625,7 +626,7 @@ function library:new_window(...)
 				slider_button.MouseLeave:Connect(function()
 					outline.Color = Color3.fromRGB(21, 21, 21)
 				end)
-				
+
 				local min = data.min
 				local max = data.max
 				local mouse_down = false
@@ -662,18 +663,18 @@ function library:new_window(...)
 						mouse_down = false
 					end
 				end)
-				
-				function slider:value() 
+
+				function slider:get_value() 
 					return slider.value
 				end
-				
+
 				return slider	
 			end
-			
+
 			function category:new_keybind(...)
 				category.elements += 1
 				category_frame.Size += UDim2.new(0, 0, 0, 20)
-				
+
 				local keybind, data = { key = nil, editing = false, clicked = false }, {
 					text = 'keybind',
 					input_mode = 'click',
@@ -682,9 +683,9 @@ function library:new_window(...)
 						warn("No callback set to keybind")
 					end,
 				}
-				
+
 				local data = overwrite(data, ... or {})
-				
+
 				local keybind_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 20);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[keybind_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 				local keybind_label = create("TextLabel", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = keybind_frame;AnchorPoint = Vector2.new(0, 0.5);TextSize = 13;Size = UDim2.new(0.75, 0, 1, 0);TextXAlignment = Enum.TextXAlignment.Left;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = [[keybind]];TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[keybind_label]];Position = UDim2.new(0, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
 				local keybind_button = create("TextButton", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;AutoButtonColor = false;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = keybind_frame;AnchorPoint = Vector2.new(1, 0.5);TextSize = 13;Size = UDim2.new(0, 30, 0, 15);TextXAlignment = Enum.TextXAlignment.Right;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = '[...]';TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[keybind_button]];Position = UDim2.new(1, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
@@ -694,7 +695,7 @@ function library:new_window(...)
 					keybind_button.Text = string.format('[%s]', keybind.key)
 					keybind.key = data.key
 				end
-				
+
 				local blacklisted_keys = {
 					'RightSuper',
 					'LeftSuper',
@@ -704,15 +705,15 @@ function library:new_window(...)
 					'Return',
 					'Escape',
 				}
-				
+
 				keybind_button.MouseEnter:Connect(function()
 					keybind_button.TextColor3 = library.colors.accent
 				end)
-				
+
 				keybind_button.MouseLeave:Connect(function()
 					keybind_button.TextColor3 = Color3.fromRGB(150, 150, 150)
 				end)
-				
+
 				library.connections['click_connection_' .. tostring(category.elements)] = keybind_button.MouseButton1Click:Connect(function()
 					keybind_button.TextColor3 = library.colors.accent
 					keybind_button.Text = '[...]'
@@ -722,7 +723,7 @@ function library:new_window(...)
 				library.connections['input_connection_' .. tostring(category.elements)] = input_service.InputBegan:Connect(function(key)
 					if keybind.editing then
 						keybind_button.TextColor3 = Color3.new(150, 150, 150)
-						
+
 						if table.find(blacklisted_keys, tostring(key.KeyCode):gsub('Enum.KeyCode.', '')) then
 							keybind.key = nil
 							keybind_button.Text = '...'
@@ -775,20 +776,20 @@ function library:new_window(...)
 
 				return keybind
 			end
-			
+
 			function category:new_colorpicker(...)
 				category.elements += 1
 				category_frame.Size += UDim2.new(0, 0, 0, 20)
-				
+
 				local color_picker, data = { value = Color3.fromRGB(255, 255, 255) }, {
 					text = 'color picker',
 					callback = function()
 						warn('')
 					end,
 				}
-				
+
 				local data = overwrite(data, ... or {})
-				
+
 				local color_picker_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 20);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[keybind_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
 				local color_picker_label = create("TextLabel", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = color_picker_frame;AnchorPoint = Vector2.new(0, 0.5);TextSize = 13;Size = UDim2.new(0.75, 0, 1, 0);TextXAlignment = Enum.TextXAlignment.Left;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = [[keybind]];TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[keybind_label]];Position = UDim2.new(0, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
 				local color_picker_button = create("TextButton", {AutoButtonColor = false;BackgroundColor3 = Color3.fromRGB(255, 0, 0);BorderMode = Enum.BorderMode.Inset;Parent = color_picker_frame;AnchorPoint = Vector2.new(1, 0.5);TextSize = 14;Size = UDim2.new(0, 30, 0, 15);BorderColor3 = Color3.fromRGB(50, 50, 50);Text = [[]];Font = Enum.Font.SourceSans;Position = UDim2.new(1, 0, 0.5, 0);TextColor3 = Color3.fromRGB(0, 0, 0);})
@@ -802,10 +803,10 @@ function library:new_window(...)
 			function category.element_count()
 				return category.elements
 			end
-			
+
 			return category
 		end
-		
+
 		--// auto sort categories
 		coroutine.wrap(function()
 			local function GetCategoryFrames()
@@ -824,19 +825,19 @@ function library:new_window(...)
 				local anchor = 0
 				local padding = 10
 				local switched = false
-				
+
 				for index, category in ipairs(frames) do
 					count = count + 1
 
 					if count > 1 then
 						local lastFrame = frames[index - 1]
-						
+
 						if sizeY + category.Size.Y.Offset + padding > tab_frame.AbsoluteSize.Y then
 							--> warn("Switched")
 							switched = not switched
 							sizeY = 0
 							anchor = 1
-							
+
 							category.Position = UDim2.new(
 								anchor, 
 								0, 
@@ -859,7 +860,7 @@ function library:new_window(...)
 							sizeY = 0
 							anchor = 1
 						end
-						
+
 						category.AnchorPoint = Vector2.new(anchor, 0)
 					else
 						sizeY = sizeY + category.Size.Y.Offset
@@ -872,25 +873,25 @@ function library:new_window(...)
 			PositionCategoryFrames(frames)
 			PositionCategoryFrames(frames)
 		end)()
-		
+
 		return tab
 	end
-	
+
 	return window
 end
 
 coroutine.wrap(function()
 	task.wait()
-	
+
 	--// encrypt names
 	for _,__ in ipairs(library.GUI:GetDescendants()) do
 		__.Name = encrypt_name()
 	end
-		
+
 	--// start threads
 	library.threads['update_cursor_pos'] = coroutine.create(reposition_cursor)
 	coroutine.resume(library.threads['update_cursor_pos'])
-		
+
 	warn('. encrypted')
 	warn('. started threads')
 end)() warn('loaded sprite: ' .. library.version)
