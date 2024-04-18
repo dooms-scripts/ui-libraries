@@ -23,7 +23,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.1.6',
+	version = '1.1.7',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -417,6 +417,7 @@ function library:new_window(...)
 				
 				toggle_button.MouseButton1Click:Connect(function()
 					toggle.value = not toggle.value
+					data.callback(toggle.value)
 					
 					if not toggle.value then
 						toggle_button.BackgroundColor3 = library.colors.accent
@@ -426,10 +427,6 @@ function library:new_window(...)
 					if toggle.value then
 						toggle_button.BackgroundColor3 = Color3.fromRGB(29, 29, 29)
 						--> toggle_button.BorderColor3 = Color3.fromRGB(50, 50, 50)
-					end
-					
-					if not pcall(function() data.callback(toggle.value) end) then 
-						warn('Callback failed. Check your code bud')
 					end
 				end)
 				
