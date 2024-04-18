@@ -23,7 +23,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.1.7',
+	version = '1.1.8',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
