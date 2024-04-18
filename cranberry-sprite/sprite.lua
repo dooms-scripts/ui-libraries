@@ -23,7 +23,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.1.8',
+	version = '1.1.9',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -352,7 +352,7 @@ function library:new_window(...)
 				local data = overwrite(data, ... or {})
 				
 				local label_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 20);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[label_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
-				local label_text = create("TextLabel", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = label_frame;AnchorPoint = Vector2.new(0, 0.5);TextSize = 13;Size = UDim2.new(0.75, 0, 1, 0);TextXAlignment = Enum.TextXAlignment[data.alignment];BorderColor3 = Color3.fromRGB(0, 0, 0);Text = data.text;TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[label_text]];Position = UDim2.new(0, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
+				local label_text = create("TextLabel", {TextStrokeTransparency = 0.5;RichText=true;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = label_frame;AnchorPoint = Vector2.new(0, 0.5);TextSize = 13;Size = UDim2.new(1, 0, 1, 0);TextXAlignment = Enum.TextXAlignment[data.alignment];BorderColor3 = Color3.fromRGB(0, 0, 0);Text = data.text;TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[label_text]];Position = UDim2.new(0, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
 				local padding = create("UIPadding", {Name = [[padding]];Parent = label_frame;PaddingRight = UDim.new(0, 6);PaddingLeft = UDim.new(0, 6);})
 				
 				return label
