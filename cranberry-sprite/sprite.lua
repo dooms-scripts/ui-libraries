@@ -23,7 +23,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.1.2',
+	version = '1.1.3',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -583,6 +583,11 @@ function library:new_window(...)
 				
 				function textbox:value()
 					return textbox.value
+				end
+
+				function textbox:update(...)
+					local data = overwrite(data, ... or {})
+					textbox_text.Text = data.text_prefix .. textbox_text.Text
 				end
 
 				return textbox
