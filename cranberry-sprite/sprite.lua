@@ -94,6 +94,8 @@ function library:exit()
 	if not pcall(function() library:exit_threads() end) then warn('Failed to exit lib threads') end
 	if not pcall(function() library:exit_connections() end) then warn('Failed to exit lib connections') end
 
+	input_service.MouseIconEnabled = true
+
 	warn('> sprite closed')
 end
 
