@@ -99,6 +99,7 @@ local EncryptedName = encrypt.create("ScreenGui", {
 	Name = 'ENCRYPT_'.. encrypt.randomize(20),
 	ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
 	Parent = workspace,
+	IgnoreGuiInset = true,
 })
 
 local _,err = pcall(function() EncryptedName.Parent = game.CoreGui end)
