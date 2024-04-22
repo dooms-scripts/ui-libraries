@@ -90,12 +90,14 @@ function encrypt_notification_lib.initialize()
 		padding.PaddingTop = UDim.new(0, encrypt_notification_lib.padding)
 		padding.PaddingBottom = UDim.new(0, encrypt_notification_lib.padding)
 
-		encrypted_name.Parent = game:GetService('Players').LocalPlayer:WaitForChild('PlayerGui')
+		--encrypted_name.Parent = game:GetService('Players').LocalPlayer:WaitForChild('PlayerGui')
 		encrypted_name.Name = 'encrypt_notifications'
 		encrypted_name.ResetOnSpawn = false
+		encrypted_name.IgnoreGuiInset = true
 
 		warn('[⚠️] ENCRYPT LIBRARY ERROR: ' ..tostring(err))
-		encrypted_name.Parent = game:GetService('Players').LocalPlayer:WaitForChild('PlayerGui')
+		encrypted_name.Parent = cloneref(game:GetService('CoreGui'))
+		--encrypted_name.Parent = game:GetService('Players').LocalPlayer:WaitForChild('PlayerGui')
 	end
 end
 
@@ -104,7 +106,7 @@ function tween(instance, info, property, value)
 	ts:Create(instance, info, { [property] = value }):Play()
 end
 
-function encrypt_notification_lib.notify(text, duration)	
+function encrypt_notification_lib.new(text : string, duration : number)	
 	local formatted = text:gsub('#(%a+)%s([^#]+)', function(tag, text)
 		local color = false
 		local format = '255, 255, 255'
