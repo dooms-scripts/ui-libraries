@@ -23,7 +23,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.2.3',
+	version = '1.2.4',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -550,7 +550,7 @@ function library:new_window(...)
 
 							if table.find(blacklisted_keys, tostring(key.KeyCode):gsub('Enum.KeyCode.', '')) then
 								keybind.key = nil
-								keybind_button.Text = '...'
+								keybind_button.Text = '[...]'
 								keybind_button.Size = UDim2.new(0, 30, 1, 0)	
 								keybind.editing = false
 								return
@@ -798,7 +798,7 @@ function library:new_window(...)
 
 						if table.find(blacklisted_keys, tostring(key.KeyCode):gsub('Enum.KeyCode.', '')) then
 							keybind.key = nil
-							keybind_button.Text = '...'
+							keybind_button.Text = '[...]'
 							keybind_button.Size = UDim2.new(0, 30, 1, 0)	
 							keybind.editing = false
 							return
