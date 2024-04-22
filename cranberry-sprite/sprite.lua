@@ -23,7 +23,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.2.2',
+	version = '1.2.3',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -300,6 +300,71 @@ function library:new_window(...)
 			tab_button.Size = UDim2.new(0, bound_x, 1, 0)
 		end)()
 
+		local function GetCategoryFrames()
+			local frames = {}
+			for _, child in ipairs(tab_frame:GetChildren()) do
+				if child:IsA("Frame") and child.Name == "category_frame" then
+					table.insert(frames, child)
+				end
+			end
+			return frames
+		end
+		
+		local function PositionCategoryFrames(frames)
+			local count = 0
+			local sizeY = 0
+			local anchor = 0
+			local padding = 10
+			local switched = false
+	
+			for index, category in ipairs(frames) do
+				count = count + 1
+	
+				if count > 1 then
+					local lastFrame = frames[index - 1]
+	
+					if sizeY + category.Size.Y.Offset + padding > tab_frame.AbsoluteSize.Y then
+						--> warn("Switched")
+						switched = not switched
+						sizeY = 0
+						anchor = 1
+	
+						category.Position = UDim2.new(
+							anchor, 
+							0, 
+							0, 
+							0
+						)
+					else
+						sizeY = sizeY + category.Size.Y.Offset + padding
+	
+						category.Position = UDim2.new(
+							anchor, 
+							0, 0, 
+							lastFrame.Position.Y.Offset + lastFrame.Size.Y.Offset + padding
+						)
+					end
+	
+					if sizeY > tab_frame.AbsoluteSize.Y then
+						--> warn("Switched")
+						switched = not switched
+						sizeY = 0
+						anchor = 1
+					end
+	
+					category.AnchorPoint = Vector2.new(anchor, 0)
+				else
+					sizeY = sizeY + category.Size.Y.Offset
+				end
+			end
+		end
+	
+		local function Reposition()
+			local frames = GetCategoryFrames()
+			PositionCategoryFrames(frames)
+			PositionCategoryFrames(frames)
+		end
+
 		tab_button.MouseButton1Click:Connect(function()
 			for _, button in ipairs(tab_buttons:GetChildren()) do 
 				if button:IsA('TextButton') then
@@ -358,6 +423,7 @@ function library:new_window(...)
 				local label_text = create("TextLabel", {TextStrokeTransparency = 0.5;RichText=true;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = label_frame;AnchorPoint = Vector2.new(0, 0.5);TextSize = 13;Size = UDim2.new(1, 0, 1, 0);TextXAlignment = Enum.TextXAlignment[data.alignment];BorderColor3 = Color3.fromRGB(0, 0, 0);Text = data.text;TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[label_text]];Position = UDim2.new(0, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
 				local padding = create("UIPadding", {Name = [[padding]];Parent = label_frame;PaddingRight = UDim.new(0, 6);PaddingLeft = UDim.new(0, 6);})
 
+				task.spawn(function() task.wait() Reposition() end)
 				return label
 			end
 
@@ -387,6 +453,7 @@ function library:new_window(...)
 				text_button.MouseButton1Down:Connect(function() button_highlight.BackgroundTransparency = 0.875 end)
 				text_button.MouseButton1Click:Connect(function() data.callback() button_highlight.BackgroundTransparency = 0.85 end)
 
+				task.spawn(function() task.wait() Reposition() end)
 				return button
 			end
 
@@ -538,6 +605,7 @@ function library:new_window(...)
 					return toggle.value
 				end
 
+				task.spawn(function() task.wait() Reposition() end)
 				return toggle
 			end
 
@@ -591,6 +659,7 @@ function library:new_window(...)
 					textbox_text.Text = new_data.text_prefix .. new_data.text
 				end
 
+				task.spawn(function() task.wait() Reposition() end)
 				return textbox
 			end
 
@@ -670,6 +739,7 @@ function library:new_window(...)
 					return slider.value
 				end
 
+				task.spawn(function() task.wait() Reposition() end)
 				return slider	
 			end
 
@@ -689,7 +759,7 @@ function library:new_window(...)
 				local data = overwrite(data, ... or {})
 
 				local keybind_frame = create("Frame", {Parent = category_frame;BorderSizePixel = 0;Size = UDim2.new(1, 0, 0, 20);BorderColor3 = Color3.fromRGB(0, 0, 0);Name = [[keybind_frame]];BackgroundTransparency = 1;BackgroundColor3 = Color3.fromRGB(255, 255, 255);})
-				local keybind_label = create("TextLabel", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = keybind_frame;AnchorPoint = Vector2.new(0, 0.5);TextSize = 13;Size = UDim2.new(0.75, 0, 1, 0);TextXAlignment = Enum.TextXAlignment.Left;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = data.text;TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[keybind_label]];Position = UDim2.new(0, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
+				local keybind_label = create("TextLabel", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = keybind_frame;AnchorPoint = Vector2.new(0, 0.5);TextSize = 13;Size = UDim2.new(0.75, 0, 1, 0);TextXAlignment = Enum.TextXAlignment.Left;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = [[keybind]];TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[keybind_label]];Position = UDim2.new(0, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
 				local keybind_button = create("TextButton", {TextStrokeTransparency = 0.5;BorderSizePixel = 0;AutoButtonColor = false;BackgroundColor3 = Color3.fromRGB(255, 255, 255);Parent = keybind_frame;AnchorPoint = Vector2.new(1, 0.5);TextSize = 13;Size = UDim2.new(0, 30, 0, 15);TextXAlignment = Enum.TextXAlignment.Right;BorderColor3 = Color3.fromRGB(0, 0, 0);Text = '[...]';TextStrokeColor3 = Color3.fromRGB(18, 18, 18);Font = Enum.Font.Code;Name = [[keybind_button]];Position = UDim2.new(1, 0, 0.5, 0);TextColor3 = Color3.fromRGB(150, 150, 150);BackgroundTransparency = 1;})
 				create("UIPadding", {Parent = keybind_frame;PaddingRight = UDim.new(0, 6);PaddingLeft = UDim.new(0, 6);})
 
@@ -728,7 +798,7 @@ function library:new_window(...)
 
 						if table.find(blacklisted_keys, tostring(key.KeyCode):gsub('Enum.KeyCode.', '')) then
 							keybind.key = nil
-							keybind_button.Text = '[...]'
+							keybind_button.Text = '...'
 							keybind_button.Size = UDim2.new(0, 30, 1, 0)	
 							keybind.editing = false
 							return
@@ -776,6 +846,7 @@ function library:new_window(...)
 					end
 				end)
 
+				task.spawn(function() task.wait() Reposition() end)
 				return keybind
 			end
 
@@ -799,6 +870,7 @@ function library:new_window(...)
 				create("UIPadding", {Parent = color_picker_frame;PaddingRight = UDim.new(0, 6);PaddingLeft = UDim.new(0, 6);})
 				create("UIGradient", {Parent = color_picker_button;Rotation = 90;Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255));ColorSequenceKeypoint.new(0.6712803244590759, Color3.fromRGB(140, 140, 140));ColorSequenceKeypoint.new(1, Color3.fromRGB(86, 86, 86));});})
 
+				task.spawn(function() task.wait() Reposition() end)
 				return color_picker
 			end
 
@@ -806,75 +878,12 @@ function library:new_window(...)
 				return category.elements
 			end
 
+			task.spawn(function() task.wait() Reposition() end)
 			return category
 		end
 
 		--// auto sort categories
-		coroutine.wrap(function()
-			local function GetCategoryFrames()
-				local frames = {}
-				for _, child in ipairs(tab_frame:GetChildren()) do
-					if child:IsA("Frame") and child.Name == "category_frame" then
-						table.insert(frames, child)
-					end
-				end
-				return frames
-			end
-
-			local function PositionCategoryFrames(frames)
-				local count = 0
-				local sizeY = 0
-				local anchor = 0
-				local padding = 10
-				local switched = false
-
-				for index, category in ipairs(frames) do
-					count = count + 1
-
-					if count > 1 then
-						local lastFrame = frames[index - 1]
-
-						if sizeY + category.Size.Y.Offset + padding > tab_frame.AbsoluteSize.Y then
-							--> warn("Switched")
-							switched = not switched
-							sizeY = 0
-							anchor = 1
-
-							category.Position = UDim2.new(
-								anchor, 
-								0, 
-								0, 
-								0
-							)
-						else
-							sizeY = sizeY + category.Size.Y.Offset + padding
-
-							category.Position = UDim2.new(
-								anchor, 
-								0, 0, 
-								lastFrame.Position.Y.Offset + lastFrame.Size.Y.Offset + padding
-							)
-						end
-
-						if sizeY > tab_frame.AbsoluteSize.Y then
-							--> warn("Switched")
-							switched = not switched
-							sizeY = 0
-							anchor = 1
-						end
-
-						category.AnchorPoint = Vector2.new(anchor, 0)
-					else
-						sizeY = sizeY + category.Size.Y.Offset
-					end
-				end
-			end
-			task.wait()
-
-			local frames = GetCategoryFrames()
-			PositionCategoryFrames(frames)
-			PositionCategoryFrames(frames)
-		end)()
+		task.spawn(function() task.wait() Reposition() end)
 
 		return tab
 	end
