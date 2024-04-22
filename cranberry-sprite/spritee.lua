@@ -23,7 +23,7 @@
 
 --[[ LIBRARY DATA ]]-------------------------------------------------
 local library = {
-	version = '1.2.4',
+	version = '1.2.5',
 	use_custom_cursor = true,
 	threads = {}, connections = {},
 	custom_cursor = {
@@ -289,7 +289,7 @@ function library:new_window(...)
 		local line = create("Frame", {Visible = false;Parent = tab_button;AnchorPoint = Vector2.new(0, 1);Size = UDim2.new(1, 0, 0, 1);BorderColor3 = Color3.fromRGB(28, 28, 28);Name = [[line]];Position = UDim2.new(0, 0, 1, 0);BackgroundColor3 = library.colors.accent;})
 		create("UIStroke", {Name = [[outline]];Parent = tab_frame;Enabled = false;Color = Color3.fromRGB(20, 20, 20);})
 		create("UIGradient", {Name = [[gradient]];Parent = tab_frame;Rotation = 90;Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255));ColorSequenceKeypoint.new(0.8287197351455688, Color3.fromRGB(253, 253, 253));ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 200, 200));});})
-		create("UIPadding", {Name = [[padding]];Parent = tab_frame;})
+		create("UIPadding", {Name = [[padding]];Parent = tab_frame;PaddingTop = UDim.new(0, 2)})
 
 		-->> automatically resize tab buttons based on text
 		coroutine.wrap(function() 
