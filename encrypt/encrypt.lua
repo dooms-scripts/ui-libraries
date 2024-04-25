@@ -225,6 +225,8 @@ function encrypt.watermark(options)
 		Position = UDim2.new(0.5, 0, 0, 0),
 		Size = UDim2.new(1, 0, 0, 1),
 	})
+
+	encrypt.create("UIPadding", { Parent = label, PaddingLeft = UDim.new(0, 2) })
 	
 	function watermark:update(options)
 		text = options.text or text
@@ -254,12 +256,14 @@ function encrypt.new_window(options)
 		title_text = 'encrypt // '..encrypt.version,
 		title_alignment = 'Center',
 		size = UDim2.new(0, 380, 0, 425),
+		position = UDim2.new(0.711538434, 0, 0.436090231, 0),
 	}
 
 	local options = options or default
 	local title_text = options.title_text or default.title_text
 	local title_alignment = options.title_alignment or default.title_alignment
 	local size = options.size or default.size
+	local pos = options.position or default.position
 
 	local window = { tab_count = 0 }
 	
@@ -269,7 +273,7 @@ function encrypt.new_window(options)
 		Parent = EncryptedName,
 		BackgroundColor3 = encrypt.colors.background,
 		BorderColor3 = Color3.fromRGB(35, 35, 35),
-		Position = UDim2.new(0.711538434, 0, 0.436090231, 0),
+		Position = pos,
 		Size = size,
 		Active = true,
 		Selectable = true,
