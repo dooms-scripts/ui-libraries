@@ -9,7 +9,7 @@
 
 -- [ ATTRIBUTES ] ----------------------------------------------------------------------------------
 local library = { 
-	version = 'e1.0.7', 
+	version = 'e1.0.8', 
 	drawings = { 
 		highlights = {}, 
 		skeletons = {}, 
