@@ -464,7 +464,16 @@ function encrypt.new_window(options)
 			Padding = UDim.new(0, 8),
 		})
 
-		TabButton.Size = UDim2.new(0, TabButton.TextBounds.X + 10, 1, 0)
+		-->> automatically resize tab buttons based on text
+		coroutine.wrap(function() 
+			task.wait(0.1)
+			local bounds = TabButton.TextBounds
+			local bound_x = bounds.X
+
+			TabButton.Size = UDim2.new(0, bound_x, 1, 0)
+		end)()
+		
+		--TabButton.Size = UDim2.new(0, TabButton.TextBounds.X + 10, 1, 0)
 		TabButton.MouseButton1Click:Connect(function()
 			for _,t in ipairs(Tabs:GetChildren()) do
 				if t:IsA('Frame') then t.Visible = false end
