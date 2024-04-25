@@ -15,7 +15,7 @@
 
 --> CONFIG <------------------------------------------------
 local encrypt = {
-	version = 'e1.5.3',
+	version = 'e1.5.4',
 	instance = nil,
 	drop_shadow = false,
 	encrypt_names = false,
