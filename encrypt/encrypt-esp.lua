@@ -1,7 +1,7 @@
 --[[
 
 	encrypt esp library
-	∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨
+	~~~~~~~~~~~~~~~~~~~
 	> ESP LIBRARY
 	> MADE BY doom#1000
 	
