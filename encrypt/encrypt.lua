@@ -98,7 +98,7 @@ end
 local EncryptedName = encrypt.create("ScreenGui", {
 	Name = 'ENCRYPT_'.. encrypt.randomize(20),
 	ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
-	Parent = workspace,
+	Parent = nil,
 	IgnoreGuiInset = true,
 })
 
@@ -1697,10 +1697,13 @@ function encrypt:toggle()
 end
 
 warn('[+] ENCRYPT > LOADED IN '..tostring(tick() - start_time):sub(1,4) .. ' SECONDS')
+local initialize = loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/ui-libraries/main/safe-load.lua'))()
 encrypt.is_loaded = true
 encrypt.on_loaded()
 getgenv().ENCRYPT_LIB_LOADED = true
 getgenv().ENCRYPT_INSTANCE = encrypt.instance
+
+initialize(getgenv().ENCRYPT_INSTANCE, false)
 
 game.StarterGui:SetCore('SendNotification', {
 	Title = string.format('ENCRYPT %s', encrypt.version),
