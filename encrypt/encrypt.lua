@@ -15,7 +15,7 @@
 
 --> CONFIG <------------------------------------------------
 local encrypt = {
-	version = 'e1.5.4',
+	version = 'e1.5.5',
 	instance = nil,
 	drop_shadow = false,
 	encrypt_names = false,
@@ -470,7 +470,7 @@ function encrypt.new_window(options)
 			local bounds = TabButton.TextBounds
 			local bound_x = bounds.X
 
-			TabButton.Size = UDim2.new(0, bound_x, 1, 0)
+			TabButton.Size = UDim2.new(0, bound_x + 10, 1, 0)
 		end)()
 		
 		--TabButton.Size = UDim2.new(0, TabButton.TextBounds.X + 10, 1, 0)
