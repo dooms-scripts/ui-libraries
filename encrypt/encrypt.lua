@@ -13,15 +13,24 @@
 	
 ]]--
 
+local initialize = loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/ui-libraries/main/safe-load.lua'))()
+getgenv = getgenv or error('Encrypt could not load.', 999)
+
 --> CONFIG <------------------------------------------------
 local encrypt = {
-	version = 'e1.5.5',
+	version = 'e1.5.6',
 	instance = nil,
 	drop_shadow = false,
 	encrypt_names = false,
-	is_loaded = false,
-	on_loaded = function() end,
-	
+	on_loaded = function() 
+		game.StarterGui:SetCore('SendNotification', {
+			Title = string.format('ENCRYPT UI LIBRARY'),
+			Text = 'Finished loading!',
+			Duration = 2,
+			Icon = 'rbxassetid://16947733084',
+		})	
+	end,
+
 	threads = { 
 		dropdowns = {},
 		keybinds = {},
@@ -30,13 +39,13 @@ local encrypt = {
 		buttons = {},
 		sliders = {},
 	},
-	
+
 	custom_cursor = {
 		use_custom_cursor = false,
 		enabled = false,
 		icon = 'http://www.roblox.com/asset/?id=16710247795',
 	},
-	
+
 	fonts = {
 		main = 'Gotham',
 		secondary = 'GothamMedium',
@@ -49,8 +58,11 @@ local encrypt = {
 		categories = Color3.fromRGB(10, 10, 10),
 		topbar = Color3.fromRGB(10, 10, 10),
 	},
+	
+	connections = {}
 }
 
+--> START CLOCK <-------------------------------------------
 local start_time = tick()
 warn(string.format('[+] ENCRYPT > LOADING (%s)', encrypt.version))
 
@@ -86,64 +98,36 @@ end
 
 function encrypt.randomize(length)
 	local str = ''
-	
+
 	for i=1, length do
 		str = str .. string.char(math.random(65, 122))
 	end
-	
+
 	return str
 end
 
---> CONFIG <------------------------------------------------
-local EncryptedName = encrypt.create("ScreenGui", {
+function encrypt.overwrite(to_overwrite : {}, overwrite_with : {})
+	for i, v in pairs(overwrite_with) do
+		if type(v) == 'table' then
+			to_overwrite[i] = encrypt.overwrite(to_overwrite[i] or {}, v)
+		else
+			to_overwrite[i] = v
+		end
+	end
+
+	return to_overwrite or nil
+end
+
+--> INITIALIZE <--------------------------------------------
+encrypt.instance = encrypt.create("ScreenGui", {
 	Name = 'ENCRYPT_'.. encrypt.randomize(20),
 	ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
 	Parent = nil,
 	IgnoreGuiInset = true,
 })
 
-local _,err = pcall(function() EncryptedName.Parent = game.CoreGui end)
-
-if err then
-	return warn('[!] ENCRYPT > Your executor is not supported.')
-	-- EncryptedName.Parent = game:GetService('Players').LocalPlayer.PlayerGui
-end
-
-encrypt.instance = EncryptedName
-
-encrypt.create('Configuration', {
-	Name='[1] encrypt '..encrypt.version,
-	Parent = EncryptedName,
-})
-
-task.wait()
-
-encrypt.create('Configuration', {
-	Name='[2] made by doom#1000',
-	Parent = EncryptedName,
-})
-
-task.wait()
-
-encrypt.create('Configuration', {
-	Name='[3] --------------------------',
-	Parent = EncryptedName,
-})
-
-task.wait()
-encrypt.create('Configuration', {
-	Name='[4] be careful editing anything in here',
-	Parent = EncryptedName,
-})
-task.wait()
-encrypt.create('Configuration', {
-	Name='[5] you might break something',
-	Parent = EncryptedName,
-})
-task.wait()
-
 local custom_cursor = encrypt.create('ImageLabel', {
-	Parent = EncryptedName,
+	Parent = encrypt.instance,
 	AnchorPoint = Vector2.new(0.5, 0.5),
 	BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 	BackgroundTransparency = 1.000,
@@ -156,7 +140,7 @@ local custom_cursor = encrypt.create('ImageLabel', {
 	ZIndex = 99999,
 })
 
-coroutine.wrap(function()
+encrypt.threads['MouseThread'] = coroutine.wrap(function()
 	run_service.Stepped:Connect(function()
 		if encrypt.use_custom_cursor then
 			input_service.MouseIconEnabled = not encrypt.custom_cursor.enabled
@@ -171,20 +155,13 @@ coroutine.wrap(function()
 end)()
 
 --> CREATE UI <---------------------------------------------
-function encrypt.watermark(options)
+function encrypt.watermark(...)
 	local watermark, default = {}, {
 		text = string.format('encrypt // %s', encrypt.version),
 		size = UDim2.new(0, 250, 0, 25),
 	}
-
-	local options = options or default
-	local text = options.text or default.text
-	local size = options.size or default.size
-
-	local gui = encrypt.create('ScreenGui', {
-		Parent = game.CoreGui,
-		Name = 'ENCRYPT_WATERMARK_'..string.char(255)..string.char(255)..string.char(255)..string.char(255)..string.char(255)..string.char(255)..string.char(255)..string.char(255)..string.char(255),
-	})
+	
+	local data = encrypt.overwrite(default, ... or {})
 
 	local container = encrypt.create('Frame', {
 		Name = "Watermark",
@@ -194,12 +171,12 @@ function encrypt.watermark(options)
 		BorderColor3 = Color3.fromRGB(0, 0, 0),
 		BorderSizePixel = 0,
 		Position = UDim2.new(0.99, 0, 0.01, 0),
-		Size = size,
+		Size = data.size,
 		Active = true,
 		Selectable = true,
 		Draggable = true,
 	})
-	
+
 	local label = encrypt.create('TextLabel', {
 		Name = "TitleText",
 		Parent = container,
@@ -209,7 +186,7 @@ function encrypt.watermark(options)
 		BorderSizePixel = 0,
 		Size = UDim2.new(0, 1, 1, 0),
 		Font = Enum.Font.Gotham,
-		Text = "  ".. text,
+		Text = "  ".. data.text,
 		TextColor3 = Color3.fromRGB(255, 255, 255),
 		TextSize = 12.000,
 		TextXAlignment = Enum.TextXAlignment.Left,
@@ -226,55 +203,47 @@ function encrypt.watermark(options)
 		Size = UDim2.new(1, 0, 0, 1),
 	})
 
-	encrypt.create("UIPadding", { Parent = label, PaddingLeft = UDim.new(0, 2) })
-	
-	function watermark:update(options)
-		text = options.text or text
-		size = options.size or size
-		
-		label.Text = '  ' ..text
-		container.Size = size
+	encrypt.create("UIPadding", { 
+		Parent = label, PaddingLeft = UDim.new(0, 2) 
+	})
+
+	function watermark:update(...)
+		local new_data = encrypt.overwrite(data, ... or {})
+
+		label.Text = '  ' ..new_data.text
+		container.Size = new_data.size
+		color.BackgroundColor3 = encrypt.colors.main_color
 	end
-	
+
 	function watermark:toggle()
 		container.Visible = not container.Visible
 	end
-	
-	function watermark:delete()
+
+	function watermark:Destroy()
 		container:Destroy()
 	end
-	
-	coroutine.wrap(function()
-		color.BackgroundColor3 = encrypt.colors.main_color
-	end)
-	
+
 	return watermark
 end
 
-function encrypt.new_window(options)
-	local default = {
+function encrypt.new_window(...)
+	local window, default = { tab_count = 0 }, {
 		title_text = 'encrypt // '..encrypt.version,
 		title_alignment = 'Center',
 		size = UDim2.new(0, 380, 0, 425),
 		position = UDim2.new(0.711538434, 0, 0.436090231, 0),
 	}
-
-	local options = options or default
-	local title_text = options.title_text or default.title_text
-	local title_alignment = options.title_alignment or default.title_alignment
-	local size = options.size or default.size
-	local pos = options.position or default.position
-
-	local window = { tab_count = 0 }
 	
+	local data = encrypt.overwrite(default, ... or {})
+
 	-- Creating UI
 	local WindowFrame = encrypt.create('Frame', {
 		Name = "WindowFrame",
-		Parent = EncryptedName,
+		Parent = encrypt.instance,
 		BackgroundColor3 = encrypt.colors.background,
 		BorderColor3 = Color3.fromRGB(35, 35, 35),
-		Position = pos,
-		Size = size,
+		Position = data.pos,
+		Size = data.size,
 		Active = true,
 		Selectable = true,
 		Draggable = true,
@@ -334,10 +303,10 @@ function encrypt.new_window(options)
 		BorderSizePixel = 0,
 		Size = UDim2.new(0, 111, 0, 25),
 		Font = Enum.Font[encrypt.fonts.main],
-		Text = "  "..tostring(title_text),
+		Text = "  "..tostring(data.title_text),
 		TextColor3 = Color3.fromRGB(255, 255, 255),
 		TextSize = 12.000,
-		TextXAlignment = Enum.TextXAlignment[title_alignment],
+		TextXAlignment = Enum.TextXAlignment[data.title_alignment],
 		RichText = true,
 	})
 
@@ -360,6 +329,23 @@ function encrypt.new_window(options)
 		Position = UDim2.new(0.65, 0, 0.5, 0),
 		Size = UDim2.new(0, 1, 0.600000024, 0),
 	})
+	
+	local drop_shadow = encrypt.create('ImageLabel', {
+		Name = "DropShadow",
+		Parent = WindowFrame,
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		BackgroundTransparency = 1.000,
+		BorderSizePixel = 0,
+		Position = UDim2.new(0.5, 0, 0.5, 0),
+		Size = UDim2.new(1, 47, 1, 47),
+		ZIndex = -475645654,
+		Image = "rbxassetid://6015897843",
+		ImageColor3 = Color3.fromRGB(10, 10, 10),
+		ImageTransparency = 0.500,
+		ScaleType = Enum.ScaleType.Slice,
+		SliceCenter = Rect.new(49, 49, 450, 450),
+		Visible = encrypt.drop_shadow
+	})
 
 	encrypt.create('ImageLabel', {
 		Parent = WindowFrame,
@@ -378,7 +364,7 @@ function encrypt.new_window(options)
 	encrypt.create('UIListLayout', {
 		Parent = ButtonHolder,
 		FillDirection = Enum.FillDirection.Horizontal,
-		SortOrder = Enum.SortOrder.Name,
+		SortOrder = Enum.SortOrder.LayoutOrder,
 	})
 
 	encrypt.create('UIPadding', {
@@ -388,44 +374,25 @@ function encrypt.new_window(options)
 		PaddingLeft = UDim.new(0, 7),
 		PaddingTop = UDim.new(0, 7),
 	})
-	
+
 	WindowFrame.MouseEnter:Connect(function()
 		encrypt.custom_cursor.enabled = encrypt.custom_cursor.enabled
 	end)
-	
+
 	WindowFrame.MouseLeave:Connect(function()
 		encrypt.custom_cursor.enabled = encrypt.custom_cursor.enabled
 	end)
 
 	TitleText.Size = UDim2.new(0, TitleText.TextBounds.X, 1, 0)
-	
-	if encrypt.drop_shadow then
-		local drop_shadow = encrypt.create('ImageLabel', {
-			Name = "DropShadow",
-			Parent = WindowFrame,
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			BackgroundTransparency = 1.000,
-			BorderSizePixel = 0,
-			Position = UDim2.new(0.5, 0, 0.5, 0),
-			Size = UDim2.new(1, 47, 1, 47),
-			ZIndex = -475645654,
-			Image = "rbxassetid://6015897843",
-			ImageColor3 = Color3.fromRGB(10, 10, 10),
-			ImageTransparency = 0.500,
-			ScaleType = Enum.ScaleType.Slice,
-			SliceCenter = Rect.new(49, 49, 450, 450),
-		})
-	end
 
 	-- Functions
 	function window:toggle()
 		WindowFrame.Visible = not WindowFrame.Visible
 	end
-	
+
 	function window.new_tab(tab_name)
 		window.tab_count += 1
 		local tab = { group_count = 0 }
-		local formatted_tab_name = string.format('[%d] %s', window.tab_count, tab_name)
 
 		local TabFrame = encrypt.create('Frame', {
 			Name = encrypt.randomize(999),
@@ -438,10 +405,11 @@ function encrypt.new_window(options)
 			Position = UDim2.new(0.5, 0, 0.5, 0),
 			Visible = false,
 			Size = UDim2.new(1, 0, 1, 0),
+			LayoutOrder = window.tab_count,
 		})
 
 		local TabButton = encrypt.create('TextButton', {
-			Name = string.format('[%d] TabButton', window.tab_count + 2),
+			Name = 'TabButton',
 			Parent = ButtonHolder,
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 			BackgroundTransparency = 1.000,
@@ -455,6 +423,7 @@ function encrypt.new_window(options)
 			TextSize = 12.000,
 			TextWrapped = true,
 			RichText = true,
+			LayoutOrder = window.tab_count,
 		})
 
 		local UIListLayout = encrypt.create('UIListLayout', {
@@ -465,25 +434,23 @@ function encrypt.new_window(options)
 		})
 
 		-->> automatically resize tab buttons based on text
-		coroutine.wrap(function() 
+		encrypt.threads['TabButtonResize'] = coroutine.wrap(function() 
 			task.wait(0.1)
 			local bounds = TabButton.TextBounds
 			local bound_x = bounds.X
 
 			TabButton.Size = UDim2.new(0, bound_x + 10, 1, 0)
 		end)()
-		
-		--TabButton.Size = UDim2.new(0, TabButton.TextBounds.X + 10, 1, 0)
+
 		TabButton.MouseButton1Click:Connect(function()
 			for _,t in ipairs(Tabs:GetChildren()) do
 				if t:IsA('Frame') then t.Visible = false end
-				-- Tabs[formatted_tab_name].Visible = true
 			end
 			for _,b in ipairs(ButtonHolder:GetChildren()) do
 				if b:IsA('TextButton') then b.TextColor3 = Color3.fromRGB(100, 100, 100) end
 				TabButton.TextColor3 = encrypt.colors.main_color
 			end
-			
+
 			TabFrame.Visible = true
 		end)
 
@@ -512,7 +479,7 @@ function encrypt.new_window(options)
 
 			encrypt.create('UIListLayout', {
 				Parent = ContentHolder, 
-				SortOrder = Enum.SortOrder.Name, 
+				SortOrder = Enum.SortOrder.LayoutOrder, 
 				Padding = UDim.new(0, 4)
 			})
 
@@ -520,8 +487,8 @@ function encrypt.new_window(options)
 				Parent = ContentHolder,
 				PaddingRight = UDim.new(0, 8)
 			})
-			
-			coroutine.wrap(function()
+
+			encrypt.threads['GroupResize'] = coroutine.wrap(function()
 				task.wait(0.1)
 				ContentHolder.Size = UDim2.new(1 / tab.group_count, -4, 1, 0)
 			end)()
@@ -530,6 +497,8 @@ function encrypt.new_window(options)
 			group.categoryCount = 0
 
 			function group.new_category(title_text, title_alignment)
+				group.categoryCount += 1
+				
 				local category = {
 					label_count = 0,
 					button_count = 0,
@@ -541,19 +510,18 @@ function encrypt.new_window(options)
 					colorpicker_count = 0,
 				}
 
-				group.categoryCount += 1
-
 				title_alignment = title_alignment or 'Center'
 
 				-- Creating UI
 				local CategoryFrame = encrypt.create('Frame', {
 					Parent = ContentHolder,
-					Name = "[" ..tostring(group.categoryCount) .."] CategoryFrame" ..tostring(group.categoryCount),
+					Name = "CategoryFrame",
 					BackgroundColor3 = encrypt.colors.categories,
 					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BackgroundTransparency = 0,
 					BorderSizePixel = 0,
 					Size = UDim2.new(1, 0, 0, 24),
+					LayoutOrder = group.categoryCount
 				})
 
 				local TitleText = encrypt.create('TextLabel', {
@@ -591,17 +559,13 @@ function encrypt.new_window(options)
 				ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 28)
 
 				-- Functions
-				function category.new_label(options)
+				function category.new_label(...)
 					category.label_count += 1
 
-					local default = {
-						text = 'label'
-					}
-
-					local options = options or default
-					local text = options.text or default.text
-
-					local text_label = {}
+					local text_label, default, data = {}, {
+						text = 'label',
+						alignment = 'Center',
+					}, encrypt.overwrite(default, ... or {})
 
 					--> Creating UI
 					local container = encrypt.create('Frame', {
@@ -613,6 +577,7 @@ function encrypt.new_window(options)
 						BorderSizePixel = 0,
 						Position = UDim2.new(0, 0, 0.13333334, 0),
 						Size = UDim2.new(1, 0, 0, 20),
+						LayoutOrder = #ContentHolder:GetChildren()+1,
 					})
 
 					local label = encrypt.create('TextLabel', {
@@ -626,10 +591,10 @@ function encrypt.new_window(options)
 						Position = UDim2.new(0, 0, 0.5, 0),
 						Size = UDim2.new(1, 0, 0, 20),
 						Font = Enum.Font[encrypt.fonts.main],
-						Text = text,
+						Text = data.text,
 						TextColor3 = encrypt.colors.main_color,
 						TextSize = 12.000,
-						TextXAlignment = Enum.TextXAlignment.Left,
+						TextXAlignment = Enum.TextXAlignment[data.alignment],
 						RichText = true,
 					})
 
@@ -637,21 +602,23 @@ function encrypt.new_window(options)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
 
 					--> Functions
-					function text_label:update_text(new_text)
-						label.Text = new_text
+					function text_label:Update(...)
+						local new_data = encrypt.overwrite(data, ... or {})
+						label.Text = new_data.text
+						label.TextXAlignment = Enum.TextXAlignment[new_data.alignment]
 					end
 
-					function text_label.alignment(option)
+					function text_label:Align(option)
 						local first_character = string.upper(option:sub(1,1))
 						local rest = string.lower(option:sub(2,99))
 						label.TextXAlignment = Enum.TextXAlignment[first_character .. rest]
 					end
 
-					function text_label:get_text()
+					function text_label:GetValue()
 						return label.Text
 					end
 
-					function text_label:delete() 
+					function text_label:Destroy() 
 						container:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
@@ -660,24 +627,17 @@ function encrypt.new_window(options)
 					return text_label
 				end
 
-				function category.new_toggle(options)
+				function category.new_toggle(...)
 					category.toggle_count += 1
 
-					local default = {
+					local toggle, default, data = { value = false }, {
 						text = 'toggle',
 						yield = false,
 						callback = function()
 							warn(string.format('[❗] Toggle #%d > no callback set.', category.toggle_count))
 						end,
-					}
-
-					local options    = options or default
-					local text       = options.text or default.text
-					local yield      = options.yield or default.yield
-					local callback   = options.callback or default.callback
-
-					local toggle = { value = false }
-
+					}, encrypt.overwrite(default, ... or {})
+	
 					-- Creating UI
 					local container = encrypt.create('Frame', {
 						Name = "Toggle",
@@ -688,6 +648,7 @@ function encrypt.new_window(options)
 						BorderSizePixel = 0,
 						Position = UDim2.new(0, 0, 0.13333334, 0),
 						Size = UDim2.new(1, 0, 0, 20),
+						LayoutOrder = #ContentHolder:GetChildren()+1,
 					})
 
 					local label = encrypt.create('TextLabel', {
@@ -701,7 +662,7 @@ function encrypt.new_window(options)
 						Position = UDim2.new(0, 0, 0.5, 0),
 						Size = UDim2.new(1, 0, 0, 20),
 						Font = Enum.Font[encrypt.fonts.main],
-						Text = text,
+						Text = data.text,
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 						TextXAlignment = Enum.TextXAlignment.Left,
@@ -735,37 +696,38 @@ function encrypt.new_window(options)
 					local call = nil
 
 					encrypt.threads.toggles[category.toggle_count] = button.MouseButton1Click:Connect(function()
-						if yield then
+						if data.yield then
 							toggle.value = true
 							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
 							call = coroutine.create(function()
-								callback(toggle.value)
+								data.callback(toggle.value)
 							end)
 
 							coroutine.resume(call)
 
 							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
 							toggle.value = false
-						elseif not yield then
+							coroutine.close(call)
+						elseif not data.yield then
 							--encrypt.threads.toggles[category.toggle_count] = task.spawn(function()
 							toggle.value = not toggle.value
 							if toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
-								callback(toggle.value)
+								data.callback(toggle.value)
 							elseif not toggle.value then 
 								encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
-								callback(toggle.value)
+								data.callback(toggle.value)
 							end
 						end
 					end)
 
-					function toggle:get_value()
+					function toggle:GetValue()
 						return toggle.value
 					end
 
-					function toggle:update_value(bool)
+					function toggle:UpdateValue(bool)
 						warn('updated toggle to ' .. tostring(bool))
 						toggle.value = bool
-						
+
 						if bool then
 							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
 						elseif not bool then 
@@ -773,7 +735,7 @@ function encrypt.new_window(options)
 						end
 					end
 
-					function toggle:delete()
+					function toggle:Destroy()
 						container:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
@@ -782,21 +744,15 @@ function encrypt.new_window(options)
 					return toggle
 				end
 
-				function category.new_button(options)
+				function category.new_button(...)
 					category.button_count += 1
 
-					local default = {
+					local text_button, default, data = {}, {
 						text = 'button',
 						callback = function()
 							warn(string.format('[❗] Button #%d > no callback set.', category.button_count))
 						end,
-					}
-
-					local options = options or default
-					local text		 = options.text or default.text
-					local callback	 = options.callback or default.callback
-
-					local text_button = {}
+					}, encrypt.overwrite(default, ... or {})
 
 					-- Creating UI
 					local container = encrypt.create('Frame', {
@@ -808,6 +764,7 @@ function encrypt.new_window(options)
 						BorderSizePixel = 0,
 						Position = UDim2.new(0, 0, 0.13333334, 0),
 						Size = UDim2.new(1, 0, 0, 20),
+						LayoutOrder = #ContentHolder:GetChildren()+1,
 					})
 
 					local button = encrypt.create('TextButton', {
@@ -821,7 +778,7 @@ function encrypt.new_window(options)
 						Size = UDim2.new(1, 0, 0, 16),
 						AutoButtonColor = true,
 						Font = Enum.Font[encrypt.fonts.main],
-						Text = text,
+						Text = data.text,
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 					})
@@ -835,9 +792,15 @@ function encrypt.new_window(options)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
 
 					-- Functions
-					button.MouseButton1Click:Connect(callback)
+					button.MouseButton1Click:Connect(data.callback)
+					
+					function text_button:Update(...)
+						local new_data = encrypt.overwrite(data, ... or {})
+						button.Text = new_data.text
+						data.callback = new_data.callback
+					end
 
-					function text_button:delete()
+					function text_button:Destroy()
 						container:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
@@ -846,23 +809,18 @@ function encrypt.new_window(options)
 					return text_button
 				end
 
-				function category.new_textbox(options)
+				function category.new_textbox(...)
 					category.textbox_count += 1
 
-					local default = {
+					local text_box, default, data = {}, {
 						text = 'button',
 						placeholder_text = '...',
 						callback = function()
 							warn(string.format('[❗] Textbox #%d > no callback set.', category.textbox_count))
 						end,
-					}
+					}, encrypt.overwrite(default, ... or {})
 
-					local options		   = options or default
-					local text	           = options.text
-					local placeholder_text     = options.placeholder_text or default.placeholder_text
-					local callback		   = options.callback or default.callback
-
-					local text_box = { text = text }
+					local text_box = { text = data.text }
 
 					local container = encrypt.create('Frame', {
 						Name = "TextBox",
@@ -873,6 +831,7 @@ function encrypt.new_window(options)
 						BorderSizePixel = 0,
 						Position = UDim2.new(0, 0, 0.13333334, 0),
 						Size = UDim2.new(1, 0, 0, 20),
+						LayoutOrder = #ContentHolder:GetChildren()+1,
 					})
 
 					local label = encrypt.create('TextLabel', {
@@ -885,7 +844,7 @@ function encrypt.new_window(options)
 						Position = UDim2.new(0, 0, 0, 0),
 						Size = UDim2.new(0, 93, 0, 20),
 						Font = Enum.Font[encrypt.fonts.main],
-						Text = text,
+						Text = data.text,
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 						TextXAlignment = Enum.TextXAlignment.Left,
@@ -901,7 +860,7 @@ function encrypt.new_window(options)
 						Position = UDim2.new(1, 0, 0.5, 0),
 						Size = UDim2.new(0, 60, 0, 16),
 						Font = Enum.Font[encrypt.fonts.main],
-						PlaceholderText = placeholder_text,
+						PlaceholderText = data.placeholder_text,
 						Text = '',
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
@@ -919,51 +878,45 @@ function encrypt.new_window(options)
 					-- Functions
 					textbox.FocusLost:Connect(function()
 						text_box.text = textbox.Text
-						callback(textbox.Text)
+						data.callback(textbox.Text)
 					end)
 
-					function text_box:delete()
+					function text_box:Disable()
+						textbox.TextEditable = false
+						textbox.TextColor3 = Color3.fromRGB(75,75,75)
+					end
+
+					function text_box:Enable()
+						textbox.TextEditable = true
+						textbox.TextColor3 = Color3.fromRGB(255,255,255)
+					end
+
+					function text_box:Update(new_text)
+						text_box.text = new_text
+						textbox.Text = new_text
+					end
+					
+					function text_box:Destroy()
 						container:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
 					end
 
-					function text_box:disable()
-						textbox.TextEditable = false
-						textbox.TextColor3 = Color3.fromRGB(75,75,75)
-					end
-					
-					function text_box:enable()
-						textbox.TextEditable = true
-						textbox.TextColor3 = Color3.fromRGB(255,255,255)
-					end
-
-					function text_box:update(new_text)
-						text_box.text = new_text
-						textbox.Text = new_text
-					end
-
 					return text_box
 				end
 
-				function category.new_keybind(options)
+				function category.new_keybind(...)
 					category.keybind_count += 1
 
-					local default = {
+					local keybind, default, data = {}, {
 						text = 'keybind',
 						keybind = '...',
 						callback = function()
 							warn(string.format('[❗] Keybind #%d > no callback set.', category.keybind_count))
 						end,
-					}
+					}, encrypt.overwrite(default, ... or {})
 
-
-					local options  = options or default
-					local text	   = options.text or default.text
-					local key	   = options.keybind or default.keybind
-					local callback = options.callback or default.callback
-
-					local keybind = { text = text, key = key, editing = false }
+					keybind = { text = data.text, key = data.key, editing = false }
 
 					local container = encrypt.create('Frame', {
 						Name = "keybind",
@@ -974,6 +927,7 @@ function encrypt.new_window(options)
 						BorderSizePixel = 0,
 						Position = UDim2.new(0, 0, 0.13333334, 0),
 						Size = UDim2.new(1, 0, 0, 20),
+						LayoutOrder = #ContentHolder:GetChildren()+1,
 					})
 
 					local label = encrypt.create('TextLabel', {
@@ -986,7 +940,7 @@ function encrypt.new_window(options)
 						Position = UDim2.new(0, 0, 0, 0),
 						Size = UDim2.new(0, 140, 0, 20),
 						Font = Enum.Font[encrypt.fonts.main],
-						Text = text,
+						Text = data.text,
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 						TextXAlignment = Enum.TextXAlignment.Left,
@@ -1004,7 +958,7 @@ function encrypt.new_window(options)
 						ZIndex = 2,
 						AutoButtonColor = false,
 						Font = Enum.Font.SourceSans,
-						Text = key,
+						Text = data.key,
 						TextColor3 = Color3.fromRGB(150, 150, 150),
 						TextSize = 15.000,
 						TextWrapped = true,
@@ -1037,22 +991,22 @@ function encrypt.new_window(options)
 
 								keybind.editing = false
 							elseif keybind.key ~= '...' and input.KeyCode == Enum.KeyCode[keybind.key] then
-								callback()
+								data.callback()
 							end
 						end)
-							
+
 						encrypt.threads.keybinds[category.keybind_count] = thread
 					end)()
 
-					function keybind:get_key()
+					function keybind:GetValue()
 						return keybind.key
 					end
 
-					function keybind:disconnect()
+					function keybind:Disconnect()
 						thread:Disconnect()
 					end
 
-					function keybind:delete()
+					function keybind:Destroy()
 						container:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
@@ -1061,28 +1015,20 @@ function encrypt.new_window(options)
 					return keybind
 				end
 
-				function category.new_slider(options)
+				function category.new_slider(...)
 					category.slider_count += 1
-					local default = {
+					local slider, default, data = {}, {
 						text = 'slider',
-						default_value = 0,
-						min_value = 1,
-						max_value = 100,
+						value = 0,
+						min = 1,
+						max = 100,
 						allow_decimals = false,
 						callback = function()
 							warn(string.format('[❗] Slider #%d > no callback set.', category.slider_count))
 						end,
-					}
+					}, encrypt.overwrite(default, ... or {})
 
-					local options		 = options or default
-					local text			 = options.text or default.text
-					local default_value	 = options.default_value or default.default_value
-					local min_value		 = options.min_value or default.min_value
-					local max_value		 = options.max_value or default.max_value
-					local allow_decimals = options.allow_decimals or default.allow_decimals
-					local callback		 = options.callback or default.callback
-
-					local slider = { value = default_value }
+					slider = { value = data.default_value }
 
 					local container = encrypt.create('Frame', {
 						Name = "slider",
@@ -1093,6 +1039,7 @@ function encrypt.new_window(options)
 						BorderSizePixel = 0,
 						Position = UDim2.new(0, 0, 0.13333334, 0),
 						Size = UDim2.new(1, 0, 0, 20),
+						LayoutOrder = #ContentHolder:GetChildren()+1,
 					})
 
 					local button = encrypt.create('TextButton', {
@@ -1134,7 +1081,7 @@ function encrypt.new_window(options)
 						Size = UDim2.new(1, 0, 1, 0),
 						ZIndex = 3,
 						Font = Enum.Font[encrypt.fonts.main],
-						Text = text,
+						Text = data.text,
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 11.000,
 						TextStrokeTransparency = 0.500,
@@ -1161,9 +1108,9 @@ function encrypt.new_window(options)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
 
 					--> Values
-					local min = min_value
-					local max = max_value
-					slider.value = default_value
+					local min = data.min
+					local max = data.max
+					slider.value = data.value
 
 					--> Variables
 					local plr = game.Players.LocalPlayer
@@ -1179,7 +1126,7 @@ function encrypt.new_window(options)
 					local mouse_on = false
 
 					--> Connections
-					button.MouseButton1Up:Connect(function() mouse_down = false label.Text = text end)
+					button.MouseButton1Up:Connect(function() mouse_down = false label.Text = data.text end)
 					button.MouseEnter:Connect(function() mouse_on = true end)
 					button.MouseLeave:Connect(function() mouse_on = false end)
 
@@ -1187,9 +1134,9 @@ function encrypt.new_window(options)
 						mouse_down = true
 						encrypt.tween(fill, tween_info.new(.25, easing_style.Linear, easing_direction.InOut), 'BackgroundTransparency', 0)
 						local mouse_x = math.clamp(mouse.X - button.AbsolutePosition.X, min, button.AbsoluteSize.X)
-						if allow_decimals then
+						if data.allow_decimals then
 							slider.value = (math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
-						elseif not allow_decimals then
+						elseif not data.allow_decimals then
 							slider.value = math.floor(math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
 						end
 
@@ -1197,7 +1144,7 @@ function encrypt.new_window(options)
 						fill.Size = UDim2.new((slider.value - min) / (max - min), 0, 1, 0)
 						label.Text = tostring(slider.value):sub(1,4)
 						local s, err = pcall(function()
-							callback(slider.value)
+							data.callback(slider.value)
 						end)
 
 						if err then warn('err') end
@@ -1206,9 +1153,9 @@ function encrypt.new_window(options)
 					mouse.Move:Connect(function()
 						if mouse_down then	
 							local mouse_x = math.clamp(mouse.X - button.AbsolutePosition.X, min, button.AbsoluteSize.X)
-							if allow_decimals then
+							if data.allow_decimals then
 								slider.value = (math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
-							elseif not allow_decimals then
+							elseif not data.allow_decimals then
 								slider.value = math.floor(math.clamp((mouse_x / button.AbsoluteSize.X) * (max - min) + min, min, max))
 							end
 
@@ -1216,7 +1163,7 @@ function encrypt.new_window(options)
 							fill.Size = UDim2.new((slider.value - min) / (max - min), 0, 1, 0)
 							label.Text = tostring(slider.value):sub(1,4)
 							local s, err = pcall(function()
-								callback(slider.value)
+								data.callback(slider.value)
 							end)
 
 							if err then warn('err') end
@@ -1226,16 +1173,16 @@ function encrypt.new_window(options)
 					input_service.InputEnded:Connect(function(input)
 						if input.UserInputType == Enum.UserInputType.MouseButton1 then
 							mouse_down = false
-							label.Text = text
+							label.Text = data.text
 							encrypt.tween(fill, tween_info.new(.25, easing_style.Linear, easing_direction.InOut), 'BackgroundTransparency', .75)
 						end
 					end)
 
-					function slider:get_value()
+					function slider:GetValue()
 						return(slider.value)
 					end
 
-					function slider:delete()
+					function slider:Destroy()
 						container:destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
@@ -1244,24 +1191,18 @@ function encrypt.new_window(options)
 					return slider
 				end
 
-				function category.new_dropdown(properties)
+				function category.new_dropdown(...)
 					category.dropdown_count += 1
-					local default = {
+					local dropdown, default, data = {}, {
 						text = 'dropdown',
 						options = {},
 						default_selection = nil,
 						callback = function()
 							warn(string.format('[❗] Dropdown #%d > no callback set.', category.dropdown_count))
 						end,
-					}
-
-					local showing_options = false
-					local properties = properties or default 
-					local options = properties.options or default.options
-					local callback = properties.callback or default.callback
-					local selection = properties.default_selection or default.default_selection
-					local text = properties.text or default.text
-					local dropdown = { selection = selection, options = {} }
+					}, encrypt.overwrite(default, ... or {})
+					
+					dropdown = { selection = data.selection, options = {} }
 
 					local container = encrypt.create('Frame', {
 						Name = "dropdown",
@@ -1272,6 +1213,7 @@ function encrypt.new_window(options)
 						BorderSizePixel = 0,
 						Position = UDim2.new(0, 0, 0.13333334, 0),
 						Size = UDim2.new(1, 0, 0, 20),
+						LayoutOrder = #ContentHolder:GetChildren()+1,
 					})
 
 					local button = encrypt.create('TextButton', {
@@ -1284,7 +1226,7 @@ function encrypt.new_window(options)
 						Position = UDim2.new(0.5, 0, 0, 0),
 						Size = UDim2.new(1, 0, 0, 16),
 						Font = Enum.Font[encrypt.fonts.main],
-						Text = text,
+						Text = data.text,
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 					})
@@ -1342,16 +1284,16 @@ function encrypt.new_window(options)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
 
 					button.MouseButton1Click:Connect(function()
-						showing_options = not showing_options
-						options_frame.Visible = showing_options
+						data.showing_options = not data.showing_options
+						options_frame.Visible = data.showing_options
 
-						if showing_options then
+						if data.showing_options then
 							container.Size += UDim2.new(0, 0, 0, options_frame.Size.Y.Offset)
 							CategoryFrame.Size += UDim2.new(0, 0, 0, options_frame.Size.Y.Offset)
 							ContentHolder.CanvasSize += UDim2.new(0, 0, 0, options_frame.Size.Y.Offset)
 
 							arrow.Rotation = 180
-						elseif not showing_options then
+						elseif not data.showing_options then
 							container.Size -= UDim2.new(0, 0, 0, options_frame.Size.Y.Offset)
 							CategoryFrame.Size -= UDim2.new(0, 0, 0, options_frame.Size.Y.Offset)
 							ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, options_frame.Size.Y.Offset)
@@ -1360,7 +1302,7 @@ function encrypt.new_window(options)
 						end
 					end)
 
-					function dropdown:add_option(option)
+					function dropdown:AddOption(option)
 						table.insert(dropdown.options, option)
 
 						local option_button = encrypt.create('TextButton', {
@@ -1394,13 +1336,13 @@ function encrypt.new_window(options)
 							option_button.BackgroundTransparency = .95
 							dropdown.selection = option
 
-							callback(dropdown.selection)
+							data.callback(dropdown.selection)
 						end)
 
 						options_frame.Size += UDim2.new(0, 0, 0, 20)
 					end
 
-					function dropdown:remove_option(option)
+					function dropdown:RemoveOption(option)
 						if not table.find(option) then return warn("[!] ENCRYPT > Could not remove option because it doesn't exist") end
 
 						table.remove(dropdown.options, option)
@@ -1409,11 +1351,11 @@ function encrypt.new_window(options)
 						options_frame.Size -= UDim2.new(0, 0, 0, 20)
 					end
 
-					function dropdown:get_selection()
+					function dropdown:GetValue()
 						return dropdown.selection
 					end
 
-					function dropdown:delete()
+					function dropdown:Destroy()
 						container:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
@@ -1422,22 +1364,17 @@ function encrypt.new_window(options)
 					return dropdown
 				end
 
-				function category.new_colorpicker(options)
+				function category.new_colorpicker(...)
 					category.colorpicker_count += 1
-					local default = {
+					local color_picker, default, data = {}, {
 						text = 'color picker',
 						default_color = Color3.fromRGB(255, 255, 255),
 						callback = function() 
 							warn(string.format('[❗] Color Picker #%d > no callback set.', category.colorpicker_count))
 						end,
-					}
+					}, encrypt.overwrite(default, ... or {})
 
-					local options = options or default
-					local text = options.text or default.text
-					local default_color = options.default_color or default.default_color
-					local callback = options.callback or default.callback
-
-					local color_picker = { color = default_color }
+					color_picker = { color = data.default_color }
 
 					local container = encrypt.create("Frame", {
 						Name = "container",
@@ -1449,6 +1386,7 @@ function encrypt.new_window(options)
 						Position = UDim2.new(0, 0, 0.13333334, 0),
 						Size = UDim2.new(1, 0, 0, 20),
 						ZIndex = 99999,
+						LayoutOrder = #ContentHolder:GetChildren()+1,
 					})
 
 					local label = encrypt.create("TextLabel", {
@@ -1462,7 +1400,7 @@ function encrypt.new_window(options)
 						Position = UDim2.new(0, 0, 0.5, 0),
 						Size = UDim2.new(1, 0, 0, 20),
 						Font = Enum.Font[encrypt.fonts.main],
-						Text = text,
+						Text = data.text,
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 						TextXAlignment = Enum.TextXAlignment.Left,
@@ -1472,7 +1410,7 @@ function encrypt.new_window(options)
 						Name = "button",
 						Parent = container,
 						AnchorPoint = Vector2.new(1, 0.5),
-						BackgroundColor3 = default_color,
+						BackgroundColor3 = data.default_color,
 						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(1, 0, 0.5, 0),
@@ -1528,7 +1466,7 @@ function encrypt.new_window(options)
 						BorderColor3 = Color3.fromRGB(40, 40, 40),
 						Position = UDim2.new(0, 91, 0.493999988, 0),
 						Size = UDim2.new(0, 10, 0, 76),
-						ImageColor3 = default_color,
+						ImageColor3 = data.default_color,
 						ZIndex = 4,
 						Image = "rbxassetid://359311684",
 						SliceCenter = Rect.new(10, 10, 90, 90),
@@ -1580,9 +1518,9 @@ function encrypt.new_window(options)
 					end)
 
 					local mouse_down = false
-					local current_color_h, current_color_s, current_color_v = default_color:ToHSV()
+					local current_color_h, current_color_s, current_color_v = data.default_color:ToHSV()
 					local current_color = Color3.fromHSV(current_color_h, current_color_s, current_color_v)
-					
+
 					local color_data = {
 						current_color_h,
 						current_color_s,
@@ -1598,7 +1536,7 @@ function encrypt.new_window(options)
 
 						button.BackgroundColor3 = current_color
 
-						callback(color_picker.color)
+						data.callback(color_picker.color)
 					end
 
 					local function in_bounds(i)
@@ -1625,7 +1563,7 @@ function encrypt.new_window(options)
 							end
 						end
 					end
-					
+
 					update_rgb()
 
 					color_pick.MouseEnter:Connect(function()	
@@ -1650,11 +1588,11 @@ function encrypt.new_window(options)
 					CategoryFrame.Size += UDim2.new(0, 0, 0, 20)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
 
-					function color_picker:get_value()
+					function color_picker:GetValue()
 						return color_picker.color
 					end
 
-					function color_picker:delete()
+					function color_picker:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
 						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
 
@@ -1663,22 +1601,25 @@ function encrypt.new_window(options)
 
 					return color_picker
 				end
-				
+
 				function category.import_custom(instance)
-					instance.Parent = CategoryFrame
+					pcall(function()
+						instance.Parent = CategoryFrame
+						CategoryFrame.Size += UDim2.new(0, 0, instance.Size.Y.Scale, instance.Size.Y.Offset)
+					end)
 				end
-				
+
 				return category
 			end
 
 			return group
 		end
-		
+
 		if window.tab_count <= 1 then
 			TabFrame.Visible = true
 			TabButton.TextColor3 = encrypt.colors.main_color
 		end
-		
+
 		return tab
 	end
 
@@ -1686,12 +1627,14 @@ function encrypt.new_window(options)
 end
 
 function encrypt:exit()
-	EncryptedName:Destroy()
+	encrypt.instance:Destroy()
 
-	for _, thread_table in pairs(encrypt.threads) do
-		for _n, thread in pairs(thread_table) do
+	for _, t in pairs(encrypt.threads) do
+		if pcall(function() coroutine.close(t) end) then print("Closed thread: " .. t) end
+		
+		for i, thread in pairs(t) do
 			pcall(function()
-				task.cancel(thread_table[_n])
+				task.cancel(t[i])
 				print('Closed thread: '.. thread)
 			end)
 
@@ -1706,23 +1649,15 @@ function encrypt:exit()
 end
 
 function encrypt:toggle() 
-	EncryptedName.Enabled = not EncryptedName.Enabled 
+	encrypt.instance.Enabled = not encrypt.instance.Enabled 
 end
 
-warn('[+] ENCRYPT > LOADED IN '..tostring(tick() - start_time):sub(1,4) .. ' SECONDS')
-local initialize = loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/ui-libraries/main/safe-load.lua'))()
-encrypt.is_loaded = true
-encrypt.on_loaded()
 getgenv().ENCRYPT_LIB_LOADED = true
 getgenv().ENCRYPT_INSTANCE = encrypt.instance
 
+encrypt.on_loaded()
+
 initialize(getgenv().ENCRYPT_INSTANCE, false)
 
-game.StarterGui:SetCore('SendNotification', {
-	Title = string.format('ENCRYPT %s', encrypt.version),
-	Text = 'Finished loading!',
-	Duration = 2,
-	Icon = 'rbxassetid://16947733084',
-})
-
+warn('[+] ENCRYPT > LOADED IN '..tostring(tick() - start_time):sub(1,4) .. ' SECONDS')
 return encrypt
