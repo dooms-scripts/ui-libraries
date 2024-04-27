@@ -562,10 +562,13 @@ function encrypt.new_window(...)
 				function category.new_label(...)
 					category.label_count += 1
 
-					local text_label, default, data = {}, {
+					local text_label, default = {}, {
 						text = 'label',
 						alignment = 'Center',
-					}, encrypt.overwrite(default, ... or {})
+					}, 
+					
+					local data = encrypt.overwrite(default, ... or {})
+					for i,v in data do print(i, v) end
 
 					--> Creating UI
 					local container = encrypt.create('Frame', {
