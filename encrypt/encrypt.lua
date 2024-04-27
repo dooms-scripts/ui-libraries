@@ -18,7 +18,7 @@ getgenv = getgenv or error('Encrypt could not load.', 999)
 
 --> CONFIG <------------------------------------------------
 local encrypt = {
-	version = 'e1.5.6',
+	version = 'e1.5.7 secure edition',
 	instance = nil,
 	drop_shadow = false,
 	encrypt_names = false,
@@ -58,7 +58,7 @@ local encrypt = {
 		categories = Color3.fromRGB(10, 10, 10),
 		topbar = Color3.fromRGB(10, 10, 10),
 	},
-	
+
 	connections = {}
 }
 
@@ -160,7 +160,7 @@ function encrypt.watermark(...)
 		text = string.format('encrypt // %s', encrypt.version),
 		size = UDim2.new(0, 250, 0, 25),
 	}
-	
+
 	local data = encrypt.overwrite(default, ... or {})
 
 	local container = encrypt.create('Frame', {
@@ -233,7 +233,7 @@ function encrypt.new_window(...)
 		size = UDim2.new(0, 380, 0, 425),
 		position = UDim2.new(0.711538434, 0, 0.436090231, 0),
 	}
-	
+
 	local data = encrypt.overwrite(default, ... or {})
 
 	-- Creating UI
@@ -329,7 +329,7 @@ function encrypt.new_window(...)
 		Position = UDim2.new(0.65, 0, 0.5, 0),
 		Size = UDim2.new(0, 1, 0.600000024, 0),
 	})
-	
+
 	local drop_shadow = encrypt.create('ImageLabel', {
 		Name = "DropShadow",
 		Parent = WindowFrame,
@@ -498,7 +498,7 @@ function encrypt.new_window(...)
 
 			function group.new_category(title_text, title_alignment)
 				group.categoryCount += 1
-				
+
 				local category = {
 					label_count = 0,
 					button_count = 0,
@@ -565,7 +565,7 @@ function encrypt.new_window(...)
 					local text_label, default = {}, {
 						text = 'label',
 						alignment = 'Center',
-					}, 
+					}
 					
 					local data = encrypt.overwrite(default, ... or {})
 					for i,v in data do print(i, v) end
@@ -633,14 +633,16 @@ function encrypt.new_window(...)
 				function category.new_toggle(...)
 					category.toggle_count += 1
 
-					local toggle, default, data = { value = false }, {
+					local toggle, default = { value = false }, {
 						text = 'toggle',
 						yield = false,
 						callback = function()
 							warn(string.format('[❗] Toggle #%d > no callback set.', category.toggle_count))
 						end,
-					}, encrypt.overwrite(default, ... or {})
-	
+					}
+					
+					local data = encrypt.overwrite(default, ... or {})
+
 					-- Creating UI
 					local container = encrypt.create('Frame', {
 						Name = "Toggle",
@@ -750,12 +752,14 @@ function encrypt.new_window(...)
 				function category.new_button(...)
 					category.button_count += 1
 
-					local text_button, default, data = {}, {
+					local text_button, default = {}, {
 						text = 'button',
 						callback = function()
 							warn(string.format('[❗] Button #%d > no callback set.', category.button_count))
 						end,
-					}, encrypt.overwrite(default, ... or {})
+					}
+					
+					local data = encrypt.overwrite(default, ... or {})
 
 					-- Creating UI
 					local container = encrypt.create('Frame', {
@@ -796,7 +800,7 @@ function encrypt.new_window(...)
 
 					-- Functions
 					button.MouseButton1Click:Connect(data.callback)
-					
+
 					function text_button:Update(...)
 						local new_data = encrypt.overwrite(data, ... or {})
 						button.Text = new_data.text
@@ -815,13 +819,15 @@ function encrypt.new_window(...)
 				function category.new_textbox(...)
 					category.textbox_count += 1
 
-					local text_box, default, data = {}, {
+					local text_box, default = {}, {
 						text = 'button',
 						placeholder_text = '...',
 						callback = function()
 							warn(string.format('[❗] Textbox #%d > no callback set.', category.textbox_count))
 						end,
-					}, encrypt.overwrite(default, ... or {})
+					}
+					
+					local data = encrypt.overwrite(default, ... or {})
 
 					local text_box = { text = data.text }
 
@@ -898,7 +904,7 @@ function encrypt.new_window(...)
 						text_box.text = new_text
 						textbox.Text = new_text
 					end
-					
+
 					function text_box:Destroy()
 						container:Destroy()
 						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
@@ -911,15 +917,17 @@ function encrypt.new_window(...)
 				function category.new_keybind(...)
 					category.keybind_count += 1
 
-					local keybind, default, data = {}, {
+					local keybind, default = {}, {
 						text = 'keybind',
 						keybind = '...',
 						callback = function()
 							warn(string.format('[❗] Keybind #%d > no callback set.', category.keybind_count))
 						end,
-					}, encrypt.overwrite(default, ... or {})
+					}
+					
+					local data = encrypt.overwrite(default, ... or {})
 
-					keybind = { text = data.text, key = data.key, editing = false }
+					keybind = { text = data.text, key = data.keybind, editing = false }
 
 					local container = encrypt.create('Frame', {
 						Name = "keybind",
@@ -961,7 +969,7 @@ function encrypt.new_window(...)
 						ZIndex = 2,
 						AutoButtonColor = false,
 						Font = Enum.Font.SourceSans,
-						Text = data.key,
+						Text = data.keybind,
 						TextColor3 = Color3.fromRGB(150, 150, 150),
 						TextSize = 15.000,
 						TextWrapped = true,
@@ -1020,7 +1028,7 @@ function encrypt.new_window(...)
 
 				function category.new_slider(...)
 					category.slider_count += 1
-					local slider, default, data = {}, {
+					local slider, default = {}, {
 						text = 'slider',
 						value = 0,
 						min = 1,
@@ -1029,7 +1037,9 @@ function encrypt.new_window(...)
 						callback = function()
 							warn(string.format('[❗] Slider #%d > no callback set.', category.slider_count))
 						end,
-					}, encrypt.overwrite(default, ... or {})
+					}
+					
+					local data = encrypt.overwrite(default, ... or {})
 
 					slider = { value = data.default_value }
 
@@ -1196,15 +1206,17 @@ function encrypt.new_window(...)
 
 				function category.new_dropdown(...)
 					category.dropdown_count += 1
-					local dropdown, default, data = {}, {
+					local dropdown, default = {}, {
 						text = 'dropdown',
 						options = {},
 						default_selection = nil,
 						callback = function()
 							warn(string.format('[❗] Dropdown #%d > no callback set.', category.dropdown_count))
 						end,
-					}, encrypt.overwrite(default, ... or {})
+					}
 					
+					local data = encrypt.overwrite(default, ... or {})
+
 					dropdown = { selection = data.selection, options = {} }
 
 					local container = encrypt.create('Frame', {
@@ -1369,13 +1381,15 @@ function encrypt.new_window(...)
 
 				function category.new_colorpicker(...)
 					category.colorpicker_count += 1
-					local color_picker, default, data = {}, {
+					local color_picker, default = {}, {
 						text = 'color picker',
 						default_color = Color3.fromRGB(255, 255, 255),
 						callback = function() 
 							warn(string.format('[❗] Color Picker #%d > no callback set.', category.colorpicker_count))
 						end,
-					}, encrypt.overwrite(default, ... or {})
+					}
+					
+					local data = encrypt.overwrite(default, ... or {})
 
 					color_picker = { color = data.default_color }
 
@@ -1634,7 +1648,7 @@ function encrypt:exit()
 
 	for _, t in pairs(encrypt.threads) do
 		if pcall(function() coroutine.close(t) end) then print("Closed thread: " .. t) end
-		
+
 		for i, thread in pairs(t) do
 			pcall(function()
 				task.cancel(t[i])
@@ -1663,4 +1677,5 @@ encrypt.on_loaded()
 initialize(getgenv().ENCRYPT_INSTANCE, false)
 
 warn('[+] ENCRYPT > LOADED IN '..tostring(tick() - start_time):sub(1,4) .. ' SECONDS')
+
 return encrypt
