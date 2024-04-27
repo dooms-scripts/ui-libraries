@@ -568,7 +568,6 @@ function encrypt.new_window(...)
 					}
 					
 					local data = encrypt.overwrite(default, ... or {})
-					for i,v in data do print(i, v) end
 
 					--> Creating UI
 					local container = encrypt.create('Frame', {
