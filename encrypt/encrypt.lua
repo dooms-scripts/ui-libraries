@@ -18,7 +18,7 @@ getgenv = getgenv or error('Encrypt could not load.', 999)
 
 --> LIBRARY DATA <------------------------------------------
 local encrypt = {
-	version = 'e1.5.8',
+	version = 'e1.5.9',
 	instance = nil,
 	drop_shadow = false,
 	encrypt_names = false,
@@ -615,7 +615,7 @@ function encrypt.new_window(...)
 						category.cut(20)
 						container.Visible = false
 					end
-					
+
 					function text_label:Show()
 						category.append(20)
 						container.Visible = true
@@ -641,7 +641,7 @@ function encrypt.new_window(...)
 						container:Destroy()
 						category.cut(20)
 					end
-					
+
 					category.append(20)
 					return text_label
 				end
@@ -649,13 +649,18 @@ function encrypt.new_window(...)
 				function category.new_toggle(...)
 					category.toggle_count += 1
 
-					local toggle, default = { value = false }, {
+					local toggle, default = { 
+						OnValueChanged = function() end,
+						value = false,
+					}, {
 						text = 'toggle',
 						yield = false,
 						callback = function()
-							warn(string.format('[❗] Toggle #%d > no callback set.', category.toggle_count))
+							warn(string.format('[â—] Toggle #%d > no callback set.', category.toggle_count))
 						end,
 					}
+
+					toggle.__index = toggle
 
 					local data = encrypt.overwrite(default, ... or {})
 
@@ -715,8 +720,10 @@ function encrypt.new_window(...)
 					local call = nil
 
 					encrypt.threads.toggles[category.toggle_count] = button.MouseButton1Click:Connect(function()
+						toggle.OnValueChanged()
 						if data.yield then
 							toggle.value = true
+							toggle.OnValueChanged()
 							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
 							call = coroutine.create(function()
 								data.callback(toggle.value)
@@ -726,10 +733,12 @@ function encrypt.new_window(...)
 
 							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
 							toggle.value = false
+							toggle.OnValueChanged()
 							coroutine.close(call)
 						elseif not data.yield then
 							--encrypt.threads.toggles[category.toggle_count] = task.spawn(function()
 							toggle.value = not toggle.value
+							toggle.OnValueChanged()
 							if toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
 								data.callback(toggle.value)
 							elseif not toggle.value then 
@@ -753,7 +762,11 @@ function encrypt.new_window(...)
 							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
 						end
 					end
-					
+
+					function toggle.OnValueChanged:Connect(...)
+						toggle.OnValueChanged = ...
+					end
+
 					function toggle:Hide()
 						container.Visible = false
 						category.cut(20)
@@ -768,7 +781,7 @@ function encrypt.new_window(...)
 						container:Destroy()
 						category.cut(20)
 					end
-					
+
 					category.append(20)
 					return toggle
 				end
@@ -779,7 +792,7 @@ function encrypt.new_window(...)
 					local text_button, default = {}, {
 						text = 'button',
 						callback = function()
-							warn(string.format('[❗] Button #%d > no callback set.', category.button_count))
+							warn(string.format('[â—] Button #%d > no callback set.', category.button_count))
 						end,
 					}
 
@@ -825,7 +838,7 @@ function encrypt.new_window(...)
 
 					-- Functions
 					button.MouseButton1Click:Connect(data.callback)
-					
+
 					function button:Hide()
 						container.Visible = false
 						category.cut(20)
@@ -835,7 +848,7 @@ function encrypt.new_window(...)
 						container.Visible = true
 						category.append(20)
 					end
-					
+
 					function text_button:Update(...)
 						local new_data = encrypt.overwrite(data, ... or {})
 						button.Text = new_data.text
@@ -858,7 +871,7 @@ function encrypt.new_window(...)
 						text = 'button',
 						placeholder_text = '...',
 						callback = function()
-							warn(string.format('[❗] Textbox #%d > no callback set.', category.textbox_count))
+							warn(string.format('[â—] Textbox #%d > no callback set.', category.textbox_count))
 						end,
 					}
 
@@ -968,7 +981,7 @@ function encrypt.new_window(...)
 						text = 'keybind',
 						keybind = '...',
 						callback = function()
-							warn(string.format('[❗] Keybind #%d > no callback set.', category.keybind_count))
+							warn(string.format('[â—] Keybind #%d > no callback set.', category.keybind_count))
 						end,
 					}
 
@@ -1094,7 +1107,7 @@ function encrypt.new_window(...)
 						max = 100,
 						allow_decimals = false,
 						callback = function()
-							warn(string.format('[❗] Slider #%d > no callback set.', category.slider_count))
+							warn(string.format('[â—] Slider #%d > no callback set.', category.slider_count))
 						end,
 					}
 
@@ -1282,7 +1295,7 @@ function encrypt.new_window(...)
 						options = {},
 						default_selection = nil,
 						callback = function()
-							warn(string.format('[❗] Dropdown #%d > no callback set.', category.dropdown_count))
+							warn(string.format('[â—] Dropdown #%d > no callback set.', category.dropdown_count))
 						end,
 					}
 
@@ -1468,7 +1481,7 @@ function encrypt.new_window(...)
 						text = 'color picker',
 						default_color = Color3.fromRGB(255, 255, 255),
 						callback = function() 
-							warn(string.format('[❗] Color Picker #%d > no callback set.', category.colorpicker_count))
+							warn(string.format('[â—] Color Picker #%d > no callback set.', category.colorpicker_count))
 						end,
 					}
 
