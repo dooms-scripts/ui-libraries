@@ -13,7 +13,7 @@
 	
 ]]--
 
-local initialize = loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/ui-libraries/main/safe-load.lua'))())
+local initialize = loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/ui-libraries/main/safe-load.lua'))()
 getgenv = getgenv or getfenv --error('Encrypt could not load.', 999)
 setreadonly = setreadonly or function() end
 
