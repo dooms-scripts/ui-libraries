@@ -16,9 +16,9 @@
 local initialize = loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/ui-libraries/main/safe-load.lua'))()
 getgenv = getgenv or error('Encrypt could not load.', 999)
 
---> CONFIG <------------------------------------------------
+--> LIBRARY DATA <------------------------------------------
 local encrypt = {
-	version = 'e1.5.7 secure edition',
+	version = 'e1.5.8',
 	instance = nil,
 	drop_shadow = false,
 	encrypt_names = false,
@@ -559,6 +559,16 @@ function encrypt.new_window(...)
 				ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 28)
 
 				-- Functions
+				function category.append(y)
+					CategoryFrame.Size += UDim2.new(0, 0, 0, y)
+					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, y)
+				end
+
+				function category.cut(y)
+					CategoryFrame.Size -= UDim2.new(0, 0, 0, y)
+					ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, y)
+				end
+
 				function category.new_label(...)
 					category.label_count += 1
 
@@ -566,7 +576,7 @@ function encrypt.new_window(...)
 						text = 'label',
 						alignment = 'Center',
 					}
-					
+
 					local data = encrypt.overwrite(default, ... or {})
 
 					--> Creating UI
@@ -600,10 +610,17 @@ function encrypt.new_window(...)
 						RichText = true,
 					})
 
-					CategoryFrame.Size += UDim2.new(0, 0, 0, 20)
-					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
-
 					--> Functions
+					function text_label:Hide()
+						category.cut(20)
+						container.Visible = false
+					end
+					
+					function text_label:Show()
+						category.append(20)
+						container.Visible = true
+					end
+
 					function text_label:Update(...)
 						local new_data = encrypt.overwrite(data, ... or {})
 						label.Text = new_data.text
@@ -622,10 +639,10 @@ function encrypt.new_window(...)
 
 					function text_label:Destroy() 
 						container:Destroy()
-						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
-						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
+						category.cut(20)
 					end
-
+					
+					category.append(20)
 					return text_label
 				end
 
@@ -639,7 +656,7 @@ function encrypt.new_window(...)
 							warn(string.format('[❗] Toggle #%d > no callback set.', category.toggle_count))
 						end,
 					}
-					
+
 					local data = encrypt.overwrite(default, ... or {})
 
 					-- Creating UI
@@ -670,6 +687,7 @@ function encrypt.new_window(...)
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 						TextXAlignment = Enum.TextXAlignment.Left,
+						RichText = true,
 					})
 
 					local button = encrypt.create('TextButton', {
@@ -692,9 +710,6 @@ function encrypt.new_window(...)
 						CornerRadius = UDim.new(0, 2),
 						Parent = button,
 					})
-
-					CategoryFrame.Size += UDim2.new(0, 0, 0, 20)
-					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
 
 					-- Functions
 					local call = nil
@@ -738,13 +753,23 @@ function encrypt.new_window(...)
 							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
 						end
 					end
+					
+					function toggle:Hide()
+						container.Visible = false
+						category.cut(20)
+					end
+
+					function toggle:Show()
+						container.Visible = false
+						category.append(20)
+					end
 
 					function toggle:Destroy()
 						container:Destroy()
-						CategoryFrame.Size -= UDim2.new(0, 0, 0, 20)
-						ContentHolder.CanvasSize -= UDim2.new(0, 0, 0, 20)
+						category.cut(20)
 					end
-
+					
+					category.append(20)
 					return toggle
 				end
 
@@ -757,7 +782,7 @@ function encrypt.new_window(...)
 							warn(string.format('[❗] Button #%d > no callback set.', category.button_count))
 						end,
 					}
-					
+
 					local data = encrypt.overwrite(default, ... or {})
 
 					-- Creating UI
@@ -787,6 +812,7 @@ function encrypt.new_window(...)
 						Text = data.text,
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
+						RichText = true,
 					})
 
 					encrypt.create('UICorner', {
@@ -799,7 +825,17 @@ function encrypt.new_window(...)
 
 					-- Functions
 					button.MouseButton1Click:Connect(data.callback)
+					
+					function button:Hide()
+						container.Visible = false
+						category.cut(20)
+					end
 
+					function button:Show()
+						container.Visible = false
+						category.append(20)
+					end
+					
 					function text_button:Update(...)
 						local new_data = encrypt.overwrite(data, ... or {})
 						button.Text = new_data.text
@@ -825,7 +861,7 @@ function encrypt.new_window(...)
 							warn(string.format('[❗] Textbox #%d > no callback set.', category.textbox_count))
 						end,
 					}
-					
+
 					local data = encrypt.overwrite(default, ... or {})
 
 					local text_box = { text = data.text }
@@ -856,6 +892,7 @@ function encrypt.new_window(...)
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 						TextXAlignment = Enum.TextXAlignment.Left,
+						RichText = true,
 					})
 
 					local textbox = encrypt.create('TextBox', {
@@ -873,6 +910,7 @@ function encrypt.new_window(...)
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 						TextWrapped = true,
+						RichText = true,
 					})
 
 					encrypt.create('UICorner', {
@@ -888,6 +926,16 @@ function encrypt.new_window(...)
 						text_box.text = textbox.Text
 						data.callback(textbox.Text)
 					end)
+
+					function text_box:Hide()
+						container.Visible = false
+						category.cut(20)
+					end
+
+					function text_box:Show()
+						container.Visible = false
+						category.append(20)
+					end
 
 					function text_box:Disable()
 						textbox.TextEditable = false
@@ -923,7 +971,7 @@ function encrypt.new_window(...)
 							warn(string.format('[❗] Keybind #%d > no callback set.', category.keybind_count))
 						end,
 					}
-					
+
 					local data = encrypt.overwrite(default, ... or {})
 
 					keybind = { text = data.text, key = data.keybind, editing = false }
@@ -954,6 +1002,7 @@ function encrypt.new_window(...)
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 						TextXAlignment = Enum.TextXAlignment.Left,
+						RichText = true,
 					})
 
 					local button = encrypt.create('TextButton', {
@@ -972,6 +1021,7 @@ function encrypt.new_window(...)
 						TextColor3 = Color3.fromRGB(150, 150, 150),
 						TextSize = 15.000,
 						TextWrapped = true,
+						RichText = true,
 					})
 
 					encrypt.create('UICorner', {
@@ -1008,6 +1058,16 @@ function encrypt.new_window(...)
 						encrypt.threads.keybinds[category.keybind_count] = thread
 					end)()
 
+					function keybind:Hide()
+						container.Visible = false
+						category.cut(20)
+					end
+
+					function keybind:Show()
+						container.Visible = false
+						category.append(20)
+					end
+
 					function keybind:GetValue()
 						return keybind.key
 					end
@@ -1037,7 +1097,7 @@ function encrypt.new_window(...)
 							warn(string.format('[❗] Slider #%d > no callback set.', category.slider_count))
 						end,
 					}
-					
+
 					local data = encrypt.overwrite(default, ... or {})
 
 					slider = { value = data.default_value }
@@ -1068,6 +1128,7 @@ function encrypt.new_window(...)
 						Text = "",
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
+						RichText = true,
 					})
 
 					local fill = encrypt.create('Frame', {
@@ -1098,6 +1159,7 @@ function encrypt.new_window(...)
 						TextSize = 11.000,
 						TextStrokeTransparency = 0.500,
 						TextWrapped = true,
+						RichText = true,
 					})
 
 					encrypt.create('UICorner', {
@@ -1190,6 +1252,16 @@ function encrypt.new_window(...)
 						end
 					end)
 
+					function slider:Hide()
+						container.Visible = false
+						category.cut(20)
+					end
+
+					function slider:Show()
+						container.Visible = false
+						category.append(20)
+					end
+
 					function slider:GetValue()
 						return(slider.value)
 					end
@@ -1213,7 +1285,7 @@ function encrypt.new_window(...)
 							warn(string.format('[❗] Dropdown #%d > no callback set.', category.dropdown_count))
 						end,
 					}
-					
+
 					local data = encrypt.overwrite(default, ... or {})
 
 					dropdown = { selection = data.selection, options = {} }
@@ -1241,6 +1313,7 @@ function encrypt.new_window(...)
 						Size = UDim2.new(1, 0, 0, 16),
 						Font = Enum.Font[encrypt.fonts.main],
 						Text = data.text,
+						RichText = true,
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 					})
@@ -1329,6 +1402,7 @@ function encrypt.new_window(...)
 							Font = Enum.Font[encrypt.fonts.main],
 							Name = option,
 							Text = option,
+							RichText = true,
 							TextColor3 = Color3.fromRGB(125, 125, 125),
 							TextSize = 12.000,
 						})
@@ -1365,6 +1439,16 @@ function encrypt.new_window(...)
 						options_frame.Size -= UDim2.new(0, 0, 0, 20)
 					end
 
+					function dropdown:Hide()
+						container.Visible = false
+						category.cut(20)
+					end
+
+					function dropdown:Show()
+						container.Visible = false
+						category.append(20)
+					end
+
 					function dropdown:GetValue()
 						return dropdown.selection
 					end
@@ -1387,7 +1471,7 @@ function encrypt.new_window(...)
 							warn(string.format('[❗] Color Picker #%d > no callback set.', category.colorpicker_count))
 						end,
 					}
-					
+
 					local data = encrypt.overwrite(default, ... or {})
 
 					color_picker = { color = data.default_color }
@@ -1420,6 +1504,7 @@ function encrypt.new_window(...)
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
 						TextXAlignment = Enum.TextXAlignment.Left,
+						RichText = true,
 					})
 
 					local button = encrypt.create("TextButton", {
@@ -1603,6 +1688,16 @@ function encrypt.new_window(...)
 
 					CategoryFrame.Size += UDim2.new(0, 0, 0, 20)
 					ContentHolder.CanvasSize += UDim2.new(0, 0, 0, 20)
+
+					function color_picker:Hide()
+						container.Visible = false
+						category.cut(20)
+					end
+
+					function color_picker:Show()
+						container.Visible = false
+						category.append(20)
+					end
 
 					function color_picker:GetValue()
 						return color_picker.color
