@@ -6,6 +6,7 @@
 
 🎯 Patch notes
 > All elements now have a :Show() and :Hide() function
+> 
 > All elements now support RichText
 
 > Updated element methods (see How to use)
