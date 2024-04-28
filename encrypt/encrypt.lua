@@ -232,7 +232,7 @@ function encrypt.new_window(...)
 		title_text = 'encrypt // '..encrypt.version,
 		title_alignment = 'Center',
 		size = UDim2.new(0, 380, 0, 425),
-		position = UDim2.new(0.99, -380, 0.99, -425),
+		position = UDim2.new(1, -380 - 20, 1, -425 - 20),
 	}
 
 	local data = encrypt.overwrite(default, ... or {})
@@ -1341,7 +1341,7 @@ function encrypt.new_window(...)
 
 					local data = encrypt.overwrite(default, ... or {})
 
-					dropdown = { selection = data.selection, options = {} }
+					dropdown = { selection = data.default_selection, options = {} }
 
 					local container = encrypt.create('Frame', {
 						Name = "dropdown",
