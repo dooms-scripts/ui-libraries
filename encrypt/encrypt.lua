@@ -14,11 +14,11 @@
 ]]--
 
 local initialize = loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/ui-libraries/main/safe-load.lua'))()
-getgenv = getgenv or error('Encrypt could not load.', 999)
+getgenv = getgenv or getfenv --error('Encrypt could not load.', 999)
 
 --> LIBRARY DATA <------------------------------------------
 local encrypt = {
-	version = 'e1.5.9',
+	version = 'e1.6.0',
 	instance = nil,
 	drop_shadow = false,
 	encrypt_names = false,
@@ -231,7 +231,7 @@ function encrypt.new_window(...)
 		title_text = 'encrypt // '..encrypt.version,
 		title_alignment = 'Center',
 		size = UDim2.new(0, 380, 0, 425),
-		position = UDim2.new(0.711538434, 0, 0.436090231, 0),
+		position = UDim2.new(0.99, -380, 0.99, -425),
 	}
 
 	local data = encrypt.overwrite(default, ... or {})
@@ -393,6 +393,7 @@ function encrypt.new_window(...)
 	function window.new_tab(tab_name)
 		window.tab_count += 1
 		local tab = { group_count = 0 }
+		local tab_name = tab_name or `Tab {tostring(window.tab_count)}`
 
 		local TabFrame = encrypt.create('Frame', {
 			Name = encrypt.randomize(999),
@@ -456,6 +457,7 @@ function encrypt.new_window(...)
 
 		function tab.new_group(group_name)
 			local group = {}
+			local group_name = group_name or 'group'
 			tab.group_count += 1
 
 			-- Creating UI
@@ -509,8 +511,9 @@ function encrypt.new_window(...)
 					dropdown_count = 0,
 					colorpicker_count = 0,
 				}
-
-				title_alignment = title_alignment or 'Center'
+				
+				local title_text = title_text or 'Category'
+				local title_alignment = title_alignment or 'Center'
 
 				-- Creating UI
 				local CategoryFrame = encrypt.create('Frame', {
@@ -650,7 +653,7 @@ function encrypt.new_window(...)
 					category.toggle_count += 1
 
 					local toggle, default = { 
-						OnValueChanged = function() end,
+						OnValueChanged = { Connections = {} },
 						value = false,
 					}, {
 						text = 'toggle',
@@ -661,6 +664,34 @@ function encrypt.new_window(...)
 					}
 
 					toggle.__index = toggle
+
+					-- Connections
+					function toggle.OnValueChanged:Connect(...)
+						local Connection = {}
+						local Connected = true
+						local Callback = ...
+						local Index = #toggle.OnValueChanged.Connections+1
+
+						if type(...) == 'function' then
+							toggle.OnValueChanged.Connections[Index] = Callback
+							--> print('Added Connection: '.. Index)
+						end
+
+						function Connection:Disconnect()
+							table.remove(toggle.OnValueChanged.Connections, Index)
+							--> print('Removed Connection: '.. Index)
+						end
+
+						return Connection
+					end
+					
+					function toggle.OnValueChanged:FireConnections()
+						for _, Connection in pairs(toggle.OnValueChanged.Connections) do
+							if type(Connection) == 'function' then
+								Connection(toggle.value)
+							end
+						end
+					end
 
 					local data = encrypt.overwrite(default, ... or {})
 
@@ -720,10 +751,9 @@ function encrypt.new_window(...)
 					local call = nil
 
 					encrypt.threads.toggles[category.toggle_count] = button.MouseButton1Click:Connect(function()
-						toggle.OnValueChanged()
 						if data.yield then
 							toggle.value = true
-							toggle.OnValueChanged()
+							toggle.OnValueChanged:FireConnections()
 							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
 							call = coroutine.create(function()
 								data.callback(toggle.value)
@@ -733,12 +763,12 @@ function encrypt.new_window(...)
 
 							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
 							toggle.value = false
-							toggle.OnValueChanged()
+							toggle.OnValueChanged:FireConnections()
 							coroutine.close(call)
 						elseif not data.yield then
 							--encrypt.threads.toggles[category.toggle_count] = task.spawn(function()
 							toggle.value = not toggle.value
-							toggle.OnValueChanged()
+							toggle.OnValueChanged:FireConnections()
 							if toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
 								data.callback(toggle.value)
 							elseif not toggle.value then 
@@ -761,10 +791,6 @@ function encrypt.new_window(...)
 						elseif not bool then 
 							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
 						end
-					end
-
-					function toggle.OnValueChanged:Connect(...)
-						toggle.OnValueChanged = ...
 					end
 
 					function toggle:Hide()
@@ -839,12 +865,12 @@ function encrypt.new_window(...)
 					-- Functions
 					button.MouseButton1Click:Connect(data.callback)
 
-					function button:Hide()
+					function text_button:Hide()
 						container.Visible = false
 						category.cut(20)
 					end
 
-					function button:Show()
+					function text_button:Show()
 						container.Visible = true
 						category.append(20)
 					end
@@ -1781,8 +1807,11 @@ getgenv().ENCRYPT_INSTANCE = encrypt.instance
 
 encrypt.on_loaded()
 
-initialize(getgenv().ENCRYPT_INSTANCE, false)
-
-warn('[+] ENCRYPT > LOADED IN '..tostring(tick() - start_time):sub(1,4) .. ' SECONDS')
+if not pcall(function() initialize(getgenv().ENCRYPT_INSTANCE, false) end) then
+	warn('[!] ENCRYPT > Could not initialize encrypt')
+	--> getgenv().ENCRYPT_INSTANCE.Parent = game.Players.LocalPlayer:WaitForChild('PlayerGui')
+else
+	warn('[+] ENCRYPT > LOADED IN '..tostring(tick() - start_time):sub(1,4) .. ' SECONDS')
+end
 
 return encrypt
