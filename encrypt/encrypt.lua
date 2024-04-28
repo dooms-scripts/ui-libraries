@@ -13,12 +13,13 @@
 	
 ]]--
 
-local initialize = loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/ui-libraries/main/safe-load.lua'))()
+local initialize = loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/ui-libraries/main/safe-load.lua'))())
 getgenv = getgenv or getfenv --error('Encrypt could not load.', 999)
+setreadonly = setreadonly or function() end
 
 --> LIBRARY DATA <------------------------------------------
 local encrypt = {
-	version = 'e1.6.0',
+	version = 'e1.6.1',
 	instance = nil,
 	drop_shadow = false,
 	encrypt_names = false,
@@ -653,6 +654,7 @@ function encrypt.new_window(...)
 					category.toggle_count += 1
 
 					local toggle, default = { 
+						Methods = {  },
 						OnValueChanged = { Connections = {} },
 						value = false,
 					}, {
@@ -666,7 +668,25 @@ function encrypt.new_window(...)
 					toggle.__index = toggle
 
 					-- Connections
+					function toggle.Methods:FireAll()
+						for _, Connection in pairs(toggle.OnValueChanged.Connections) do
+							if type(Connection) == 'function' then
+								Connection(toggle.value)
+							end
+						end
+					end
+
+					function toggle.Methods:FilterConnections()
+						for index, Connection in pairs(toggle.OnValueChanged.Connections) do
+							if type(Connection) == 'table' and Connection.Callback == nil then
+								table.remove(toggle.OnValueChanged.Connections, index)
+							end
+						end
+					end
+					
 					function toggle.OnValueChanged:Connect(...)
+						toggle.Methods:FilterConnections()
+						
 						local Connection = {}
 						local Connected = true
 						local Callback = ...
@@ -678,19 +698,12 @@ function encrypt.new_window(...)
 						end
 
 						function Connection:Disconnect()
-							table.remove(toggle.OnValueChanged.Connections, Index)
+							toggle.OnValueChanged.Connections[Index] = nil
+							toggle.Methods:FilterConnections()
 							--> print('Removed Connection: '.. Index)
 						end
 
 						return Connection
-					end
-					
-					function toggle.OnValueChanged:FireConnections()
-						for _, Connection in pairs(toggle.OnValueChanged.Connections) do
-							if type(Connection) == 'function' then
-								Connection(toggle.value)
-							end
-						end
 					end
 
 					local data = encrypt.overwrite(default, ... or {})
@@ -753,7 +766,7 @@ function encrypt.new_window(...)
 					encrypt.threads.toggles[category.toggle_count] = button.MouseButton1Click:Connect(function()
 						if data.yield then
 							toggle.value = true
-							toggle.OnValueChanged:FireConnections()
+							toggle.Methods:FireAll()
 							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
 							call = coroutine.create(function()
 								data.callback(toggle.value)
@@ -763,12 +776,12 @@ function encrypt.new_window(...)
 
 							encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.foreground)
 							toggle.value = false
-							toggle.OnValueChanged:FireConnections()
+							toggle.Methods:FireAll()
 							coroutine.close(call)
 						elseif not data.yield then
 							--encrypt.threads.toggles[category.toggle_count] = task.spawn(function()
 							toggle.value = not toggle.value
-							toggle.OnValueChanged:FireConnections()
+							toggle.Methods:FireAll()
 							if toggle.value then encrypt.tween(button, tween_info.new(.15), 'BackgroundColor3', encrypt.colors.main_color)
 								data.callback(toggle.value)
 							elseif not toggle.value then 
@@ -809,6 +822,7 @@ function encrypt.new_window(...)
 					end
 
 					category.append(20)
+					setreadonly(toggle.Methods, true)
 					return toggle
 				end
 
@@ -1809,7 +1823,6 @@ encrypt.on_loaded()
 
 if not pcall(function() initialize(getgenv().ENCRYPT_INSTANCE, false) end) then
 	warn('[!] ENCRYPT > Could not initialize encrypt')
-	--> getgenv().ENCRYPT_INSTANCE.Parent = game.Players.LocalPlayer:WaitForChild('PlayerGui')
 else
 	warn('[+] ENCRYPT > LOADED IN '..tostring(tick() - start_time):sub(1,4) .. ' SECONDS')
 end
