@@ -962,8 +962,8 @@ function encrypt.new_window(...)
 						Text = '',
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
+						TextTruncate = 'AtEnd',
 						TextWrapped = true,
-						RichText = true,
 					})
 
 					encrypt.create('UICorner', {
