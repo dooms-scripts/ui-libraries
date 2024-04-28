@@ -242,7 +242,7 @@ function encrypt.new_window(...)
 		Parent = encrypt.instance,
 		BackgroundColor3 = encrypt.colors.background,
 		BorderColor3 = Color3.fromRGB(35, 35, 35),
-		Position = data.pos,
+		Position = data.position,
 		Size = data.size,
 		Active = true,
 		Selectable = true,
