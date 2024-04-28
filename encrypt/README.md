@@ -9,14 +9,23 @@
 > All elements now support RichText
 
 > Updated element methods (see How to use)
+> 
 > Fixed elements being broken 🐛
+> 
 > Fixed an issue where tab buttons would not resize when using Krampus
+> 
 > Changed encrypt:toggle() to window:toggle()
+> 
 > Changed most method iterators to semi-colons instead of periods
+> 
 > Changed the way the UI library is loaded for user safety
+> 
 > Changed slider arguments (see new)
+> 
 > Added padding to window title text
+> 
 > Added custom positioning to windows
+> 
 > Added extra security to the way the GUI is made and handled, protecting you from all client-side methods of detecting CoreGui additions
 
 [See what's new](https://dooms-scripts.gitbook.io/encrypt-docs#version-and-patch-notes)
