@@ -19,7 +19,7 @@ setreadonly = setreadonly or function() end
 
 --> LIBRARY DATA <------------------------------------------
 local encrypt = {
-	version = 'e1.6.1',
+	version = 'e1.6.2',
 	instance = nil,
 	drop_shadow = false,
 	encrypt_names = false,
@@ -1819,12 +1819,15 @@ end
 getgenv().ENCRYPT_LIB_LOADED = true
 getgenv().ENCRYPT_INSTANCE = encrypt.instance
 
-encrypt.on_loaded()
-
 if not pcall(function() initialize(getgenv().ENCRYPT_INSTANCE, false) end) then
 	warn('[!] ENCRYPT > Could not initialize encrypt')
 else
 	warn('[+] ENCRYPT > LOADED IN '..tostring(tick() - start_time):sub(1,4) .. ' SECONDS')
 end
+
+spawn(function()
+	task.wait(0.1)
+	encrypt.on_loaded()
+end)
 
 return encrypt
