@@ -760,7 +760,7 @@ function encrypt.new_window(...)
 					end
 
 					function toggle:Show()
-						container.Visible = false
+						container.Visible = true
 						category.append(20)
 					end
 
@@ -832,7 +832,7 @@ function encrypt.new_window(...)
 					end
 
 					function button:Show()
-						container.Visible = false
+						container.Visible = true
 						category.append(20)
 					end
 					
@@ -933,7 +933,7 @@ function encrypt.new_window(...)
 					end
 
 					function text_box:Show()
-						container.Visible = false
+						container.Visible = true
 						category.append(20)
 					end
 
@@ -1064,7 +1064,7 @@ function encrypt.new_window(...)
 					end
 
 					function keybind:Show()
-						container.Visible = false
+						container.Visible = true
 						category.append(20)
 					end
 
@@ -1258,7 +1258,7 @@ function encrypt.new_window(...)
 					end
 
 					function slider:Show()
-						container.Visible = false
+						container.Visible = true
 						category.append(20)
 					end
 
@@ -1445,7 +1445,7 @@ function encrypt.new_window(...)
 					end
 
 					function dropdown:Show()
-						container.Visible = false
+						container.Visible = true
 						category.append(20)
 					end
 
@@ -1695,7 +1695,7 @@ function encrypt.new_window(...)
 					end
 
 					function color_picker:Show()
-						container.Visible = false
+						container.Visible = true
 						category.append(20)
 					end
 
