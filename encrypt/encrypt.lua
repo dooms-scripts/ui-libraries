@@ -233,6 +233,7 @@ function encrypt.new_window(...)
 		title_alignment = 'Center',
 		size = UDim2.new(0, 380, 0, 425),
 		position = UDim2.new(1, -380 - 20, 1, -425 - 20),
+		anchor = Vector2.new(0, 0)
 	}
 
 	local data = encrypt.overwrite(default, ... or {})
@@ -245,6 +246,7 @@ function encrypt.new_window(...)
 		BorderColor3 = Color3.fromRGB(35, 35, 35),
 		Position = data.position,
 		Size = data.size,
+		AnchorPoint = data.anchor,
 		Active = true,
 		Selectable = true,
 		Draggable = true,
