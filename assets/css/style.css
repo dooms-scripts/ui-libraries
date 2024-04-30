@@ -102,7 +102,7 @@ section.main img {
 }
 
 section.main p img {
-    width: 30px; /* Set the desired width */
+    width: 6px; /* Set the desired width */
     height: auto; /* Maintain aspect ratio */
     margin-right: 10px; /* Optional: Add margin to the right of the image */
 }
