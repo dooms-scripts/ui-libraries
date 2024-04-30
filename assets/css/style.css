@@ -101,12 +101,11 @@ section.main img {
     margin-bottom: 10px;
 }
 
-section.image-before-text {
-    width: 50px; /* Set the desired width */
+section.main p img {
+    width: 30px; /* Set the desired width */
     height: auto; /* Maintain aspect ratio */
     margin-right: 10px; /* Optional: Add margin to the right of the image */
 }
-
 section.main span {
     color: #fffffe;
     font-size: 30px;
