@@ -2,4 +2,4 @@
 all UI libraries i've made recently.
 
 # 🔴 encrypt docs
-https://dooms-scripts.gitbook.io/encrypt-docs
+https://docs.doom-is-a-skid.lol
