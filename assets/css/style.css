@@ -106,6 +106,7 @@ section.main p img {
     height: auto; /* Maintain aspect ratio */
     margin-right: 10px; /* Optional: Add margin to the right of the image */
 }
+
 section.main span {
     color: #fffffe;
     font-size: 30px;
