@@ -215,7 +215,7 @@ function Library:NewTab(...)
 	end)
 	
 	function Tab:Import(...)
-		local Data = {...}
+		local Data = ...
 		
 		if Data.Object then
 			Data.Object.Parent = TabFrame
