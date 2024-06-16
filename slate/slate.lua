@@ -70,11 +70,11 @@ local Library = {
 	Exit = function() Library.INSTANCE:Destroy() end,	
 }
 
-function Library:Window(...)
+function Library:Window(name, title)
 	local Window = { TABS = 0, META = {} }
 
 	-- ! Window Frame
-	local WindowFrame = AddInstance("Frame", { Parent = ScreenGui, Name = [[Window]], BorderSizePixel = 0, Size = UDim2.new(0, 500, 0, 350), BorderColor3 = Color3.fromRGB(0, 0, 0), Position = UDim2.new(0.567754686, 0, 0.499145299, 0), BackgroundColor3 = Color3.fromRGB(15, 15, 15),})
+	local WindowFrame = AddInstance("Frame", { Parent = Library.INSTANCE, Name = name, BorderSizePixel = 0, Size = UDim2.new(0, 500, 0, 350), BorderColor3 = Color3.fromRGB(0, 0, 0), Position = UDim2.new(0.567754686, 0, 0.499145299, 0), BackgroundColor3 = Color3.fromRGB(15, 15, 15),})
 
 	-- ! Main Categories
 	local Topbar = AddInstance("Frame", { Parent = WindowFrame, Name = [[Topbar]], BorderSizePixel = 0, Size = UDim2.new(1, 0, 0, 25), BorderColor3 = Color3.fromRGB(0, 0, 0), BackgroundTransparency = 0.9900000095367432, BackgroundColor3 = Color3.fromRGB(255, 255, 255),})
@@ -86,7 +86,7 @@ function Library:Window(...)
 	local Minimize = AddInstance("ImageButton", { Parent = Buttons, Name = [[Minimize]], LayoutOrder = 1, BackgroundTransparency = 1, ScaleType = Enum.ScaleType.Fit, Image = [[http://www.roblox.com/asset/?id=6026568240]], BorderSizePixel = 0, Size = UDim2.new(0, 16, 0, 14), BorderColor3 = Color3.fromRGB(0, 0, 0), ImageColor3 = Color3.fromRGB(125, 125, 125), Position = UDim2.new(0.920000017, 0, 0.239999995, 0), BackgroundColor3 = Color3.fromRGB(255, 255, 255),})
 	local Resize = AddInstance("ImageButton", { Parent = WindowFrame, Name = [[Resize]], ResampleMode = Enum.ResamplerMode.Pixelated, BackgroundTransparency = 1, AnchorPoint = Vector2.new(1, 1), Image = [[http://www.roblox.com/asset/?id=17736105571]], BorderSizePixel = 0, Size = UDim2.new(0, 9, 0, 9), BorderColor3 = Color3.fromRGB(0, 0, 0), ImageColor3 = Color3.fromRGB(50, 50, 50), Rotation = 180, Position = UDim2.new(1, 0, 1, 0), BackgroundColor3 = Color3.fromRGB(255, 255, 255),})
 	local Close = AddInstance("ImageButton", { Parent = Buttons, Name = [[Close]], LayoutOrder = 2, BackgroundTransparency = 1, ScaleType = Enum.ScaleType.Fit, Image = [[http://www.roblox.com/asset/?id=6031094678]], BorderSizePixel = 0, Size = UDim2.new(0, 16, 0, 14), BorderColor3 = Color3.fromRGB(0, 0, 0), ImageColor3 = Color3.fromRGB(125, 125, 125), Position = UDim2.new(0.952000022, 0, 0.239999995, 0), BackgroundColor3 = Color3.fromRGB(255, 255, 255),})
-	local Title = AddInstance("TextLabel", { Parent = Topbar, Name = [[Title]], TextWrapped = true, BorderSizePixel = 0, RichText = true, BackgroundColor3 = Color3.fromRGB(255, 255, 255), TextSize = 16, Size = UDim2.new(1, -36, 0, 25), TextXAlignment = Enum.TextXAlignment.Left, BorderColor3 = Color3.fromRGB(0, 0, 0), Text = [[doom.lol <font color="rgb(75,75,75)">| slate ui</font>]], FontFace = Font.new('rbxassetid://11702779409', Enum.FontWeight.Regular, Enum.FontStyle.Normal), TextColor3 = Color3.fromRGB(173, 173, 173), BackgroundTransparency = 1,})
+	local Title = AddInstance("TextLabel", { Parent = Topbar, Name = [[Title]], TextWrapped = true, BorderSizePixel = 0, RichText = true, BackgroundColor3 = Color3.fromRGB(255, 255, 255), TextSize = 16, Size = UDim2.new(1, -36, 0, 25), TextXAlignment = Enum.TextXAlignment.Left, BorderColor3 = Color3.fromRGB(0, 0, 0), Text = title, FontFace = Font.new('rbxassetid://11702779409', Enum.FontWeight.Regular, Enum.FontStyle.Normal), TextColor3 = Color3.fromRGB(173, 173, 173), BackgroundTransparency = 1,})
 
 	-- ! UI Elements
 	AddInstance("UIListLayout", { Parent = Buttons, VerticalAlignment = Enum.VerticalAlignment.Center, FillDirection = Enum.FillDirection.Horizontal, SortOrder = Enum.SortOrder.LayoutOrder,})
