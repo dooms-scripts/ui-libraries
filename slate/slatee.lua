@@ -116,7 +116,7 @@ function Library:Window(name, title)
 		AddInstance("UICorner", { Parent = TabButton, Name = [[Padding]], CornerRadius = UDim.new(0, 4),})
 
 		-- ! Connections
-		TabButton.MouseEnter:Connect(function()
+		Hitbox.MouseEnter:Connect(function()
 			TweenInstance({
 				Object = TabButton,
 				Data = { BackgroundTransparency = 0.96 }
@@ -133,7 +133,7 @@ function Library:Window(name, title)
 			})
 		end)
 		
-		TabButton.MouseLeave:Connect(function()
+		Hitbox.MouseLeave:Connect(function()
 			TweenInstance({
 				Object = TabButton,
 				Data = { BackgroundTransparency = 1 }
@@ -150,7 +150,7 @@ function Library:Window(name, title)
 			})
 		end)
 
-		TabButton.MouseButton1Click:Connect(function()
+		Hitbox.MouseButton1Click:Connect(function()
 			for _, Button in Sidebar:GetChildren() do
 				if Button:IsA('Frame') and Button ~= TabButton then
 					TweenInstance({
