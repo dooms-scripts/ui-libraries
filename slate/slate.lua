@@ -67,6 +67,7 @@ end
 -- >> LIBRARY
 local Library = {
 	INSTANCE = AddInstance("ScreenGui", { Parent = cloneref(game.CoreGui), ZIndexBehavior = Enum.ZIndexBehavior.Sibling,}),
+	Exit = function() Library.INSTANCE:Destroy() end,	
 }
 
 function Library:Window(...)
