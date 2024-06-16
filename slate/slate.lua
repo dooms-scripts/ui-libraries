@@ -70,7 +70,7 @@ local Library = {
 }
 
 function Library:Window(...)
-	local Window = {}
+	local Window = { TABS = 0, META = {} }
 
 	-- ! Window Frame
 	local WindowFrame = AddInstance("Frame", { Parent = ScreenGui, Name = [[Window]], BorderSizePixel = 0, Size = UDim2.new(0, 500, 0, 350), BorderColor3 = Color3.fromRGB(0, 0, 0), Position = UDim2.new(0.567754686, 0, 0.499145299, 0), BackgroundColor3 = Color3.fromRGB(15, 15, 15),})
@@ -93,15 +93,39 @@ function Library:Window(...)
 	AddInstance("UIPadding", { Parent = Tabs, PaddingTop = UDim.new(0, 12), PaddingRight = UDim.new(0, 12), PaddingLeft = UDim.new(0, 12), PaddingBottom = UDim.new(0, 12),})
 	AddInstance("UIPadding", { Parent = Topbar, PaddingRight = UDim.new(0, 6), PaddingLeft = UDim.new(0, 6),})
 	AddInstance("UIPadding", { Parent = Sidebar, PaddingRight = UDim.new(0, 4), PaddingLeft = UDim.new(0, 4),})
-	AddInstance("UICorner", { Parent = WindowFrame, CornerRadius = UDim.new(0, 5),})
 	AddInstance("UIPadding", { Parent = Title, PaddingTop = UDim.new(0, 3),})
-
+	AddInstance("UICorner", { Parent = WindowFrame, CornerRadius = UDim.new(0, 5),})
+	
 	-- ! Functions
 	function Window:Tab(name, icon)
+		local Tab = { META = {} }
+		
 		if not name or not icon then return end
 
-		local TabFrame
-		local TabButton
+		-- ! Stuff
+		local TabFrame = AddInstance("ScrollingFrame", { Tabs, Name = [[TabFrame]], Active = true, BorderSizePixel = 0, CanvasSize = UDim2.new(0, 0, 0, 301), BackgroundColor3 = Color3.fromRGB(255, 255, 255), Size = UDim2.new(1, 0, 1, 0), ScrollBarImageColor3 = Color3.fromRGB(25, 25, 25), BorderColor3 = Color3.fromRGB(0, 0, 0), ScrollBarThickness = 6, BackgroundTransparency = 1,})
+		local TabButton = AddInstance("Frame", { Parent = Sidebar, Name = [[SideButton]], BorderSizePixel = 0, Size = UDim2.new(1, 0, 0, 25), BorderColor3 = Color3.fromRGB(0, 0, 0), BackgroundTransparency = 1, BackgroundColor3 = Color3.fromRGB(255, 255, 255),})
+		local Title = AddInstance("TextLabel", { Parent = TabFrame, Name = name, BorderSizePixel = 0, TextYAlignment = Enum.TextYAlignment.Top, BackgroundColor3 = Color3.fromRGB(255, 255, 255), TextSize = 16, Size = UDim2.new(1, 0, 0, 25), TextXAlignment = Enum.TextXAlignment.Left, BorderColor3 = Color3.fromRGB(0, 0, 0), Text = [[Home]], FontFace = Font.new('rbxassetid://11702779409', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal), TextColor3 = Color3.fromRGB(75, 75, 75), BackgroundTransparency = 1,})
+		local Icon = AddInstance("ImageLabel", { Parent = TabButton, Name = [[Icon]], AnchorPoint = Vector2.new(0, 0.5), Image = icon, BorderSizePixel = 0, Size = UDim2.new(0, 12, 0, 12), BorderColor3 = Color3.fromRGB(0, 0, 0), ImageColor3 = Color3.fromRGB(75, 75, 75), Position = UDim2.new(0, 10, 0.5, 0), BackgroundTransparency = 1, BackgroundColor3 = Color3.fromRGB(255, 255, 255),})
+		local Button = AddInstance("TextButton", { Parent = TabButton, Name = [[Button]], TextWrapped = true, BorderSizePixel = 0, BackgroundColor3 = Color3.fromRGB(255, 255, 255), TextSize = 16, Size = UDim2.new(1, 0, 1, 0), TextXAlignment = Enum.TextXAlignment.Left, BorderColor3 = Color3.fromRGB(0, 0, 0), Text = [[SideButton]], FontFace = Font.new('rbxassetid://11702779409', Enum.FontWeight.Medium, Enum.FontStyle.Normal), TextColor3 = Color3.fromRGB(75, 75, 75), BackgroundTransparency = 1,})
+		
+		-- ! UI Elements
+		AddInstance("UIPadding", { Parent = Button, PaddingLeft = UDim.new(0, 28), PaddingBottom = UDim.new(0, -1),})
+		AddInstance("UIPadding", { Parent = Title, PaddingTop = UDim.new(0, -4),})
+		AddInstance("UICorner", { Parent = TabButton, Name = [[Padding]], CornerRadius = UDim.new(0, 4),})
+
+		-- ! Functions
+		function Tab:Import(META)
+			if META and META.object then
+				META.Object.Parent = TabFrame
+
+				if META.offset then TabFrame.CanvasSize += UDim2.new(0,0,0,META.offset) end
+			elseif not META.object then
+				return warn('An object must be provided.')
+			end
+		end
+		
+		return Tab
 	end
 	
 	return Window
