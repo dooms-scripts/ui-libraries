@@ -96,24 +96,100 @@ function Library:Window(name, title)
 	AddInstance("UIPadding", { Parent = Sidebar, PaddingRight = UDim.new(0, 4), PaddingLeft = UDim.new(0, 4),})
 	AddInstance("UIPadding", { Parent = Title, PaddingTop = UDim.new(0, 3),})
 	AddInstance("UICorner", { Parent = WindowFrame, CornerRadius = UDim.new(0, 5),})
-	
+
 	-- ! Functions
 	function Window:Tab(name, icon)
 		local Tab = { META = {} }
-		
+
 		if not name or not icon then return end
 
 		-- ! Stuff
+		local TabButton = AddInstance("Frame", { Parent = Sidebar, Name = [[TabButton]], BorderSizePixel = 0, Visible = false, Size = UDim2.new(1, 0, 0, 25), BorderColor3 = Color3.fromRGB(0, 0, 0), BackgroundTransparency = 1, BackgroundColor3 = Color3.fromRGB(255, 255, 255),})
 		local TabFrame = AddInstance("ScrollingFrame", { Parent = Tabs, Name = [[TabFrame]], Active = true, BorderSizePixel = 0, CanvasSize = UDim2.new(0, 0, 0, 301), BackgroundColor3 = Color3.fromRGB(255, 255, 255), Size = UDim2.new(1, 0, 1, 0), ScrollBarImageColor3 = Color3.fromRGB(25, 25, 25), BorderColor3 = Color3.fromRGB(0, 0, 0), ScrollBarThickness = 6, BackgroundTransparency = 1,})
-		local TabButton = AddInstance("Frame", { Parent = Sidebar, Name = [[TabButton]], BorderSizePixel = 0, Size = UDim2.new(1, 0, 0, 25), BorderColor3 = Color3.fromRGB(0, 0, 0), BackgroundTransparency = 1, BackgroundColor3 = Color3.fromRGB(255, 255, 255),})
+		local Hitbox = AddInstance("TextButton", { Parent = TabButton, Name = [[Button]], TextWrapped = true, BorderSizePixel = 0, BackgroundColor3 = Color3.fromRGB(255, 255, 255), TextSize = 16, Size = UDim2.new(1, 0, 1, 0), TextXAlignment = Enum.TextXAlignment.Left, BorderColor3 = Color3.fromRGB(0, 0, 0), Text = name, FontFace = Font.new('rbxassetid://11702779409', Enum.FontWeight.Medium, Enum.FontStyle.Normal), TextColor3 = Color3.fromRGB(75, 75, 75), BackgroundTransparency = 1,})
 		local Title = AddInstance("TextLabel", { Parent = TabFrame, Name = name, BorderSizePixel = 0, TextYAlignment = Enum.TextYAlignment.Top, BackgroundColor3 = Color3.fromRGB(255, 255, 255), TextSize = 16, Size = UDim2.new(1, 0, 0, 25), TextXAlignment = Enum.TextXAlignment.Left, BorderColor3 = Color3.fromRGB(0, 0, 0), Text = [[Home]], FontFace = Font.new('rbxassetid://11702779409', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal), TextColor3 = Color3.fromRGB(75, 75, 75), BackgroundTransparency = 1,})
 		local Icon = AddInstance("ImageLabel", { Parent = TabButton, Name = [[Icon]], AnchorPoint = Vector2.new(0, 0.5), Image = icon, BorderSizePixel = 0, Size = UDim2.new(0, 12, 0, 12), BorderColor3 = Color3.fromRGB(0, 0, 0), ImageColor3 = Color3.fromRGB(75, 75, 75), Position = UDim2.new(0, 10, 0.5, 0), BackgroundTransparency = 1, BackgroundColor3 = Color3.fromRGB(255, 255, 255),})
-		local Button = AddInstance("TextButton", { Parent = TabButton, Name = [[Button]], TextWrapped = true, BorderSizePixel = 0, BackgroundColor3 = Color3.fromRGB(255, 255, 255), TextSize = 16, Size = UDim2.new(1, 0, 1, 0), TextXAlignment = Enum.TextXAlignment.Left, BorderColor3 = Color3.fromRGB(0, 0, 0), Text = name, FontFace = Font.new('rbxassetid://11702779409', Enum.FontWeight.Medium, Enum.FontStyle.Normal), TextColor3 = Color3.fromRGB(75, 75, 75), BackgroundTransparency = 1,})
-		
+
 		-- ! UI Elements
-		AddInstance("UIPadding", { Parent = Button, PaddingLeft = UDim.new(0, 28), PaddingBottom = UDim.new(0, -1),})
+		AddInstance("UIPadding", { Parent = Hitbox, PaddingLeft = UDim.new(0, 28), PaddingBottom = UDim.new(0, -1),})
 		AddInstance("UIPadding", { Parent = Title, PaddingTop = UDim.new(0, -4),})
 		AddInstance("UICorner", { Parent = TabButton, Name = [[Padding]], CornerRadius = UDim.new(0, 4),})
+
+		-- ! Connections
+		TabButton.MouseEnter:Connect(function()
+			TweenInstance({
+				Object = TabButton,
+				Data = { BackgroundTransparency = 0.96 }
+			})
+
+			TweenInstance({
+				Object = Hitbox,
+				Data = { TextColor3 = Color3.fromRGB(120, 120, 120) }
+			})
+
+			TweenInstance({
+				Object = Icon,
+				Data = { ImageColor3 = Color3.fromRGB(120, 120, 120) }
+			})
+		end)
+		
+		TabButton.MouseLeave:Connect(function()
+			TweenInstance({
+				Object = TabButton,
+				Data = { BackgroundTransparency = 1 }
+			})
+
+			TweenInstance({
+				Object = Hitbox,
+				Data = { TextColor3 = Color3.fromRGB(75, 75, 75) }
+			})
+
+			TweenInstance({
+				Object = Icon,
+				Data = { ImageColor3 = Color3.fromRGB(75, 75, 75) }
+			})
+		end)
+
+		TabButton.MouseButton1Click:Connect(function()
+			for _, Button in Sidebar:GetChildren() do
+				if Button:IsA('Frame') and Button ~= TabButton then
+					TweenInstance({
+						Object = Button,
+						Data = { BackgroundTransparency = 1 }
+					})
+					
+					TweenInstance({
+						Object = Button.Hitbox,
+						Data = { TextColor3 = Color3.fromRGB(75, 75, 75) }
+					})
+
+					TweenInstance({
+						Object = Button.Icon,
+						Data = { ImageColor3 = Color3.fromRGB(75, 75, 75) }
+					})
+				end
+			end
+			
+			for _, Tab in Tabs:GetChildren() do
+				if Tab:IsA('Frame') and Tab ~= TabFrame then Tab.Visible = false end
+				TabFrame.Visible = true
+			end
+			
+			TweenInstance({
+				Object = TabButton,
+				Data = { BackgroundTransparency = 0.91 }
+			})
+
+			TweenInstance({
+				Object = Hitbox,
+				Data = { TextColor3 = Color3.fromRGB(173, 173, 173) }
+			})
+
+			TweenInstance({
+				Object = Icon,
+				Data = { ImageColor3 = Color3.fromRGB(173, 173, 173) }
+			})
+		end)
 
 		-- ! Functions
 		function Tab:Import(META)
@@ -125,10 +201,10 @@ function Library:Window(name, title)
 				return warn('An object must be provided.')
 			end
 		end
-		
+
 		return Tab
 	end
-	
+
 	return Window
 end
 
