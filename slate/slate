@@ -26,7 +26,7 @@ local function AddInstance(class : string, properties : {})
 		end)
 
 		if err then 
-			return warn(`[!] Problem adding instance: {err}`) 
+			return warn(`[!] Problem adding instance: {i} Message: {err}`) 
 		end
 	end
 
