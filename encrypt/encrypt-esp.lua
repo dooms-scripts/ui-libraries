@@ -49,7 +49,7 @@ local function overwrite(to_overwrite : {}, overwrite_with : {})
 	return to_overwrite or nil
 end
 
-library.new = function(esp_type : string, player : Player, ... : {})
+library.new = function(esp_type : string, player : Player, ... : {}, ...)
 	--// HIGHLIGHTS \\--------------------------------------------------
 	if esp_type == 'Highlight' then
 		local highlight, defaults, connections = { i = #library.drawings.highlights+1 }, {
